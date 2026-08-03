@@ -12,21 +12,20 @@
       .storyboard-page-loading{
         position:absolute;
         z-index:3;
-        top:12px;
-        left:12px;
-        padding:7px 10px;
+        inset:0;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        padding:16px;
         color:var(--text);
-        background:rgba(8,13,16,.88);
-        border:1px solid var(--border-strong);
-        border-radius:7px;
+        background:#080d10;
         font-family:'IBM Plex Mono',monospace;
-        font-size:10px;
+        font-size:11px;
         pointer-events:none;
         opacity:0;
-        transform:translateY(-4px);
-        transition:opacity .15s ease,transform .15s ease;
+        transition:opacity .15s ease;
       }
-      .storyboard-page-loading.visible{opacity:1;transform:translateY(0)}
+      .storyboard-page-loading.visible{opacity:1}
     `;
     document.head.appendChild(style);
   }
@@ -81,27 +80,27 @@
     });
   }
 
-  const STORYBOARD_FILE_ID = '1tb161Lvzr8Y5R7OdyTiWflT76jwbmgEN';
-  const STORYBOARD_FULL_URL = `https://drive.google.com/file/d/${STORYBOARD_FILE_ID}/view?usp=drive_link`;
+  const STORYBOARD_FULL_URL = 'https://drive.google.com/file/d/1tb161Lvzr8Y5R7OdyTiWflT76jwbmgEN/view?usp=drive_link';
+
   const storyboardScenePages = {
-    '1A': { pages: [4], title: 'Light switch and opening cue' },
-    '2A': { pages: [5, 6, 7], title: 'Boy reading, archive photo and fishermen' },
-    '3A': { pages: [8], title: 'Drone over Klaksvík at night' },
-    '4A': { pages: [9], title: 'Children under the street light' },
-    '5A': { pages: [10], title: 'Remote village at night' },
-    '6A': { pages: [11], title: 'Dam, turbine, Eiðisvatn and Eiðisverkið' },
-    '7A': { pages: [12], title: 'Wind turbines' },
-    '8A': { pages: [13], title: 'Drone rises above the islands' },
-    '9A': { pages: [14, 15, 16], title: 'Mother and boy, electric car and heat pump' },
-    '10A': { pages: [17], title: 'Drying clothes' },
-    '11A': { pages: [18], title: 'Geothermal drilling' },
-    '12A': { pages: [19], title: 'Green energy from a river' },
-    '13A': { pages: [20, 21], title: 'Solar energy and sunlight' },
-    '14A': { pages: [22], title: 'Start small. Everything makes a difference' },
-    '15A': { pages: [23], title: 'Maybe it starts with you' },
-    '16A': { pages: [24], title: 'Light switches off' },
-    '17A': { pages: [25], title: 'Voice-over end card' },
-    '18A': { pages: [26], title: 'Animated SEV logo' }
+    '1A': { pages: [4], title: 'Light switch and opening cue', fileId: '1ovbk0s0ilEDwXgYBLC_xOc9K2ASA5-Tc' },
+    '2A': { pages: [5, 6, 7], title: 'Boy reading, archive photo and fishermen', fileId: '1DeEndiPZjuMQssY7wMDPft_aVkcSpecc' },
+    '3A': { pages: [8], title: 'Drone over Klaksvík at night', fileId: '1laqvONDUSKKBAJV481vg2WITd5dLfMN5' },
+    '4A': { pages: [9], title: 'Children under the street light', fileId: '1Gq1q7SVP2nb9rLbY9vP-G-WJ2PzH8Rc8' },
+    '5A': { pages: [10], title: 'Remote village at night', fileId: '1KcbJ5jLG3zexGvQNuolHWFRwaxiddeXD' },
+    '6A': { pages: [11], title: 'Dam, turbine, Eiðisvatn and Eiðisverkið', fileId: '1eJ8mbTTA8laSlgsiIFmRyAXEj-f759yF' },
+    '7A': { pages: [12], title: 'Wind turbines', fileId: '1zADDC4ukAIhTU-X9Knv74pYKkn9Jdabq' },
+    '8A': { pages: [13], title: 'Drone rises above the islands', fileId: '1YF5G31PfM3w3sHK8w9zxeRgK1_E-w2Ni' },
+    '9A': { pages: [14, 15, 16], title: 'Mother and boy, electric car and heat pump', fileId: '1d7LuyZiWh2tjXYX8SnE0clGwTEmiTMNX' },
+    '10A': { pages: [17], title: 'Drying clothes', fileId: '13Ovu02YU1pO4P3RhqEt9sEAPMQb97kwG' },
+    '11A': { pages: [18], title: 'Geothermal drilling', fileId: '1hiEutw6MwihjE7p32dz4CHogOn9yiKR4' },
+    '12A': { pages: [19], title: 'Green energy from a river', fileId: '17U5q_qyo_t3suKOANDuCGFdL52StTKfO' },
+    '13A': { pages: [20, 21], title: 'Solar energy and sunlight', fileId: '1QVzhE9o1DxbbY_r-ykVbmgSAqPi-Daf1' },
+    '14A': { pages: [22], title: 'Start small. Everything makes a difference', fileId: '18w-gasRIRrq--pnusoHl8dae0XMDJELN' },
+    '15A': { pages: [23], title: 'Maybe it starts with you', fileId: '1Gzxr4N-632AT0zhsKSNElpxLVctnGpqv' },
+    '16A': { pages: [24], title: 'Light switches off', fileId: '1yh-WXHSry5rws1r5P9I2jJnrqARvSpSL' },
+    '17A': { pages: [25], title: 'Voice-over end card', fileId: '1BW_FjkaqHnOllb6dpks7pZZwZwb0HAth' },
+    '18A': { pages: [26], title: 'Animated SEV logo', fileId: '1Zi20Ir9_80UgF4BEpaRPMnuVuFikQPkA' }
   };
 
   function pageLabel(pages) {
@@ -110,9 +109,12 @@
       : `PDF pages ${pages[0]}–${pages[pages.length - 1]}`;
   }
 
-  function directPdfUrl(sceneId, page) {
-    const cacheKey = `${encodeURIComponent(sceneId)}-${Date.now()}`;
-    return `https://drive.google.com/uc?export=view&id=${STORYBOARD_FILE_ID}&scene=${cacheKey}#page=${page}&zoom=page-width`;
+  function scenePreviewUrl(fileId) {
+    return `https://drive.google.com/file/d/${fileId}/preview`;
+  }
+
+  function sceneViewUrl(fileId) {
+    return `https://drive.google.com/file/d/${fileId}/view?usp=drive_link`;
   }
 
   function installExactStoryboardNavigation() {
@@ -125,29 +127,33 @@
     const fullPdfLink = panel?.querySelector('.storyboard-action.primary');
     const note = panel?.querySelector('.storyboard-note');
 
-    if (!panel || !frame || !frameWrap || panel.dataset.exactPageNavigation === 'true') return;
-    panel.dataset.exactPageNavigation = 'true';
+    if (!panel || !frame || !frameWrap || panel.dataset.exactPageNavigation === 'scene-files') return;
+    panel.dataset.exactPageNavigation = 'scene-files';
 
     frame.loading = 'eager';
-    frame.title = 'SEV storyboard. Opens directly on the selected scene page.';
+    frame.title = 'SEV storyboard scene viewer';
 
-    const loading = document.createElement('div');
-    loading.className = 'storyboard-page-loading';
-    loading.setAttribute('role', 'status');
-    loading.setAttribute('aria-live', 'polite');
-    frameWrap.appendChild(loading);
+    let loading = frameWrap.querySelector('.storyboard-page-loading');
+    if (!loading) {
+      loading = document.createElement('div');
+      loading.className = 'storyboard-page-loading';
+      loading.setAttribute('role', 'status');
+      loading.setAttribute('aria-live', 'polite');
+      frameWrap.appendChild(loading);
+    }
 
     if (fullPdfLink) fullPdfLink.href = STORYBOARD_FULL_URL;
     if (note) {
-      note.textContent = 'Select a scene and the viewer opens directly on its first storyboard page. Use Open selected page for a larger view.';
+      note.textContent = 'Each scene opens as its own storyboard file, so the correct scene appears immediately without downloading the full PDF.';
     }
 
-    let loadTimer = 0;
+    let currentSceneId = '';
+    let hideTimer = 0;
 
     function openExactScene(sceneId, options = {}) {
       const scene = storyboardScenePages[sceneId] || storyboardScenePages['1A'];
-      const page = scene.pages[0];
-      const exactUrl = directPdfUrl(sceneId, page);
+      if (currentSceneId === sceneId && frame.src.includes(scene.fileId)) return;
+      currentSceneId = sceneId;
 
       window.openPortalTab?.('storyboard');
 
@@ -157,18 +163,14 @@
 
       if (selectedTitle) selectedTitle.textContent = `Scene ${sceneId} · ${scene.title}`;
       if (selectedPage) selectedPage.textContent = pageLabel(scene.pages);
-      if (pageLink) pageLink.href = exactUrl;
+      if (pageLink) pageLink.href = sceneViewUrl(scene.fileId);
 
-      loading.textContent = `Opening scene ${sceneId} · page ${page}…`;
+      loading.textContent = `Opening scene ${sceneId}…`;
       loading.classList.add('visible');
-      window.clearTimeout(loadTimer);
+      window.clearTimeout(hideTimer);
 
-      frame.src = 'about:blank';
-      window.requestAnimationFrame(() => {
-        frame.src = exactUrl;
-      });
-
-      loadTimer = window.setTimeout(() => loading.classList.remove('visible'), 2200);
+      frame.src = scenePreviewUrl(scene.fileId);
+      hideTimer = window.setTimeout(() => loading.classList.remove('visible'), 2500);
 
       if (options.scroll !== false) {
         document.getElementById('storyboard-viewer-shell')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -176,7 +178,7 @@
     }
 
     frame.addEventListener('load', () => {
-      window.setTimeout(() => loading.classList.remove('visible'), 300);
+      window.setTimeout(() => loading.classList.remove('visible'), 200);
     });
 
     document.addEventListener('click', event => {
