@@ -87,6 +87,10 @@
     });
   }
 
+  const tasksScript = document.createElement('script');
+  tasksScript.src = 'production-tasks.js';
+  document.body.appendChild(tasksScript);
+
   const weatherScript = document.createElement('script');
   weatherScript.src = 'weather-faroe-main.js';
   weatherScript.defer = true;
