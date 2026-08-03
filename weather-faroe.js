@@ -29,5 +29,11 @@
   const weatherScript = document.createElement('script');
   weatherScript.src = 'weather-faroe-main.js';
   weatherScript.defer = true;
+  weatherScript.addEventListener('load', () => {
+    const sunScript = document.createElement('script');
+    sunScript.src = 'sun-times.js';
+    sunScript.defer = true;
+    document.body.appendChild(sunScript);
+  });
   document.body.appendChild(weatherScript);
 })();
