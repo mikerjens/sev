@@ -473,6 +473,7 @@
   FIXER.FO — SEV × SANSIR production portal · Kovboy Film / FIXER sp/f · Last updated from production brief
 </footer>
 
+<script src="weather-faroe.js"></script>
 <script>
 /* ---------- EDITABLE DATA ---------- */
 const schedule = [
@@ -831,8 +832,8 @@ document.getElementById('person-search').addEventListener('input', e => renderPe
 renderSchedule();
 renderPeople('');
 renderContacts();
-loadWeather();
-setInterval(loadWeather, WEATHER_REFRESH_MS);
+loadFaroeWeather();
+setInterval(loadFaroeWeather, WEATHER_REFRESH_MS);
 </script>
 
 </body>
