@@ -34,5 +34,5 @@
     });
   }
 
-  document.write('<script src="weather-faroe-core.js"><\\/script>');
+  document.write('<script src="weather-faroe-core.js"></scr' + 'ipt>');
 })();
