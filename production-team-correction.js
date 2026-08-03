@@ -1,6 +1,4 @@
 (() => {
-  const replaceBogi = value => String(value || '').replace(/\bBogi\b(?! Henriksen)/g, 'Bogi Henriksen');
-
   function addStyles() {
     if (document.getElementById('personal-task-entry-styles')) return;
 
@@ -30,20 +28,13 @@
       document.querySelector('nav.tabs button[data-tab="schedule"]')?.click();
     }
 
-    let attempts = 0;
-    const focusTimer = setInterval(() => {
-      const select = document.getElementById('task-person-filter');
-      attempts += 1;
-      if (select) {
-        clearInterval(focusTimer);
-        select.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        select.focus({ preventScroll: true });
-        select.classList.add('person-filter-highlight');
-        setTimeout(() => select.classList.remove('person-filter-highlight'), 3200);
-      } else if (attempts >= 20) {
-        clearInterval(focusTimer);
-      }
-    }, 100);
+    const select = document.getElementById('task-person-filter');
+    if (!select) return;
+
+    select.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    select.focus({ preventScroll: true });
+    select.classList.add('person-filter-highlight');
+    window.setTimeout(() => select.classList.remove('person-filter-highlight'), 3200);
   }
 
   window.focusPersonTaskSelector = focusPersonTaskSelector;
@@ -61,51 +52,49 @@
       select.setAttribute('aria-label', 'Vælg dit navn og se dine egne opgaver');
     }
 
-    if (!panel.querySelector('.start-here-box')) {
-      const box = document.createElement('div');
-      box.className = 'start-here-box';
-      box.innerHTML = `
-        <div class="start-here-badge">START HER</div>
-        <div>
-          <div class="start-here-title">Vælg dit navn og se præcis, hvad du skal gøre</div>
-          <div class="start-here-copy">Brug navnefeltet nedenfor. Derefter vises kun dine egne opgaver, deadlines og næste skridt.</div>
-        </div>
-        <button class="start-here-button" type="button">VÆLG MIT NAVN ↓</button>
-      `;
-      toolbar.parentNode.insertBefore(box, toolbar);
-      box.querySelector('.start-here-button')?.addEventListener('click', focusPersonTaskSelector);
-    }
+    if (panel.querySelector('.start-here-box')) return;
+
+    const box = document.createElement('div');
+    box.className = 'start-here-box';
+    box.innerHTML = `
+      <div class="start-here-badge">START HER</div>
+      <div>
+        <div class="start-here-title">Vælg dit navn og se præcis, hvad du skal gøre</div>
+        <div class="start-here-copy">Brug navnefeltet nedenfor. Derefter vises kun dine egne opgaver, deadlines og næste skridt.</div>
+      </div>
+      <button class="start-here-button" type="button">VÆLG MIT NAVN ↓</button>
+    `;
+    toolbar.parentNode.insertBefore(box, toolbar);
+    box.querySelector('.start-here-button')?.addEventListener('click', focusPersonTaskSelector);
   }
 
-  function applyCorrection() {
+  function applyCorrectionOnce() {
     addStyles();
 
-    document.querySelectorAll('#task-person-filter option').forEach(option => {
-      if (option.value === 'bogi') {
-        option.textContent = 'Bogi Henriksen · Kreativ direktør / SANSIR.fo';
-      }
-    });
+    const bogiOption = document.querySelector('#task-person-filter option[value="bogi"]');
+    if (bogiOption && bogiOption.textContent !== 'Bogi Henriksen · Kreativ direktør / SANSIR.fo') {
+      bogiOption.textContent = 'Bogi Henriksen · Kreativ direktør / SANSIR.fo';
+    }
 
     document.querySelectorAll('.crew-card').forEach(card => {
       const name = card.querySelector('.crew-card-name');
       const role = card.querySelector('.crew-card-role');
-      if (name && (name.textContent.trim() === 'Bogi' || name.textContent.trim() === 'Bogi Henriksen')) {
-        name.textContent = 'Bogi Henriksen';
-        if (role) role.textContent = 'Kreativ direktør / SANSIR.fo';
+      if (!name || !['Bogi', 'Bogi Henriksen'].includes(name.textContent.trim())) return;
+
+      if (name.textContent.trim() !== 'Bogi Henriksen') name.textContent = 'Bogi Henriksen';
+      if (role && role.textContent.trim() !== 'Kreativ direktør / SANSIR.fo') {
+        role.textContent = 'Kreativ direktør / SANSIR.fo';
       }
     });
 
     document.querySelectorAll('.bureau-note, .task-chip.owner, #plan-summary').forEach(element => {
-      if (!element.textContent.includes('Bogi')) return;
-      const updated = replaceBogi(element.innerHTML);
-      if (updated !== element.innerHTML) element.innerHTML = updated;
+      if (!element.textContent.includes('Bogi') || element.textContent.includes('Bogi Henriksen')) return;
+      element.innerHTML = element.innerHTML.replace(/\bBogi\b/g, 'Bogi Henriksen');
     });
 
     installStartHere();
   }
 
-  applyCorrection();
-
-  const observer = new MutationObserver(applyCorrection);
-  observer.observe(document.body, { childList: true, subtree: true });
+  applyCorrectionOnce();
+  window.setTimeout(applyCorrectionOnce, 250);
 })();
