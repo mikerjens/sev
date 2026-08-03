@@ -1,36 +1,8 @@
 (() => {
-  function openPersonalTasks() {
-    if (typeof window.focusPersonTaskSelector === 'function') {
-      window.focusPersonTaskSelector();
-      return;
-    }
-
-    if (typeof window.openPortalTab === 'function') {
-      window.openPortalTab('schedule');
-    } else {
-      document.querySelector('nav.tabs button[data-tab="schedule"]')?.click();
-    }
-
-    let attempts = 0;
-    const findSelector = setInterval(() => {
-      const select = document.getElementById('task-person-filter');
-      attempts += 1;
-      if (select) {
-        clearInterval(findSelector);
-        select.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        select.focus({ preventScroll: true });
-        select.classList.add('person-filter-highlight');
-        setTimeout(() => select.classList.remove('person-filter-highlight'), 3200);
-      } else if (attempts >= 20) {
-        clearInterval(findSelector);
-      }
-    }, 100);
-  }
-
   const statusBanner = document.querySelector('.status-banner');
   if (statusBanner) {
-    statusBanner.setAttribute('role', 'region');
-    statusBanner.setAttribute('aria-label', 'Production status and personal task access');
+    statusBanner.setAttribute('role', 'status');
+    statusBanner.setAttribute('aria-live', 'polite');
     statusBanner.style.background = 'rgba(74, 222, 128, 0.12)';
     statusBanner.style.borderColor = 'rgba(74, 222, 128, 0.48)';
     statusBanner.style.color = 'var(--text)';
@@ -40,25 +12,8 @@
     statusBanner.style.gap = '12px 14px';
     statusBanner.innerHTML = `
       <span class="pulse" aria-hidden="true" style="margin-top:7px"></span>
-      <div class="production-status-main">
-        <div><b>PRODUCTION STATUS:</b> Tasks have been assigned. Everyone can begin their work.</div>
-        <button id="open-person-tasks" type="button">CHOOSE YOUR NAME &amp; VIEW YOUR TASKS <span aria-hidden="true">→</span></button>
-      </div>
+      <div><b>PRODUCTION STATUS:</b> Tasks have been assigned. Everyone can begin their work.</div>
     `;
-
-    if (!document.getElementById('production-status-action-styles')) {
-      const actionStyles = document.createElement('style');
-      actionStyles.id = 'production-status-action-styles';
-      actionStyles.textContent = `
-        .production-status-main{min-width:0}
-        #open-person-tasks{margin-top:14px;padding:11px 15px;border:1px solid rgba(246,176,66,.82);border-radius:7px;background:rgba(246,176,66,.14);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.035em;cursor:pointer;box-shadow:0 0 0 0 rgba(246,176,66,.34);transition:background .18s ease,border-color .18s ease,transform .18s ease}
-        #open-person-tasks:hover,#open-person-tasks:focus-visible{background:rgba(246,176,66,.25);border-color:rgba(246,176,66,1);transform:translateY(-1px);outline:none}
-        @media(max-width:650px){#open-person-tasks{width:100%;text-align:left;line-height:1.35}}
-      `;
-      document.head.appendChild(actionStyles);
-    }
-
-    document.getElementById('open-person-tasks')?.addEventListener('click', openPersonalTasks);
 
     const countdown = document.createElement('div');
     countdown.setAttribute('role', 'timer');
@@ -114,8 +69,7 @@
     if (typeof window.openPortalTab === 'function') {
       window.openPortalTab('schedule');
     } else {
-      const scheduleButton = document.querySelector('nav.tabs button[data-tab="schedule"]');
-      scheduleButton?.click();
+      document.querySelector('nav.tabs button[data-tab="schedule"]')?.click();
     }
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
