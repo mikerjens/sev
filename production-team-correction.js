@@ -9,71 +9,38 @@
       #task-person-filter{border:2px solid rgba(246,176,66,.88)!important;font-size:15px;font-weight:700;cursor:pointer}
       #task-person-filter:focus{outline:none;box-shadow:0 0 0 4px rgba(246,176,66,.20)}
       #person-task-selector label{color:var(--signal);font-weight:800}
-      .storyboard-page-loading{
-        position:absolute;
-        z-index:3;
-        inset:0;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        padding:16px;
-        color:var(--text);
-        background:#080d10;
-        font-family:'IBM Plex Mono',monospace;
-        font-size:11px;
-        pointer-events:none;
-        opacity:0;
-        transition:opacity .15s ease;
-      }
+      .storyboard-page-loading{position:absolute;z-index:3;inset:0;display:flex;align-items:center;justify-content:center;padding:16px;color:var(--text);background:#080d10;font-family:'IBM Plex Mono',monospace;font-size:11px;pointer-events:none;opacity:0;transition:opacity .15s ease}
       .storyboard-page-loading.visible{opacity:1}
+      .storyboard-scene-card.filmed{border-color:#4ade80!important;background:rgba(74,222,128,.13)!important;box-shadow:inset 4px 0 0 #4ade80}
+      .storyboard-scene-card.filmed .storyboard-scene-number{color:#4ade80}
+      .storyboard-filmed-tag{display:inline-flex;margin-top:7px;padding:3px 7px;color:#071512;background:#4ade80;border:1px solid #4ade80;border-radius:100px;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:800;letter-spacing:.05em}
+      .storyboard-chip.filmed{color:#071512!important;background:#4ade80!important;border-color:#4ade80!important;font-weight:800}
+      .storyboard-selected-status{display:inline-flex;margin-top:6px;padding:3px 8px;color:#071512;background:#4ade80;border-radius:100px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:800;letter-spacing:.05em}
     `;
     document.head.appendChild(style);
   }
 
   function applyCorrectionOnce() {
     addStyles();
-
     const panel = document.getElementById('panel-schedule');
     const toolbar = panel?.querySelector('.plan-toolbar');
     const select = document.getElementById('task-person-filter');
     const label = toolbar?.querySelector('label[for="task-person-filter"]');
     const intro = panel?.querySelector('.section-head p');
-
-    if (toolbar) {
-      toolbar.id = 'person-task-selector';
-      toolbar.setAttribute('aria-label', 'Vælg dit navn og se dine personlige opgaver');
-    }
-
-    if (select) {
-      select.setAttribute('aria-label', 'Vælg dit navn og se dine egne opgaver');
-    }
-
-    if (label) {
-      label.textContent = 'VÆLG DIT NAVN – DINE OPGAVER VISES HER';
-    }
-
-    if (intro) {
-      intro.textContent = 'Vælg dit navn direkte i feltet nedenfor. Derefter vises kun dine egne opgaver, deadlines og næste skridt.';
-    }
-
+    if (toolbar) { toolbar.id = 'person-task-selector'; toolbar.setAttribute('aria-label', 'Vælg dit navn og se dine personlige opgaver'); }
+    if (select) select.setAttribute('aria-label', 'Vælg dit navn og se dine egne opgaver');
+    if (label) label.textContent = 'VÆLG DIT NAVN – DINE OPGAVER VISES HER';
+    if (intro) intro.textContent = 'Vælg dit navn direkte i feltet nedenfor. Derefter vises kun dine egne opgaver, deadlines og næste skridt.';
     panel?.querySelector('.start-here-box')?.remove();
-
     const bogiOption = document.querySelector('#task-person-filter option[value="bogi"]');
-    if (bogiOption && bogiOption.textContent !== 'Bogi Henriksen · Kreativ direktør / SANSIR.fo') {
-      bogiOption.textContent = 'Bogi Henriksen · Kreativ direktør / SANSIR.fo';
-    }
-
+    if (bogiOption && bogiOption.textContent !== 'Bogi Henriksen · Kreativ direktør / SANSIR.fo') bogiOption.textContent = 'Bogi Henriksen · Kreativ direktør / SANSIR.fo';
     document.querySelectorAll('.crew-card').forEach(card => {
       const name = card.querySelector('.crew-card-name');
       const role = card.querySelector('.crew-card-role');
       if (!name || !['Bogi', 'Bogi Henriksen'].includes(name.textContent.trim())) return;
-
-      if (name.textContent.trim() !== 'Bogi Henriksen') name.textContent = 'Bogi Henriksen';
-      if (role && role.textContent.trim() !== 'Kreativ direktør / SANSIR.fo') {
-        role.textContent = 'Kreativ direktør / SANSIR.fo';
-      }
+      name.textContent = 'Bogi Henriksen';
+      if (role) role.textContent = 'Kreativ direktør / SANSIR.fo';
     });
-
     document.querySelectorAll('.bureau-note, .task-chip.owner, #plan-summary').forEach(element => {
       if (!element.textContent.includes('Bogi') || element.textContent.includes('Bogi Henriksen')) return;
       element.innerHTML = element.innerHTML.replace(/\bBogi\b/g, 'Bogi Henriksen');
@@ -81,7 +48,6 @@
   }
 
   const STORYBOARD_FULL_URL = 'https://drive.google.com/file/d/1tb161Lvzr8Y5R7OdyTiWflT76jwbmgEN/view?usp=drive_link';
-
   const storyboardScenePages = {
     '1A': { pages: [4], title: 'Light switch and opening cue', fileId: '1ovbk0s0ilEDwXgYBLC_xOc9K2ASA5-Tc' },
     '2A': { pages: [5, 6, 7], title: 'Boy reading, archive photo and fishermen', fileId: '1DeEndiPZjuMQssY7wMDPft_aVkcSpecc' },
@@ -89,7 +55,7 @@
     '4A': { pages: [9], title: 'Children under the street light', fileId: '1Gq1q7SVP2nb9rLbY9vP-G-WJ2PzH8Rc8' },
     '5A': { pages: [10], title: 'Remote village at night', fileId: '1KcbJ5jLG3zexGvQNuolHWFRwaxiddeXD' },
     '6A': { pages: [11], title: 'Dam, turbine, Eiðisvatn and Eiðisverkið', fileId: '1eJ8mbTTA8laSlgsiIFmRyAXEj-f759yF' },
-    '7A': { pages: [12], title: 'Wind turbines', fileId: '1zADDC4ukAIhTU-X9Knv74pYKkn9Jdabq' },
+    '7A': { pages: [12], title: 'Vindmøller', fileId: '1zADDC4ukAIhTU-X9Knv74pYKkn9Jdabq', filmed: true },
     '8A': { pages: [13], title: 'Drone rises above the islands', fileId: '1YF5G31PfM3w3sHK8w9zxeRgK1_E-w2Ni' },
     '9A': { pages: [14, 15, 16], title: 'Mother and boy, electric car and heat pump', fileId: '1d7LuyZiWh2tjXYX8SnE0clGwTEmiTMNX' },
     '10A': { pages: [17], title: 'Drying clothes', fileId: '13Ovu02YU1pO4P3RhqEt9sEAPMQb97kwG' },
@@ -103,18 +69,34 @@
     '18A': { pages: [26], title: 'Animated SEV logo', fileId: '1Zi20Ir9_80UgF4BEpaRPMnuVuFikQPkA' }
   };
 
-  function pageLabel(pages) {
-    return pages.length === 1
-      ? `PDF page ${pages[0]}`
-      : `PDF pages ${pages[0]}–${pages[pages.length - 1]}`;
+  function pageLabel(pages) { return pages.length === 1 ? `PDF page ${pages[0]}` : `PDF pages ${pages[0]}–${pages[pages.length - 1]}`; }
+  function scenePreviewUrl(fileId) { return `https://drive.google.com/file/d/${fileId}/preview`; }
+  function sceneViewUrl(fileId) { return `https://drive.google.com/file/d/${fileId}/view?usp=drive_link`; }
+
+  function markFilmedScenes() {
+    document.querySelectorAll('[data-storyboard-scene="7A"]').forEach(element => {
+      element.classList.add('filmed');
+      element.setAttribute('aria-label', 'Scene 7A. Filmet.');
+      if (element.classList.contains('storyboard-chip')) {
+        element.textContent = '✓ 7A · FILMET';
+      } else if (element.classList.contains('storyboard-scene-card') && !element.querySelector('.storyboard-filmed-tag')) {
+        const tag = document.createElement('span');
+        tag.className = 'storyboard-filmed-tag';
+        tag.textContent = '✓ FILMET';
+        element.appendChild(tag);
+      }
+    });
   }
 
-  function scenePreviewUrl(fileId) {
-    return `https://drive.google.com/file/d/${fileId}/preview`;
-  }
-
-  function sceneViewUrl(fileId) {
-    return `https://drive.google.com/file/d/${fileId}/view?usp=drive_link`;
+  function setSelectedFilmedStatus(scene) {
+    const selected = document.querySelector('.storyboard-selected-scene');
+    if (!selected) return;
+    selected.querySelector('.storyboard-selected-status')?.remove();
+    if (!scene.filmed) return;
+    const status = document.createElement('span');
+    status.className = 'storyboard-selected-status';
+    status.textContent = '✓ SCENEN ER FILMET';
+    selected.appendChild(status);
   }
 
   function installExactStoryboardNavigation() {
@@ -126,13 +108,10 @@
     const pageLink = document.getElementById('storyboard-page-link');
     const fullPdfLink = panel?.querySelector('.storyboard-action.primary');
     const note = panel?.querySelector('.storyboard-note');
-
-    if (!panel || !frame || !frameWrap || panel.dataset.exactPageNavigation === 'scene-files') return;
+    if (!panel || !frame || !frameWrap || panel.dataset.exactPageNavigation === 'scene-files') { markFilmedScenes(); return; }
     panel.dataset.exactPageNavigation = 'scene-files';
-
     frame.loading = 'eager';
     frame.title = 'SEV storyboard scene viewer';
-
     let loading = frameWrap.querySelector('.storyboard-page-loading');
     if (!loading) {
       loading = document.createElement('div');
@@ -141,67 +120,46 @@
       loading.setAttribute('aria-live', 'polite');
       frameWrap.appendChild(loading);
     }
-
     if (fullPdfLink) fullPdfLink.href = STORYBOARD_FULL_URL;
-    if (note) {
-      note.textContent = 'Each scene opens as its own storyboard file, so the correct scene appears immediately without downloading the full PDF.';
-    }
-
+    if (note) note.textContent = 'Hver scene åbner som sin egen storyboardfil, så den korrekte scene vises med det samme.';
     let currentSceneId = '';
     let hideTimer = 0;
-
     function openExactScene(sceneId, options = {}) {
       const scene = storyboardScenePages[sceneId] || storyboardScenePages['1A'];
-      if (currentSceneId === sceneId && frame.src.includes(scene.fileId)) return;
+      if (currentSceneId === sceneId && frame.src.includes(scene.fileId)) { setSelectedFilmedStatus(scene); return; }
       currentSceneId = sceneId;
-
       window.openPortalTab?.('storyboard');
-
-      panel.querySelectorAll('.storyboard-scene-card').forEach(card => {
-        card.classList.toggle('active', card.dataset.storyboardScene === sceneId);
-      });
-
-      if (selectedTitle) selectedTitle.textContent = `Scene ${sceneId} · ${scene.title}`;
+      panel.querySelectorAll('.storyboard-scene-card').forEach(card => card.classList.toggle('active', card.dataset.storyboardScene === sceneId));
+      if (selectedTitle) selectedTitle.textContent = `Scene ${sceneId} · ${scene.title}${scene.filmed ? ' · FILMET' : ''}`;
       if (selectedPage) selectedPage.textContent = pageLabel(scene.pages);
       if (pageLink) pageLink.href = sceneViewUrl(scene.fileId);
-
-      loading.textContent = `Opening scene ${sceneId}…`;
+      setSelectedFilmedStatus(scene);
+      loading.textContent = `Åbner scene ${sceneId}…`;
       loading.classList.add('visible');
       window.clearTimeout(hideTimer);
-
       frame.src = scenePreviewUrl(scene.fileId);
       hideTimer = window.setTimeout(() => loading.classList.remove('visible'), 2500);
-
-      if (options.scroll !== false) {
-        document.getElementById('storyboard-viewer-shell')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      if (options.scroll !== false) document.getElementById('storyboard-viewer-shell')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-
-    frame.addEventListener('load', () => {
-      window.setTimeout(() => loading.classList.remove('visible'), 200);
-    });
-
+    frame.addEventListener('load', () => window.setTimeout(() => loading.classList.remove('visible'), 200));
     document.addEventListener('click', event => {
       const sceneButton = event.target.closest('[data-storyboard-scene]');
       if (!sceneButton) return;
-
       const sceneId = sceneButton.dataset.storyboardScene;
       if (!storyboardScenePages[sceneId]) return;
-
       event.preventDefault();
       event.stopPropagation();
       event.stopImmediatePropagation();
       openExactScene(sceneId);
     }, true);
-
     window.openStoryboardScene = openExactScene;
+    markFilmedScenes();
     openExactScene('1A', { scroll: false });
   }
 
   applyCorrectionOnce();
   installExactStoryboardNavigation();
-  window.setTimeout(() => {
-    applyCorrectionOnce();
-    installExactStoryboardNavigation();
-  }, 250);
+  markFilmedScenes();
+  window.setTimeout(() => { applyCorrectionOnce(); installExactStoryboardNavigation(); markFilmedScenes(); }, 250);
+  window.setTimeout(markFilmedScenes, 1000);
 })();
