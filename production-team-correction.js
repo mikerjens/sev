@@ -28,8 +28,7 @@
       name: 'Bogi Henriksen',
       role: 'Kreativ direktør · SANSIR',
       email: 'bogi@sansir.fo',
-      phone: '+298 355355',
-      phoneLabel: 'Sansirs hovednummer'
+      phone: '+298 299361'
     }
   ];
 
