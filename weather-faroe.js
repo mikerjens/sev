@@ -89,6 +89,11 @@
 
   const tasksScript = document.createElement('script');
   tasksScript.src = 'production-tasks.js';
+  tasksScript.addEventListener('load', () => {
+    const correctionScript = document.createElement('script');
+    correctionScript.src = 'production-team-correction.js';
+    document.body.appendChild(correctionScript);
+  });
   document.body.appendChild(tasksScript);
 
   const weatherScript = document.createElement('script');
