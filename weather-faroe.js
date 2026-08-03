@@ -8,7 +8,7 @@
     statusBanner.style.color = 'var(--text)';
     statusBanner.innerHTML = `
       <span class="pulse"></span>
-      <span><b>VIGTIG STATUS:</b> Film crew afventer storyboard fra BUREAU</span>
+      <span><b>IMPORTANT STATUS:</b> Film crew is awaiting the storyboard from BUREAU</span>
     `;
   }
 
