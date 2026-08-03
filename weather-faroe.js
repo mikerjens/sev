@@ -10,6 +10,54 @@
       <span class="pulse"></span>
       <span><b>IMPORTANT STATUS:</b> Film crew is awaiting the storyboard from BUREAU</span>
     `;
+
+    const countdown = document.createElement('div');
+    countdown.setAttribute('role', 'timer');
+    countdown.setAttribute('aria-label', 'Countdown to the end of the final filming day');
+    countdown.style.marginTop = '12px';
+    countdown.style.paddingTop = '12px';
+    countdown.style.borderTop = '1px solid rgba(246, 176, 66, 0.35)';
+    countdown.style.display = 'flex';
+    countdown.style.flexWrap = 'wrap';
+    countdown.style.alignItems = 'baseline';
+    countdown.style.gap = '8px';
+    countdown.style.fontVariantNumeric = 'tabular-nums';
+
+    const countdownLabel = document.createElement('span');
+    countdownLabel.textContent = 'FINAL FILMING DAY · 23 AUGUST 2026';
+    countdownLabel.style.width = '100%';
+    countdownLabel.style.fontSize = '0.78rem';
+    countdownLabel.style.fontWeight = '700';
+    countdownLabel.style.letterSpacing = '0.08em';
+    countdownLabel.style.opacity = '0.78';
+
+    const countdownValue = document.createElement('strong');
+    countdownValue.style.fontSize = 'clamp(1.05rem, 4.5vw, 1.55rem)';
+    countdownValue.style.lineHeight = '1.2';
+
+    countdown.append(countdownLabel, countdownValue);
+    statusBanner.appendChild(countdown);
+
+    const deadline = new Date('2026-08-24T00:00:00+01:00').getTime();
+
+    function updateCountdown() {
+      const remaining = Math.max(0, deadline - Date.now());
+      const totalSeconds = Math.floor(remaining / 1000);
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      if (remaining === 0) {
+        countdownValue.textContent = 'FILMING PERIOD COMPLETED';
+        return;
+      }
+
+      countdownValue.textContent = `${days}d ${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}m ${String(seconds).padStart(2, '0')}s`;
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
   }
 
   function goHomeFromTitle() {
