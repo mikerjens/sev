@@ -64,6 +64,7 @@
 
   function applyCorrectionOnce() {
     addStyles();
+    document.querySelector('.meta-line')?.remove();
     unifyCrewSection();
     const panel = document.getElementById('panel-schedule');
     const toolbar = panel?.querySelector('.plan-toolbar');
