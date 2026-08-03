@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEV × SANSIR — Production Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E1A20;
+    --bg-elevated:#142832;
+    --bg-elevated-2:#1B323D;
+    --current:#4DD9C0;
+    --current-dim:#2C6E63;
+    --signal:#F6B042;
+    --text:#EAF3F1;
+    --text-muted:#8FA8AC;
+    --border:rgba(234,243,241,0.09);
+    --border-strong:rgba(234,243,241,0.16);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{font-family:'Space Grotesk', sans-serif; letter-spacing:-0.01em;}
+  .mono{font-family:'IBM Plex Mono', monospace;}
+
+  /* ambient current line background */
+  .current-field{
+    position:fixed; inset:0; z-index:0; pointer-events:none; opacity:0.5;
+  }
+
+  header.top{
+    position:relative; z-index:1;
+    padding:28px 32px 0;
+    max-width:1040px; margin:0 auto;
+  }
+  .brand-row{
+    display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:12px;
+    padding-bottom:18px;
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px; letter-spacing:0.06em; text-transform:uppercase;
+    color:var(--text-muted);
+  }
+  .brand b{color:var(--text); font-weight:500;}
+  .brand .dot{width:6px; height:6px; border-radius:50%; background:var(--current); box-shadow:0 0 8px var(--current);}
+  .meta-line{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px; color:var(--text-muted);
+  }
+
+  .hero{
+    padding:8px 0 28px;
+    border-bottom:1px solid var(--border);
+  }
+  .hero h1{
+    font-size:clamp(30px, 4.4vw, 46px);
+    font-weight:700;
+    line-height:1.08;
+    max-width:640px;
+  }
+  .hero h1 span{color:var(--current);}
+  .hero-sub{
+    margin-top:12px; color:var(--text-muted); font-size:15px; max-width:520px;
+  }
+
+  .wave-wrap{ margin:20px 0 4px; height:52px; }
+  .wave-wrap svg{width:100%; height:100%; display:block;}
+  .wave-path{
+    fill:none; stroke:var(--current); stroke-width:2;
+    stroke-dasharray: 6 10;
+    animation: flow 2.2s linear infinite;
+    opacity:0.9;
+  }
+  .wave-path.base{ stroke:var(--border-strong); stroke-dasharray:none; opacity:1; stroke-width:1;}
+  @keyframes flow{ to{ stroke-dashoffset:-64; } }
+  @media (prefers-reduced-motion: reduce){
+    .wave-path{ animation:none; }
+  }
+
+  .status-banner{
+    display:flex; align-items:center; gap:10px;
+    margin:22px 0 0;
+    padding:12px 16px;
+    background:var(--bg-elevated);
+    border:1px solid var(--border-strong);
+    border-radius:8px;
+    font-size:14px;
+  }
+  .status-banner .pulse{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--signal);
+    box-shadow:0 0 0 0 rgba(246,176,66,0.6);
+    animation:pulse 1.8s ease-out infinite;
+    flex-shrink:0;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(246,176,66,0.55);}
+    70%{box-shadow:0 0 0 9px rgba(246,176,66,0);}
+    100%{box-shadow:0 0 0 0 rgba(246,176,66,0);}
+  }
+
+  nav.tabs{
+    display:flex; gap:4px;
+    margin:26px auto 0; padding:0 32px;
+    max-width:1040px;
+    border-bottom:1px solid var(--border);
+  }
+  nav.tabs button{
+    background:none; border:none; color:var(--text-muted);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px; letter-spacing:0.03em;
+    padding:12px 6px; margin-right:22px;
+    cursor:pointer; position:relative; top:1px;
+    border-bottom:2px solid transparent;
+    transition:color .15s ease;
+  }
+  nav.tabs button:hover{ color:var(--text); }
+  nav.tabs button.active{ color:var(--current); border-bottom-color:var(--current); }
+
+  main{
+    position:relative; z-index:1;
+    max-width:1040px; margin:0 auto; padding:36px 32px 80px;
+  }
+  section.panel{ display:none; }
+  section.panel.active{ display:block; }
+
+  .section-head{ margin-bottom:22px; }
+  .section-head h2{ font-size:21px; font-weight:600; }
+  .section-head p{ color:var(--text-muted); font-size:14px; margin-top:6px; max-width:560px; }
+
+  .day-card{
+    border:1px solid var(--border);
+    border-left:2px solid var(--current-dim);
+    border-radius:8px;
+    padding:18px 20px;
+    margin-bottom:14px;
+    background:var(--bg-elevated);
+  }
+  .day-card.today{ border-left-color:var(--signal); }
+  .day-head{
+    display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:8px;
+    margin-bottom:10px;
+  }
+  .day-date{ font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--current); }
+  .day-title{ font-weight:600; font-size:15.5px; }
+  .day-tag{
+    font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.05em;
+    color:var(--signal); border:1px solid rgba(246,176,66,0.35);
+    padding:2px 8px; border-radius:100px; text-transform:uppercase;
+  }
+  .day-body{ color:var(--text-muted); font-size:14px; }
+  .day-body .field{ margin-top:4px; }
+  .day-body .field b{ color:var(--text); font-weight:500; }
+
+  .add-note{
+    border:1px dashed var(--border-strong);
+    border-radius:8px; padding:16px 20px;
+    color:var(--text-muted); font-size:13.5px;
+    margin-top:6px;
+  }
+
+  .search-row{ margin-bottom:20px; }
+  .search-row input{
+    width:100%; max-width:340px;
+    background:var(--bg-elevated); border:1px solid var(--border-strong);
+    color:var(--text); font-family:'Inter', sans-serif; font-size:14px;
+    padding:10px 14px; border-radius:7px; outline:none;
+  }
+  .search-row input:focus{ border-color:var(--current); }
+  .search-row input::placeholder{ color:var(--text-muted); }
+
+  .group-label{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.06em;
+    text-transform:uppercase; color:var(--text-muted);
+    margin:26px 0 12px; padding-top:14px; border-top:1px solid var(--border);
+  }
+  .group-label:first-of-type{ border-top:none; padding-top:0; margin-top:0; }
+
+  .person-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(230px,1fr)); gap:10px; }
+  .person{
+    border:1px solid var(--border); border-radius:8px;
+    padding:13px 15px; background:var(--bg-elevated);
+  }
+  .person .name{ font-weight:600; font-size:14.5px; }
+  .person .role{ color:var(--current); font-size:12.5px; margin-top:2px; }
+  .person .contact{ color:var(--text-muted); font-size:12.5px; margin-top:6px; font-family:'IBM Plex Mono', monospace; }
+  .no-match{ color:var(--text-muted); font-size:14px; padding:20px 0; }
+
+  .contact-card{
+    border:1px solid var(--border); border-radius:8px;
+    padding:18px 20px; background:var(--bg-elevated);
+    margin-bottom:12px;
+  }
+  .contact-card .org{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; color:var(--text-muted); letter-spacing:0.05em; text-transform:uppercase; }
+  .contact-card .name{ font-weight:600; font-size:16px; margin-top:4px; }
+  .contact-card .role{ color:var(--text-muted); font-size:13.5px; margin-top:2px; }
+  .contact-card .links{ margin-top:10px; font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--current); }
+  .contact-card .links a{ color:var(--current); text-decoration:none; }
+  .contact-card .links a:hover{ text-decoration:underline; }
+
+  footer{
+    position:relative; z-index:1;
+    border-top:1px solid var(--border);
+    padding:22px 32px 40px; max-width:1040px; margin:0 auto;
+    color:var(--text-muted); font-size:12.5px; font-family:'IBM Plex Mono', monospace;
+  }
+
+  @media (max-width:600px){
+    header.top, main, nav.tabs, footer{ padding-left:18px; padding-right:18px; }
+    nav.tabs button{ margin-right:14px; }
+  }
+</style>
+</head>
+<body>
+
+<svg class="current-field" preserveAspectRatio="none" viewBox="0 0 1000 600"></svg>
+
+<header class="top">
+  <div class="brand-row">
+    <div class="brand"><span class="dot"></span> FIXER.FO <span style="opacity:.4">·</span> Production Portal</div>
+    <div class="meta-line">Agency: SANSIR &nbsp;·&nbsp; Client: SEV</div>
+  </div>
+
+  <div class="hero">
+    <h1>SEV <span>×</span> SANSIR</h1>
+    <p class="hero-sub">Commercial production for Elfelagið SEV, produced by Kovboy Film with FIXER sp/f as local production partner.</p>
+
+    <div class="wave-wrap">
+      <svg viewBox="0 0 800 52" preserveAspectRatio="none">
+        <path class="wave-path base" d="M0,26 L120,26 C150,26 150,8 180,8 C210,8 210,44 240,44 C270,44 270,26 300,26 L800,26"></path>
+        <path class="wave-path" d="M0,26 L120,26 C150,26 150,8 180,8 C210,8 210,44 240,44 C270,44 270,26 300,26 L800,26"></path>
+      </svg>
+    </div>
+
+    <div class="status-banner">
+      <span class="pulse"></span>
+      <span><b>Shoot begins today</b> — 3 August 2026. Portal will update day by day as scenes are filmed.</span>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="active" data-tab="schedule">Schedule</button>
+  <button data-tab="crew">Crew &amp; Contributors</button>
+  <button data-tab="contacts">Contacts</button>
+</nav>
+
+<main>
+
+  <section class="panel active" id="panel-schedule">
+    <div class="section-head">
+      <h2>What's being filmed</h2>
+      <p>Day by day — locations, scenes and call times. Updated as the shoot progresses.</p>
+    </div>
+
+    <div id="schedule-list"></div>
+
+    <div class="add-note">
+      Edit the <span class="mono">schedule</span> array in the code to add shoot days, locations and scene notes as they're confirmed.
+    </div>
+  </section>
+
+  <section class="panel" id="panel-crew">
+    <div class="section-head">
+      <h2>Everyone on this production</h2>
+      <p>Agency, crew and on-camera contributors. Search by name to jump straight to someone.</p>
+    </div>
+
+    <div class="search-row">
+      <input type="text" id="person-search" placeholder="Search by name…">
+    </div>
+
+    <div id="person-groups"></div>
+    <div class="no-match" id="no-match" style="display:none;">No one matches that search.</div>
+  </section>
+
+  <section class="panel" id="panel-contacts">
+    <div class="section-head">
+      <h2>Key contacts</h2>
+      <p>Who to call for what.</p>
+    </div>
+    <div id="contact-list"></div>
+  </section>
+
+</main>
+
+<footer>
+  FIXER.FO — SEV × SANSIR production portal · Kovboy Film / FIXER sp/f · Last updated from production brief
+</footer>
+
+<script>
+/* ---------- EDITABLE DATA ---------- */
+const schedule = [
+  {
+    date: "3 August 2026",
+    tag: "Day 1",
+    title: "Shoot day 1",
+    location: "TBC",
+    callTime: "TBC",
+    notes: "Add scenes, location and call sheet details here as they're confirmed.",
+    isToday: true
+  }
+  // Add more days here as the shoot schedule is confirmed:
+  // { date: "4 August 2026", tag: "Day 2", title: "…", location: "…", callTime: "…", notes: "…" }
+];
+
+const people = {
+  "SANSIR — Agency": [
+    { name: "Add SANSIR contact", role: "Agency lead", contact: "" }
+  ],
+  "Kovboy Film / FIXER sp/f — Production": [
+    { name: "Michael Koba", role: "Producer", contact: "" },
+    { name: "Thomas Koba", role: "Director", contact: "" }
+  ],
+  "On-camera contributors": [
+    { name: "Add contributors", role: "TBC", contact: "" }
+  ]
+};
+
+const contacts = [
+  { org: "Client", name: "SEV", role: "Elfelagið SEV", links: "" },
+  { org: "Agency", name: "SANSIR", role: "Creative agency", links: "" },
+  { org: "Production", name: "Kovboy Film", role: "Michael Koba, Producer", links: "" },
+  { org: "Local partner", name: "FIXER sp/f", role: "Local production & fixer services", links: "" }
+];
+/* ----------------------------------- */
+
+function renderSchedule(){
+  const el = document.getElementById('schedule-list');
+  el.innerHTML = schedule.map(d => `
+    <div class="day-card ${d.isToday ? 'today' : ''}">
+      <div class="day-head">
+        <div>
+          <div class="day-date">${d.date}</div>
+          <div class="day-title">${d.title}</div>
+        </div>
+        <div class="day-tag">${d.isToday ? 'Today' : d.tag}</div>
+      </div>
+      <div class="day-body">
+        <div class="field"><b>Location:</b> ${d.location}</div>
+        <div class="field"><b>Call time:</b> ${d.callTime}</div>
+        <div class="field" style="margin-top:8px;">${d.notes}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderPeople(filter){
+  const el = document.getElementById('person-groups');
+  const noMatch = document.getElementById('no-match');
+  const q = (filter || '').trim().toLowerCase();
+  let anyVisible = false;
+  let html = '';
+
+  for (const group in people){
+    const matches = people[group].filter(p => p.name.toLowerCase().includes(q));
+    if (matches.length === 0) continue;
+    anyVisible = true;
+    html += `<div class="group-label">${group}</div><div class="person-grid">`;
+    html += matches.map(p => `
+      <div class="person">
+        <div class="name">${p.name}</div>
+        <div class="role">${p.role}</div>
+        ${p.contact ? `<div class="contact">${p.contact}</div>` : ''}
+      </div>
+    `).join('');
+    html += `</div>`;
+  }
+
+  el.innerHTML = html;
+  noMatch.style.display = anyVisible ? 'none' : 'block';
+}
+
+function renderContacts(){
+  const el = document.getElementById('contact-list');
+  el.innerHTML = contacts.map(c => `
+    <div class="contact-card">
+      <div class="org">${c.org}</div>
+      <div class="name">${c.name}</div>
+      <div class="role">${c.role}</div>
+      ${c.links ? `<div class="links">${c.links}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+document.querySelectorAll('nav.tabs button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+document.getElementById('person-search').addEventListener('input', e => renderPeople(e.target.value));
+
+renderSchedule();
+renderPeople('');
+renderContacts();
+</script>
+
+</body>
+</html>
