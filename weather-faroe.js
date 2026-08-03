@@ -3,12 +3,12 @@
   if (statusBanner) {
     statusBanner.setAttribute('role', 'status');
     statusBanner.setAttribute('aria-live', 'polite');
-    statusBanner.style.background = 'rgba(246, 176, 66, 0.14)';
-    statusBanner.style.borderColor = 'rgba(246, 176, 66, 0.55)';
+    statusBanner.style.background = 'rgba(74, 222, 128, 0.12)';
+    statusBanner.style.borderColor = 'rgba(74, 222, 128, 0.48)';
     statusBanner.style.color = 'var(--text)';
     statusBanner.innerHTML = `
       <span class="pulse"></span>
-      <span><b>IMPORTANT STATUS:</b> Film crew is awaiting the storyboard from BUREAU</span>
+      <span><b>PRODUCTION STATUS:</b> Storyboard received. Production plan in progress.</span>
     `;
 
     const countdown = document.createElement('div');
@@ -16,7 +16,7 @@
     countdown.setAttribute('aria-label', 'Countdown to the end of the final filming day');
     countdown.style.marginTop = '12px';
     countdown.style.paddingTop = '12px';
-    countdown.style.borderTop = '1px solid rgba(246, 176, 66, 0.35)';
+    countdown.style.borderTop = '1px solid rgba(74, 222, 128, 0.30)';
     countdown.style.display = 'flex';
     countdown.style.flexWrap = 'wrap';
     countdown.style.alignItems = 'baseline';
