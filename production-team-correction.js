@@ -1,4 +1,12 @@
 (() => {
+  const productionPeople = [
+    { name: 'Michael Koba', role: 'Film producer · KOVBOY FILM / FIXER.FO' },
+    { name: 'Thomas Koba', role: 'Director and filmmaker · KOVBOY FILM' },
+    { name: 'Elisabeth', role: 'Agency · SANSIR' },
+    { name: 'Tór Verland Johannesen', role: 'Agency · SANSIR' },
+    { name: 'Bogi Henriksen', role: 'Creative director · SANSIR.fo' }
+  ];
+
   function addStyles() {
     if (document.getElementById('personal-task-selector-styles')) return;
 
@@ -20,8 +28,43 @@
     document.head.appendChild(style);
   }
 
+  function unifyCrewSection() {
+    const contactsTab = document.querySelector('nav.tabs button[data-tab="contacts"]');
+    const contactsPanel = document.getElementById('panel-contacts');
+    const contactsWasActive = contactsTab?.classList.contains('active') || contactsPanel?.classList.contains('active');
+
+    contactsTab?.remove();
+    contactsPanel?.remove();
+
+    const crewTab = document.querySelector('nav.tabs button[data-tab="crew"]');
+    if (crewTab) {
+      crewTab.textContent = 'Crew';
+      crewTab.setAttribute('aria-label', 'Crew');
+    }
+
+    const crewPanel = document.getElementById('panel-crew');
+    if (crewPanel) {
+      crewPanel.innerHTML = `
+        <div class="section-head">
+          <h2>Crew</h2>
+          <p>Everyone currently involved in this production is listed here.</p>
+        </div>
+        <div class="crew-card-grid">
+          ${productionPeople.map(person => `
+            <div class="crew-card">
+              <div class="crew-card-name">${person.name}</div>
+              <div class="crew-card-role">${person.role}</div>
+            </div>
+          `).join('')}
+        </div>`;
+    }
+
+    if (contactsWasActive) window.openPortalTab?.('crew');
+  }
+
   function applyCorrectionOnce() {
     addStyles();
+    unifyCrewSection();
     const panel = document.getElementById('panel-schedule');
     const toolbar = panel?.querySelector('.plan-toolbar');
     const select = document.getElementById('task-person-filter');
@@ -39,7 +82,7 @@
       const role = card.querySelector('.crew-card-role');
       if (!name || !['Bogi', 'Bogi Henriksen'].includes(name.textContent.trim())) return;
       name.textContent = 'Bogi Henriksen';
-      if (role) role.textContent = 'Kreativ direktør / SANSIR.fo';
+      if (role) role.textContent = 'Creative director · SANSIR.fo';
     });
     document.querySelectorAll('.bureau-note, .task-chip.owner, #plan-summary').forEach(element => {
       if (!element.textContent.includes('Bogi') || element.textContent.includes('Bogi Henriksen')) return;
