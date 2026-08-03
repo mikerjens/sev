@@ -1,4 +1,6 @@
 (() => {
+  document.querySelector('.hero-sub')?.remove();
+
   const translations = new Map([
     ['Production Portal', 'Produktionsportal'],
     ['Agency: SANSIR · Client: SEV', 'Bureau: SANSIR · Kunde: SEV'],
