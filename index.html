@@ -18,6 +18,9 @@
     --text-muted:#8FA8AC;
     --border:rgba(234,243,241,0.09);
     --border-strong:rgba(234,243,241,0.16);
+    --weather-good:#4DD9A7;
+    --weather-caution:#F6B042;
+    --weather-bad:#F16E6E;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   body{
@@ -30,7 +33,6 @@
   h1,h2,h3{font-family:'Space Grotesk', sans-serif; letter-spacing:-0.01em;}
   .mono{font-family:'IBM Plex Mono', monospace;}
 
-  /* ambient current line background */
   .current-field{
     position:fixed; inset:0; z-index:0; pointer-events:none; opacity:0.5;
   }
@@ -77,15 +79,13 @@
   .wave-wrap svg{width:100%; height:100%; display:block;}
   .wave-path{
     fill:none; stroke:var(--current); stroke-width:2;
-    stroke-dasharray: 6 10;
-    animation: flow 2.2s linear infinite;
+    stroke-dasharray:6 10;
+    animation:flow 2.2s linear infinite;
     opacity:0.9;
   }
-  .wave-path.base{ stroke:var(--border-strong); stroke-dasharray:none; opacity:1; stroke-width:1;}
-  @keyframes flow{ to{ stroke-dashoffset:-64; } }
-  @media (prefers-reduced-motion: reduce){
-    .wave-path{ animation:none; }
-  }
+  .wave-path.base{stroke:var(--border-strong); stroke-dasharray:none; opacity:1; stroke-width:1;}
+  @keyframes flow{to{stroke-dashoffset:-64;}}
+  @media (prefers-reduced-motion: reduce){.wave-path{animation:none;}}
 
   .status-banner{
     display:flex; align-items:center; gap:10px;
@@ -110,10 +110,13 @@
   }
 
   nav.tabs{
+    position:relative;
+    z-index:1;
     display:flex; gap:4px;
     margin:26px auto 0; padding:0 32px;
     max-width:1040px;
     border-bottom:1px solid var(--border);
+    overflow-x:auto;
   }
   nav.tabs button{
     background:none; border:none; color:var(--text-muted);
@@ -123,20 +126,156 @@
     cursor:pointer; position:relative; top:1px;
     border-bottom:2px solid transparent;
     transition:color .15s ease;
+    white-space:nowrap;
   }
-  nav.tabs button:hover{ color:var(--text); }
-  nav.tabs button.active{ color:var(--current); border-bottom-color:var(--current); }
+  nav.tabs button:hover{color:var(--text);}
+  nav.tabs button.active{color:var(--current); border-bottom-color:var(--current);}
+
+  .weather-shell{
+    position:relative;
+    z-index:1;
+    max-width:1040px;
+    margin:0 auto;
+    padding:28px 32px 4px;
+  }
+  .weather-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:20px;
+    margin-bottom:14px;
+  }
+  .weather-header h2{font-size:21px; font-weight:600;}
+  .weather-header p{color:var(--text-muted); font-size:13.5px; margin-top:5px;}
+  .weather-updated{
+    color:var(--text-muted);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    white-space:nowrap;
+  }
+  .weather-legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:14px;
+  }
+  .legend-item{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    color:var(--text-muted);
+    font-size:12px;
+  }
+  .legend-dot{width:8px; height:8px; border-radius:50%;}
+  .legend-dot.good{background:var(--weather-good);}
+  .legend-dot.caution{background:var(--weather-caution);}
+  .legend-dot.bad{background:var(--weather-bad);}
+  .weather-grid{
+    display:grid;
+    grid-template-columns:repeat(7, minmax(126px, 1fr));
+    gap:9px;
+  }
+  .weather-card{
+    position:relative;
+    min-height:226px;
+    background:var(--bg-elevated);
+    border:1px solid var(--border);
+    border-top:3px solid var(--border-strong);
+    border-radius:9px;
+    padding:13px 12px 12px;
+    overflow:hidden;
+  }
+  .weather-card.good{border-top-color:var(--weather-good);}
+  .weather-card.caution{border-top-color:var(--weather-caution);}
+  .weather-card.bad{border-top-color:var(--weather-bad);}
+  .weather-card.today{box-shadow:inset 0 0 0 1px rgba(77,217,192,0.22);}
+  .weather-day{
+    color:var(--text);
+    font-weight:600;
+    font-size:14px;
+  }
+  .weather-date{
+    color:var(--text-muted);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    margin-top:1px;
+  }
+  .weather-icon{
+    font-size:26px;
+    line-height:1;
+    margin:13px 0 8px;
+  }
+  .weather-temp{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:18px;
+    font-weight:600;
+  }
+  .weather-condition{
+    min-height:35px;
+    color:var(--text-muted);
+    font-size:11.5px;
+    margin-top:2px;
+  }
+  .weather-stats{
+    border-top:1px solid var(--border);
+    margin-top:10px;
+    padding-top:9px;
+    display:grid;
+    gap:4px;
+    color:var(--text-muted);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+  }
+  .weather-stats b{color:var(--text); font-weight:500;}
+  .film-status{
+    display:block;
+    margin-top:10px;
+    padding:6px 7px;
+    border-radius:6px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:9.5px;
+    font-weight:600;
+    letter-spacing:0.035em;
+    text-transform:uppercase;
+    line-height:1.3;
+  }
+  .film-status.good{color:var(--weather-good); background:rgba(77,217,167,0.10);}
+  .film-status.caution{color:var(--weather-caution); background:rgba(246,176,66,0.10);}
+  .film-status.bad{color:var(--weather-bad); background:rgba(241,110,110,0.10);}
+  .film-window{
+    color:var(--text);
+    font-size:10.5px;
+    margin-top:5px;
+    line-height:1.35;
+  }
+  .weather-note{
+    color:var(--text-muted);
+    font-size:11.5px;
+    margin-top:12px;
+  }
+  .weather-note a{color:var(--current); text-decoration:none;}
+  .weather-loading,
+  .weather-error{
+    grid-column:1 / -1;
+    padding:18px;
+    background:var(--bg-elevated);
+    border:1px solid var(--border);
+    border-radius:8px;
+    color:var(--text-muted);
+    font-size:13px;
+  }
+  .weather-error{border-color:rgba(241,110,110,0.35); color:#F5A3A3;}
 
   main{
     position:relative; z-index:1;
     max-width:1040px; margin:0 auto; padding:36px 32px 80px;
   }
-  section.panel{ display:none; }
-  section.panel.active{ display:block; }
+  section.panel{display:none;}
+  section.panel.active{display:block;}
 
-  .section-head{ margin-bottom:22px; }
-  .section-head h2{ font-size:21px; font-weight:600; }
-  .section-head p{ color:var(--text-muted); font-size:14px; margin-top:6px; max-width:560px; }
+  .section-head{margin-bottom:22px;}
+  .section-head h2{font-size:21px; font-weight:600;}
+  .section-head p{color:var(--text-muted); font-size:14px; margin-top:6px; max-width:560px;}
 
   .day-card{
     border:1px solid var(--border);
@@ -146,21 +285,21 @@
     margin-bottom:14px;
     background:var(--bg-elevated);
   }
-  .day-card.today{ border-left-color:var(--signal); }
+  .day-card.today{border-left-color:var(--signal);}
   .day-head{
     display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:8px;
     margin-bottom:10px;
   }
-  .day-date{ font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--current); }
-  .day-title{ font-weight:600; font-size:15.5px; }
+  .day-date{font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--current);}
+  .day-title{font-weight:600; font-size:15.5px;}
   .day-tag{
     font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.05em;
     color:var(--signal); border:1px solid rgba(246,176,66,0.35);
     padding:2px 8px; border-radius:100px; text-transform:uppercase;
   }
-  .day-body{ color:var(--text-muted); font-size:14px; }
-  .day-body .field{ margin-top:4px; }
-  .day-body .field b{ color:var(--text); font-weight:500; }
+  .day-body{color:var(--text-muted); font-size:14px;}
+  .day-body .field{margin-top:4px;}
+  .day-body .field b{color:var(--text); font-weight:500;}
 
   .add-note{
     border:1px dashed var(--border-strong);
@@ -169,44 +308,44 @@
     margin-top:6px;
   }
 
-  .search-row{ margin-bottom:20px; }
+  .search-row{margin-bottom:20px;}
   .search-row input{
     width:100%; max-width:340px;
     background:var(--bg-elevated); border:1px solid var(--border-strong);
     color:var(--text); font-family:'Inter', sans-serif; font-size:14px;
     padding:10px 14px; border-radius:7px; outline:none;
   }
-  .search-row input:focus{ border-color:var(--current); }
-  .search-row input::placeholder{ color:var(--text-muted); }
+  .search-row input:focus{border-color:var(--current);}
+  .search-row input::placeholder{color:var(--text-muted);}
 
   .group-label{
     font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.06em;
     text-transform:uppercase; color:var(--text-muted);
     margin:26px 0 12px; padding-top:14px; border-top:1px solid var(--border);
   }
-  .group-label:first-of-type{ border-top:none; padding-top:0; margin-top:0; }
+  .group-label:first-of-type{border-top:none; padding-top:0; margin-top:0;}
 
-  .person-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(230px,1fr)); gap:10px; }
+  .person-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(230px,1fr)); gap:10px;}
   .person{
     border:1px solid var(--border); border-radius:8px;
     padding:13px 15px; background:var(--bg-elevated);
   }
-  .person .name{ font-weight:600; font-size:14.5px; }
-  .person .role{ color:var(--current); font-size:12.5px; margin-top:2px; }
-  .person .contact{ color:var(--text-muted); font-size:12.5px; margin-top:6px; font-family:'IBM Plex Mono', monospace; }
-  .no-match{ color:var(--text-muted); font-size:14px; padding:20px 0; }
+  .person .name{font-weight:600; font-size:14.5px;}
+  .person .role{color:var(--current); font-size:12.5px; margin-top:2px;}
+  .person .contact{color:var(--text-muted); font-size:12.5px; margin-top:6px; font-family:'IBM Plex Mono', monospace;}
+  .no-match{color:var(--text-muted); font-size:14px; padding:20px 0;}
 
   .contact-card{
     border:1px solid var(--border); border-radius:8px;
     padding:18px 20px; background:var(--bg-elevated);
     margin-bottom:12px;
   }
-  .contact-card .org{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; color:var(--text-muted); letter-spacing:0.05em; text-transform:uppercase; }
-  .contact-card .name{ font-weight:600; font-size:16px; margin-top:4px; }
-  .contact-card .role{ color:var(--text-muted); font-size:13.5px; margin-top:2px; }
-  .contact-card .links{ margin-top:10px; font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--current); }
-  .contact-card .links a{ color:var(--current); text-decoration:none; }
-  .contact-card .links a:hover{ text-decoration:underline; }
+  .contact-card .org{font-family:'IBM Plex Mono', monospace; font-size:11.5px; color:var(--text-muted); letter-spacing:0.05em; text-transform:uppercase;}
+  .contact-card .name{font-weight:600; font-size:16px; margin-top:4px;}
+  .contact-card .role{color:var(--text-muted); font-size:13.5px; margin-top:2px;}
+  .contact-card .links{margin-top:10px; font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--current);}
+  .contact-card .links a{color:var(--current); text-decoration:none;}
+  .contact-card .links a:hover{text-decoration:underline;}
 
   footer{
     position:relative; z-index:1;
@@ -215,9 +354,20 @@
     color:var(--text-muted); font-size:12.5px; font-family:'IBM Plex Mono', monospace;
   }
 
+  @media (max-width:900px){
+    .weather-grid{grid-template-columns:repeat(4, minmax(135px,1fr));}
+  }
   @media (max-width:600px){
-    header.top, main, nav.tabs, footer{ padding-left:18px; padding-right:18px; }
-    nav.tabs button{ margin-right:14px; }
+    header.top, main, nav.tabs, footer, .weather-shell{padding-left:18px; padding-right:18px;}
+    nav.tabs button{margin-right:14px;}
+    .weather-header{align-items:flex-start; flex-direction:column; gap:5px;}
+    .weather-grid{
+      display:flex;
+      overflow-x:auto;
+      scroll-snap-type:x mandatory;
+      padding-bottom:8px;
+    }
+    .weather-card{min-width:172px; scroll-snap-align:start;}
   }
 </style>
 </head>
@@ -254,6 +404,31 @@
   <button data-tab="crew">Crew &amp; Contributors</button>
   <button data-tab="contacts">Contacts</button>
 </nav>
+
+<section class="weather-shell" aria-labelledby="weather-title">
+  <div class="weather-header">
+    <div>
+      <h2 id="weather-title">7 day filming weather</h2>
+      <p>Tórshavn. Automatically assessed for exterior filming.</p>
+    </div>
+    <div class="weather-updated" id="weather-updated">Loading live forecast…</div>
+  </div>
+
+  <div class="weather-legend" aria-label="Filming weather legend">
+    <span class="legend-item"><span class="legend-dot good"></span>Good filming conditions</span>
+    <span class="legend-item"><span class="legend-dot caution"></span>Plan with caution</span>
+    <span class="legend-item"><span class="legend-dot bad"></span>Outdoor filming not recommended</span>
+  </div>
+
+  <div class="weather-grid" id="weather-grid">
+    <div class="weather-loading">Loading the latest 7 day forecast…</div>
+  </div>
+
+  <p class="weather-note">
+    Production guide based on forecast rain, wind, gusts and visibility. Conditions can change quickly between islands and valleys.
+    Forecast data from <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>.
+  </p>
+</section>
 
 <main>
 
@@ -335,21 +510,270 @@ const contacts = [
 ];
 /* ----------------------------------- */
 
+const WEATHER_API =
+  "https://api.open-meteo.com/v1/forecast" +
+  "?latitude=62.0079&longitude=-6.7900" +
+  "&hourly=temperature_2m,precipitation_probability,precipitation,weather_code,visibility,wind_speed_10m,wind_gusts_10m" +
+  "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max,sunrise,sunset" +
+  "&timezone=Atlantic%2FFaroe&forecast_days=7&wind_speed_unit=ms";
+
+const WEATHER_REFRESH_MS = 30 * 60 * 1000;
+
+function escapeHtml(value){
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;"
+  })[char]);
+}
+
+function weatherDescription(code){
+  const descriptions = {
+    0:["☀️","Clear sky"],
+    1:["🌤️","Mainly clear"],
+    2:["⛅","Partly cloudy"],
+    3:["☁️","Overcast"],
+    45:["🌫️","Fog"],
+    48:["🌫️","Rime fog"],
+    51:["🌦️","Light drizzle"],
+    53:["🌦️","Drizzle"],
+    55:["🌧️","Heavy drizzle"],
+    56:["🌧️","Freezing drizzle"],
+    57:["🌧️","Heavy freezing drizzle"],
+    61:["🌦️","Light rain"],
+    63:["🌧️","Rain"],
+    65:["🌧️","Heavy rain"],
+    66:["🌧️","Freezing rain"],
+    67:["🌧️","Heavy freezing rain"],
+    71:["🌨️","Light snow"],
+    73:["🌨️","Snow"],
+    75:["❄️","Heavy snow"],
+    77:["❄️","Snow grains"],
+    80:["🌦️","Rain showers"],
+    81:["🌧️","Rain showers"],
+    82:["⛈️","Heavy showers"],
+    85:["🌨️","Snow showers"],
+    86:["❄️","Heavy snow showers"],
+    95:["⛈️","Thunderstorm"],
+    96:["⛈️","Thunderstorm with hail"],
+    99:["⛈️","Severe thunderstorm"]
+  };
+  return descriptions[code] || ["🌦️","Changeable"];
+}
+
+function classifyHour(hour){
+  const probability = Number(hour.precipitation_probability ?? 0);
+  const precipitation = Number(hour.precipitation ?? 0);
+  const wind = Number(hour.wind_speed_10m ?? 0);
+  const gust = Number(hour.wind_gusts_10m ?? 0);
+  const visibility = Number(hour.visibility ?? 10000);
+  const code = Number(hour.weather_code ?? 0);
+
+  const bad =
+    probability > 65 ||
+    precipitation > 1.5 ||
+    wind > 14 ||
+    gust > 22 ||
+    visibility < 1500 ||
+    code >= 95;
+
+  if (bad) return "bad";
+
+  const good =
+    probability <= 30 &&
+    precipitation <= 0.2 &&
+    wind <= 9 &&
+    gust <= 14 &&
+    visibility >= 5000 &&
+    ![45,48,55,56,57,65,66,67,75,82,86].includes(code);
+
+  return good ? "good" : "caution";
+}
+
+function minutesFromIso(iso){
+  const time = String(iso || "").slice(11,16);
+  const parts = time.split(":").map(Number);
+  return (parts[0] * 60) + parts[1];
+}
+
+function longestWindow(hours, allowed){
+  let best = [];
+  let current = [];
+
+  hours.forEach(hour => {
+    if (allowed.includes(hour.rating)){
+      if (
+        current.length &&
+        minutesFromIso(hour.time) !== minutesFromIso(current[current.length - 1].time) + 60
+      ){
+        current = [];
+      }
+      current.push(hour);
+      if (current.length > best.length) best = [...current];
+    } else {
+      current = [];
+    }
+  });
+
+  return best;
+}
+
+function formatWindow(hours){
+  if (!hours.length) return "No reliable 3 hour window";
+  const start = String(hours[0].time).slice(11,16);
+  const endMinutes = minutesFromIso(hours[hours.length - 1].time) + 60;
+  const endHour = String(Math.floor(endMinutes / 60)).padStart(2,"0");
+  const endMinute = String(endMinutes % 60).padStart(2,"0");
+  return `${start}–${endHour}:${endMinute}`;
+}
+
+function buildHourlyRows(data){
+  return data.hourly.time.map((time, index) => ({
+    time,
+    temperature_2m:data.hourly.temperature_2m[index],
+    precipitation_probability:data.hourly.precipitation_probability[index],
+    precipitation:data.hourly.precipitation[index],
+    weather_code:data.hourly.weather_code[index],
+    visibility:data.hourly.visibility[index],
+    wind_speed_10m:data.hourly.wind_speed_10m[index],
+    wind_gusts_10m:data.hourly.wind_gusts_10m[index]
+  }));
+}
+
+function assessDay(date, sunrise, sunset, allHours){
+  const start = Math.max(minutesFromIso(sunrise) + 30, 6 * 60);
+  const end = Math.min(minutesFromIso(sunset) - 30, 22 * 60);
+
+  const daylightHours = allHours
+    .filter(hour =>
+      hour.time.startsWith(date) &&
+      minutesFromIso(hour.time) >= start &&
+      minutesFromIso(hour.time) <= end
+    )
+    .map(hour => ({...hour, rating:classifyHour(hour)}));
+
+  const goodWindow = longestWindow(daylightHours, ["good"]);
+  const usableWindow = longestWindow(daylightHours, ["good","caution"]);
+
+  if (goodWindow.length >= 3){
+    return {
+      rating:"good",
+      label:"Good for filming",
+      window:formatWindow(goodWindow)
+    };
+  }
+
+  if (usableWindow.length >= 3){
+    return {
+      rating:"caution",
+      label:"Plan with caution",
+      window:formatWindow(usableWindow)
+    };
+  }
+
+  return {
+    rating:"bad",
+    label:"Outdoor not recommended",
+    window:"No reliable 3 hour window"
+  };
+}
+
+function isTodayInFaroe(dateString){
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone:"Atlantic/Faroe",
+    year:"numeric",
+    month:"2-digit",
+    day:"2-digit"
+  });
+  const parts = formatter.formatToParts(new Date());
+  const values = Object.fromEntries(parts.map(part => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}` === dateString;
+}
+
+function renderWeather(data){
+  const grid = document.getElementById("weather-grid");
+  const hourlyRows = buildHourlyRows(data);
+  const dayFormatter = new Intl.DateTimeFormat("en-GB", {weekday:"short", timeZone:"UTC"});
+  const dateFormatter = new Intl.DateTimeFormat("en-GB", {day:"numeric", month:"short", timeZone:"UTC"});
+
+  grid.innerHTML = data.daily.time.map((date, index) => {
+    const assessment = assessDay(
+      date,
+      data.daily.sunrise[index],
+      data.daily.sunset[index],
+      hourlyRows
+    );
+    const [icon, condition] = weatherDescription(data.daily.weather_code[index]);
+    const dateObject = new Date(`${date}T12:00:00Z`);
+    const todayClass = isTodayInFaroe(date) ? " today" : "";
+
+    return `
+      <article class="weather-card ${assessment.rating}${todayClass}">
+        <div class="weather-day">${escapeHtml(dayFormatter.format(dateObject))}${todayClass ? " · Today" : ""}</div>
+        <div class="weather-date">${escapeHtml(dateFormatter.format(dateObject))}</div>
+        <div class="weather-icon" aria-hidden="true">${icon}</div>
+        <div class="weather-temp">
+          ${Math.round(data.daily.temperature_2m_max[index])}° /
+          ${Math.round(data.daily.temperature_2m_min[index])}°
+        </div>
+        <div class="weather-condition">${escapeHtml(condition)}</div>
+        <div class="weather-stats">
+          <div>Rain <b>${Math.round(data.daily.precipitation_probability_max[index])}%</b></div>
+          <div>Wind <b>${Math.round(data.daily.wind_speed_10m_max[index])} m/s</b></div>
+          <div>Gusts <b>${Math.round(data.daily.wind_gusts_10m_max[index])} m/s</b></div>
+        </div>
+        <span class="film-status ${assessment.rating}">${escapeHtml(assessment.label)}</span>
+        <div class="film-window">Best window: <b>${escapeHtml(assessment.window)}</b></div>
+      </article>
+    `;
+  }).join("");
+
+  const updated = new Intl.DateTimeFormat("en-GB", {
+    timeZone:"Atlantic/Faroe",
+    hour:"2-digit",
+    minute:"2-digit",
+    day:"numeric",
+    month:"short"
+  }).format(new Date());
+
+  document.getElementById("weather-updated").textContent = `Updated ${updated}`;
+}
+
+async function loadWeather(){
+  const grid = document.getElementById("weather-grid");
+
+  try{
+    const response = await fetch(`${WEATHER_API}&_=${Date.now()}`, {cache:"no-store"});
+    if (!response.ok) throw new Error(`Forecast request failed: ${response.status}`);
+
+    const data = await response.json();
+    if (!data.daily || !data.hourly) throw new Error("Forecast data is incomplete");
+
+    renderWeather(data);
+  } catch (error){
+    console.error(error);
+    grid.innerHTML = `
+      <div class="weather-error">
+        The live forecast could not be loaded. Refresh the page or check the internet connection.
+      </div>
+    `;
+    document.getElementById("weather-updated").textContent = "Forecast temporarily unavailable";
+  }
+}
+
 function renderSchedule(){
   const el = document.getElementById('schedule-list');
   el.innerHTML = schedule.map(d => `
     <div class="day-card ${d.isToday ? 'today' : ''}">
       <div class="day-head">
         <div>
-          <div class="day-date">${d.date}</div>
-          <div class="day-title">${d.title}</div>
+          <div class="day-date">${escapeHtml(d.date)}</div>
+          <div class="day-title">${escapeHtml(d.title)}</div>
         </div>
-        <div class="day-tag">${d.isToday ? 'Today' : d.tag}</div>
+        <div class="day-tag">${escapeHtml(d.isToday ? 'Today' : d.tag)}</div>
       </div>
       <div class="day-body">
-        <div class="field"><b>Location:</b> ${d.location}</div>
-        <div class="field"><b>Call time:</b> ${d.callTime}</div>
-        <div class="field" style="margin-top:8px;">${d.notes}</div>
+        <div class="field"><b>Location:</b> ${escapeHtml(d.location)}</div>
+        <div class="field"><b>Call time:</b> ${escapeHtml(d.callTime)}</div>
+        <div class="field" style="margin-top:8px;">${escapeHtml(d.notes)}</div>
       </div>
     </div>
   `).join('');
@@ -366,12 +790,12 @@ function renderPeople(filter){
     const matches = people[group].filter(p => p.name.toLowerCase().includes(q));
     if (matches.length === 0) continue;
     anyVisible = true;
-    html += `<div class="group-label">${group}</div><div class="person-grid">`;
+    html += `<div class="group-label">${escapeHtml(group)}</div><div class="person-grid">`;
     html += matches.map(p => `
       <div class="person">
-        <div class="name">${p.name}</div>
-        <div class="role">${p.role}</div>
-        ${p.contact ? `<div class="contact">${p.contact}</div>` : ''}
+        <div class="name">${escapeHtml(p.name)}</div>
+        <div class="role">${escapeHtml(p.role)}</div>
+        ${p.contact ? `<div class="contact">${escapeHtml(p.contact)}</div>` : ''}
       </div>
     `).join('');
     html += `</div>`;
@@ -385,9 +809,9 @@ function renderContacts(){
   const el = document.getElementById('contact-list');
   el.innerHTML = contacts.map(c => `
     <div class="contact-card">
-      <div class="org">${c.org}</div>
-      <div class="name">${c.name}</div>
-      <div class="role">${c.role}</div>
+      <div class="org">${escapeHtml(c.org)}</div>
+      <div class="name">${escapeHtml(c.name)}</div>
+      <div class="role">${escapeHtml(c.role)}</div>
       ${c.links ? `<div class="links">${c.links}</div>` : ''}
     </div>
   `).join('');
@@ -407,6 +831,8 @@ document.getElementById('person-search').addEventListener('input', e => renderPe
 renderSchedule();
 renderPeople('');
 renderContacts();
+loadWeather();
+setInterval(loadWeather, WEATHER_REFRESH_MS);
 </script>
 
 </body>
