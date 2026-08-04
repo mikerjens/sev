@@ -1,4 +1,76 @@
 (() => {
+  const activeTabStorageKey = 'sev-active-portal-tab';
+  const validTabs = new Set(['schedule', 'storyboard', 'weather', 'crew', 'contacts', 'tasks']);
+
+  function rememberTab(tabName) {
+    if (!validTabs.has(tabName)) return;
+    try {
+      window.sessionStorage.setItem(activeTabStorageKey, tabName);
+    } catch (_) {
+      // Portalen fungerer stadig, hvis browseren blokerer sessionStorage.
+    }
+  }
+
+  function rememberedTab() {
+    try {
+      const tabName = window.sessionStorage.getItem(activeTabStorageKey);
+      return validTabs.has(tabName) ? tabName : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  document.addEventListener('click', event => {
+    const tabButton = event.target.closest('nav.tabs button[data-tab]');
+    if (tabButton) {
+      rememberTab(tabButton.dataset.tab);
+      return;
+    }
+
+    if (event.target.closest('#home-button, .hero h1')) {
+      rememberTab('schedule');
+      return;
+    }
+
+    if (event.target.closest('#open-weather-details')) {
+      rememberTab('weather');
+      return;
+    }
+
+    if (event.target.closest('[data-storyboard-scene], [data-open-storyboard]')) {
+      rememberTab('storyboard');
+    }
+  }, true);
+
+  const originalOpenPortalTab = window.openPortalTab;
+  if (typeof originalOpenPortalTab === 'function') {
+    window.openPortalTab = function openRememberedPortalTab(tabName, options) {
+      let targetTab = tabName;
+      const savedTab = rememberedTab();
+
+      // Et ældre opstartsscript forsøger at åbne HJEM ved hver genindlæsning.
+      // Bevar i stedet brugerens senest valgte fane.
+      if (tabName === 'schedule' && savedTab && savedTab !== 'schedule') {
+        targetTab = savedTab;
+      }
+
+      const targetExists = document.querySelector(`nav.tabs button[data-tab="${targetTab}"]`) &&
+        document.getElementById(`panel-${targetTab}`);
+
+      if (targetExists) rememberTab(targetTab);
+      return originalOpenPortalTab(targetExists ? targetTab : tabName, options);
+    };
+
+    const savedTab = rememberedTab();
+    if (savedTab) {
+      window.setTimeout(() => {
+        if (document.querySelector(`nav.tabs button[data-tab="${savedTab}"]`) && document.getElementById(`panel-${savedTab}`)) {
+          originalOpenPortalTab(savedTab);
+        }
+      }, 0);
+    }
+  }
+
   const previousScript = document.createElement('script');
   previousScript.src = 'https://cdn.jsdelivr.net/gh/mikerjens/sev@5ae0ec2257c5b42c7b428355e9a51769f6aa0fc6/sun-times.js';
   previousScript.defer = true;
