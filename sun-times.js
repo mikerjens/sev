@@ -5,10 +5,13 @@
   document.head.appendChild(previousScript);
 
   const graphicSceneIds = new Set(['17A', '18A']);
+  let finished = false;
 
   function simplifyStoryboardOverview() {
+    if (finished) return true;
+
     const sceneList = document.getElementById('storyboard-scene-list');
-    if (!sceneList) return;
+    if (!sceneList) return false;
 
     sceneList.querySelectorAll('.storyboard-scene-card[data-storyboard-scene]').forEach(card => {
       if (graphicSceneIds.has(card.dataset.storyboardScene)) card.remove();
@@ -19,18 +22,20 @@
     const count = sideHeading?.querySelector('span');
     const visibleScenes = sceneList.querySelectorAll('.storyboard-scene-card').length;
 
-    if (title) title.textContent = 'Optagescener';
-    if (count && visibleScenes) count.textContent = `${visibleScenes} scener`;
+    if (title && title.textContent !== 'Optagescener') title.textContent = 'Optagescener';
+    if (count && count.textContent !== `${visibleScenes} scener`) count.textContent = `${visibleScenes} scener`;
+
+    finished = true;
+    return true;
   }
 
-  const observer = new MutationObserver(simplifyStoryboardOverview);
-  observer.observe(document.documentElement, { childList: true, subtree: true });
+  let attempts = 0;
+  const timer = window.setInterval(() => {
+    attempts += 1;
+    if (simplifyStoryboardOverview() || attempts >= 100) {
+      window.clearInterval(timer);
+    }
+  }, 100);
 
   simplifyStoryboardOverview();
-  window.setTimeout(simplifyStoryboardOverview, 250);
-  window.setTimeout(simplifyStoryboardOverview, 1000);
-  window.setTimeout(() => {
-    simplifyStoryboardOverview();
-    observer.disconnect();
-  }, 5000);
 })();
