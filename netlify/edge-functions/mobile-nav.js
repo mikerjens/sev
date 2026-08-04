@@ -32,7 +32,7 @@ export default async (request, context) => {
 </style>`;
 
   const authoritativeTeamScript =
-    '<script src="/team-portal-v2.js?v=36b5c2bab4bec19ab8409ae21d8329020f58f6b6" defer></script>';
+    '<script src="/team-portal-v3.js?v=325e553ac78dcaeb4dee0782e91669d83c05117a" defer></script>';
 
   html = html
     .replace(/Crew &amp; Contributors/g, "TEAM")
