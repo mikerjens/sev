@@ -31,15 +31,17 @@ export default async (request, context) => {
   }
 </style>`;
 
-  const authoritativeTeamScript =
-    '<script src="/team-portal-v3.js?v=325e553ac78dcaeb4dee0782e91669d83c05117a" defer></script>';
+  const authoritativeScripts = [
+    '<script src="/team-portal-v3.js?v=325e553ac78dcaeb4dee0782e91669d83c05117a" defer></script>',
+    '<script src="/scene-status-v2.js?v=367f1035de46d91ed05172a05e9c15e593c0d35e" defer></script>'
+  ].join('');
 
   html = html
     .replace(/Crew &amp; Contributors/g, "TEAM")
     .replace(/Crew & Contributors/g, "TEAM")
     .replace(/>Crew</g, ">TEAM<")
     .replace("</head>", `${mobileNavStyles}</head>`)
-    .replace("</body>", `${authoritativeTeamScript}</body>`);
+    .replace("</body>", `${authoritativeScripts}</body>`);
 
   const headers = new Headers(response.headers);
   headers.delete("content-length");
