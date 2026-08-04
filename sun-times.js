@@ -1,4 +1,59 @@
 (() => {
+  let userHasNavigated = false;
+  let forcingInitialHome = false;
+
+  document.addEventListener('click', event => {
+    if (!event.isTrusted) return;
+    if (event.target.closest('nav.tabs button, [data-storyboard-scene], [data-open-storyboard], #open-weather-details, #home-button, .hero h1')) {
+      userHasNavigated = true;
+    }
+  }, true);
+
+  function showInitialHome() {
+    if (userHasNavigated || forcingInitialHome) return;
+    forcingInitialHome = true;
+
+    if (typeof window.openPortalTab === 'function') {
+      window.openPortalTab('schedule');
+    } else {
+      document.querySelectorAll('nav.tabs button').forEach(button => {
+        button.classList.toggle('active', button.dataset.tab === 'schedule');
+      });
+      document.querySelectorAll('section.panel').forEach(panel => {
+        panel.classList.toggle('active', panel.id === 'panel-schedule');
+      });
+    }
+
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    forcingInitialHome = false;
+  }
+
+  const startupObserver = new MutationObserver(() => {
+    if (userHasNavigated) {
+      startupObserver.disconnect();
+      return;
+    }
+    if (document.getElementById('panel-storyboard')?.classList.contains('active')) {
+      showInitialHome();
+    }
+  });
+
+  startupObserver.observe(document.documentElement, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['class']
+  });
+
+  showInitialHome();
+  window.addEventListener('load', showInitialHome, { once: true });
+  window.setTimeout(showInitialHome, 250);
+  window.setTimeout(showInitialHome, 1000);
+  window.setTimeout(() => {
+    showInitialHome();
+    startupObserver.disconnect();
+  }, 5000);
+
   const originalScript = document.createElement('script');
   originalScript.src = 'https://cdn.jsdelivr.net/gh/mikerjens/sev@32faab2f57232769277e359dbf4dafb41edf4031/sun-times.js';
   originalScript.defer = true;
