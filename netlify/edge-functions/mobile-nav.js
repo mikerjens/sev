@@ -32,8 +32,8 @@ export default async (request, context) => {
 </style>`;
 
   html = html
-    .replace(/Crew &amp; Contributors/g, "Crew")
-    .replace(/Crew & Contributors/g, "Crew")
+    .replace(/Crew &amp; Contributors/g, "TEAM")
+    .replace(/Crew & Contributors/g, "TEAM")
     .replace("</head>", `${mobileNavStyles}</head>`);
 
   const headers = new Headers(response.headers);
