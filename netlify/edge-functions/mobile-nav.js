@@ -31,13 +31,21 @@ export default async (request, context) => {
   }
 </style>`;
 
+  const authoritativeTeamScript =
+    '<script src="/team-portal-v2.js?v=36b5c2bab4bec19ab8409ae21d8329020f58f6b6" defer></script>';
+
   html = html
     .replace(/Crew &amp; Contributors/g, "TEAM")
     .replace(/Crew & Contributors/g, "TEAM")
-    .replace("</head>", `${mobileNavStyles}</head>`);
+    .replace(/>Crew</g, ">TEAM<")
+    .replace("</head>", `${mobileNavStyles}</head>`)
+    .replace("</body>", `${authoritativeTeamScript}</body>`);
 
   const headers = new Headers(response.headers);
   headers.delete("content-length");
+  headers.set("cache-control", "no-store, no-cache, must-revalidate, max-age=0");
+  headers.set("pragma", "no-cache");
+  headers.set("expires", "0");
 
   return new Response(html, {
     status: response.status,
