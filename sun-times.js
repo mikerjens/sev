@@ -67,7 +67,6 @@
       'Optag Klaksvík, lille bygd, dæmning, vindmøller og ø-landskaber.',
       'Klaksvík må ikke bruges til droneflyvning. Optag i stedet Fuglafjørður eller Vestmanna samt lille bygd, dæmning, vindmøller og ø-landskaber.'
     );
-    replaceText(schedulePanel, 'Klaksvík', 'Fuglafjørður eller Vestmanna');
     return true;
   }
 
