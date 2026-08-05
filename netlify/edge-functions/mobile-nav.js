@@ -36,6 +36,7 @@ export default async (request, context) => {
     '<script src="/scene-status-v4.js?v=e8d3483f81edc0161a7e46956111965456b57c17" defer></script>',
     '<script src="/producer-scene-comments-v2.js?v=f4c9994b7ec8dbea6162283703c24c6fe74e36c2" defer></script>',
     '<script src="/person-schedule-selector-v2.js?v=8cb909578a829aacda2ccefe59c550ed9ca311a7" defer></script>',
+    '<script src="/elisabeth-scene-4a-task-v1.js?v=933949573c5cda501cce9415bee8b40fe976fa46" defer></script>',
     '<script src="/next-scenes-calendar-v1.js?v=a69caf14c0bd3fc3d0c0eabd12d8849d9398eccb" defer></script>',
     '<script src="/room-location-pending-v1.js?v=1b7c8558faa015afcee83da54d3134c860e57060" defer></script>'
   ].join('');
