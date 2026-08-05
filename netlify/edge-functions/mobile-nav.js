@@ -62,15 +62,17 @@ export default async (request, context) => {
   }
 </style>`;
 
-  const stablePortalScript =
-    '<script src="/sev-portal-stable-v1.js?v=cc45112b14ae1aa825e27e0f191fc0500608bf94" defer></script>';
+  const portalScripts = [
+    '<script src="/sev-portal-stable-v1.js?v=cc45112b14ae1aa825e27e0f191fc0500608bf94" defer></script>',
+    '<script src="/scene-4a-elduvik-v1.js?v=b89866c6c6777c1d42f84e73f6e768770e13faf1" defer></script>'
+  ].join('');
 
   html = html
     .replace(/Crew &amp; Contributors/g, "TEAM")
     .replace(/Crew & Contributors/g, "TEAM")
     .replace(/>Crew</g, ">TEAM<")
     .replace("</head>", `${portalBoot}${portalStyles}</head>`)
-    .replace("</body>", `${stablePortalScript}</body>`);
+    .replace("</body>", `${portalScripts}</body>`);
 
   const headers = new Headers(response.headers);
   headers.delete("content-length");
