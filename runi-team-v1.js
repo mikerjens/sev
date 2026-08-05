@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2026-08-05-2047';
+  const VERSION = '2026-08-05-2053';
   const PERSON_ID = 'runi';
   const PERSON = {
     name: 'Rúni Friis Kjær',
@@ -11,11 +11,11 @@
   };
 
   function taskMarkup() {
-    return `<article class="task-card high" data-runi-scene-2a-task="${VERSION}">
+    return `<article class="task-card high" data-runi-scene-4a-task="${VERSION}">
       <div class="task-top">
         <div>
-          <div class="task-title">Planlæg og gennemfør lys til scene 2A</div>
-          <div class="task-time">Mandag 17. august kl. 13:00 · Skálabúðin, Tórshavn</div>
+          <div class="task-title">Planlæg og gennemfør lys til scene 4A</div>
+          <div class="task-time">Mandag 10. august kl. 21:30 · Elduvík</div>
         </div>
         <span class="task-status">Planlagt</span>
       </div>
@@ -23,8 +23,8 @@
         <span class="task-chip">Lys</span>
         <span class="task-chip owner">Ansvar: ${PERSON.name}</span>
       </div>
-      <div class="task-copy"><b>Opgaven:</b> Planlæg lyssætningen til scene 2A sammen med Thomas Koba. Kontrollér strømforhold, medbring det nødvendige lysudstyr og sørg for sikker opsætning og betjening under optagelsen.</div>
-      <div class="task-done"><b>Færdig når:</b> Lysplanen er godkendt, udstyret er kontrolleret, og scene 2A er gennemført med det aftalte lys.</div>
+      <div class="task-copy"><b>Opgaven:</b> Planlæg lyssætningen til scene 4A sammen med Thomas Koba. Medbring det nødvendige lysudstyr og sørg for sikker opsætning, betjening og nedtagning under optagelsen ved gadelyset i Elduvík.</div>
+      <div class="task-done"><b>Færdig når:</b> Lysplanen er godkendt, udstyret er kontrolleret, og scene 4A er gennemført med det aftalte lys.</div>
     </article>`;
   }
 
@@ -79,7 +79,7 @@
           </div>
           <span class="team-status">Bekræftet</span>
         </div>
-        <p class="team-card-note">Ansvarlig for lys på scene 2A i Skálabúðin den 17. august kl. 13:00.</p>
+        <p class="team-card-note">Ansvarlig for lys på scene 4A i Elduvík den 10. august kl. 21:30.</p>
         <div class="team-contact-list">
           <a href="mailto:${PERSON.email}">✉ ${PERSON.email}</a>
           <a href="tel:+298218218">☎ ${PERSON.phone}</a>
@@ -100,7 +100,7 @@
   function showRuniSchedule() {
     const list = document.getElementById('production-plan-list');
     if (!list) return false;
-    list.innerHTML = `<div class="plan-date">17. august</div>${taskMarkup()}`;
+    list.innerHTML = `<div class="plan-date">10. august</div>${taskMarkup()}`;
     setRuniSummary();
     const bureauNote = document.querySelector('#schedule-main-column > .bureau-note');
     if (bureauNote) bureauNote.style.display = 'none';
@@ -111,10 +111,10 @@
     const list = document.getElementById('production-plan-list');
     const summary = document.getElementById('plan-summary');
     if (!list || !summary) return false;
-    if (list.querySelector('[data-runi-scene-2a-task]')) return true;
+    if (list.querySelector('[data-runi-scene-4a-task]')) return true;
 
     const wrapper = document.createElement('div');
-    wrapper.innerHTML = `<div class="plan-date" data-runi-date="${VERSION}">17. august</div>${taskMarkup()}`;
+    wrapper.innerHTML = `<div class="plan-date" data-runi-date="${VERSION}">10. august</div>${taskMarkup()}`;
     const nodes = [...wrapper.children];
     const finalControlHeading = [...list.querySelectorAll('.plan-date')]
       .find(node => /Før hver optagedag/i.test(node.textContent));
