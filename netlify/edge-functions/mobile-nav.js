@@ -55,7 +55,7 @@ export default async (request, context) => {
     '<script src="/next-scenes-calendar-v1.js?v=a69caf14c0bd3fc3d0c0eabd12d8849d9398eccb" defer></script>',
     '<script src="/schedule-choice-bridge-v1.js?v=080f826deec590f727216c9f9e5a033be67d935e" defer></script>',
     '<script src="/schedule-portal-v2.js?v=450b25be0b8956e504e021f3a3f74c89cf46c579" defer></script>',
-    '<script src="/elduvik-period-styling-v1.js?v=c943f203a144f4fa0577cf3474f94b59bebe3ead" defer></script>'
+    '<script src="/elduvik-period-styling-v1.js?v=8c41c0e52e2ff5267dd8962663149c636641a02e" defer></script>'
   ].join('');
 
   html = html
