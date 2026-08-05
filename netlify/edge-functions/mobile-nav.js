@@ -35,6 +35,12 @@ export default async (request, context) => {
     transition: opacity 140ms ease;
   }
 
+  #panel-next-scenes .next-scenes-page-grid > .shoot-calendar-card .next-shoot-list,
+  #panel-next-scenes .next-scenes-page-grid > .shoot-calendar-card .calendar-undated,
+  #panel-next-scenes .next-scenes-page-grid > .shoot-calendar-card .calendar-filmed {
+    display: none;
+  }
+
   @media (max-width: 700px) {
     nav.tabs {
       display: grid;
