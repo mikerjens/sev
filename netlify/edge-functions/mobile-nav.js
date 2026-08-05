@@ -63,6 +63,7 @@ export default async (request, context) => {
 </style>`;
 
   const portalScripts = [
+    '<script src="/home-plan-default-v1.js?v=38ade46ad52812f0d01ec96d6b8ded4bcb954397" defer></script>',
     '<script src="/sev-portal-stable-v1.js?v=cc45112b14ae1aa825e27e0f191fc0500608bf94" defer></script>',
     '<script src="/scene-location-updates-v2.js?v=3e0ef28fe5965a4fa0c47f8b84cc355067e3e99f" defer></script>',
     '<script src="/scene-links-v1.js?v=c6bfbd35afd9d5029a3c82113e05f972106bc3f6" defer></script>',
