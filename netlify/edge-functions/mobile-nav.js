@@ -51,10 +51,10 @@ export default async (request, context) => {
   const authoritativeScripts = [
     '<script src="/team-portal-v3.js?v=325e553ac78dcaeb4dee0782e91669d83c05117a" defer></script>',
     '<script src="/scene-status-v4.js?v=e8d3483f81edc0161a7e46956111965456b57c17" defer></script>',
-    '<script src="/producer-scene-comments-v2.js?v=f4c9994b7ec8dbea6162283703c24c6fe74e36c2" defer></script>',
+    '<script src="/producer-scene-comments-v2.js?v=182c926d66896342eaf3fc1cb515e01adb804352" defer></script>',
     '<script src="/next-scenes-calendar-v1.js?v=a69caf14c0bd3fc3d0c0eabd12d8849d9398eccb" defer></script>',
     '<script src="/schedule-choice-bridge-v1.js?v=080f826deec590f727216c9f9e5a033be67d935e" defer></script>',
-    '<script src="/schedule-portal-v1.js?v=a8b51bf30294bb164955f7356bffa67c293c04aa" defer></script>'
+    '<script src="/schedule-portal-v2.js?v=450b25be0b8956e504e021f3a3f74c89cf46c579" defer></script>'
   ].join('');
 
   html = html
