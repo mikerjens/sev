@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2026-08-05-1832';
+  const VERSION = '2026-08-05-1840';
   const INDOOR_SCENES = ['1A', '2A', '2B', '2C', '15A', '16A'];
 
   function replaceText(root, from, to) {
@@ -15,9 +15,18 @@
     });
   }
 
+  function sceneIds(card) {
+    const source = card.querySelector('.next-shoot-scenes, .producer-scenes')?.textContent || card.textContent || '';
+    return source.match(/\b\d+[A-Z]\b/g) || [];
+  }
+
+  function hasScene(card, sceneId) {
+    return sceneIds(card).includes(sceneId);
+  }
+
   function containsIndoorScenes(card) {
-    const text = card.querySelector('.next-shoot-scenes, .producer-scenes')?.textContent || card.textContent || '';
-    return INDOOR_SCENES.some(scene => text.includes(scene)) && !text.includes('4A');
+    const ids = sceneIds(card);
+    return ids.some(sceneId => INDOOR_SCENES.includes(sceneId)) && !ids.includes('4A');
   }
 
   function updateScene4A(schedule, nextScenes) {
@@ -29,16 +38,14 @@
     });
 
     document.querySelectorAll('.next-shoot-event').forEach(card => {
-      const scenes = card.querySelector('.next-shoot-scenes')?.textContent || '';
-      if (!scenes.includes('4A')) return;
+      if (!hasScene(card, '4A')) return;
       const location = card.querySelector('p');
       if (location) location.textContent = 'Elduvík · præcis placering ved gadelyset afklares';
       card.dataset.locationVersion = VERSION;
     });
 
     document.querySelectorAll('.producer-location-card').forEach(card => {
-      const scenes = card.querySelector('.producer-scenes')?.textContent || card.textContent;
-      if (!scenes.includes('4A')) return;
+      if (!hasScene(card, '4A')) return;
       const title = card.querySelector('.producer-location-title');
       const comment = card.querySelector('.producer-location-comment');
       if (title) title.textContent = 'Elduvík · gadelys-location';
@@ -101,6 +108,30 @@
     });
   }
 
+  function restoreScene11A() {
+    document.querySelectorAll('.next-shoot-event').forEach(card => {
+      if (!hasScene(card, '11A')) return;
+      const title = card.querySelector('h4');
+      const location = card.querySelector('p');
+      const badge = card.querySelector('.next-shoot-date b');
+      if (title) title.textContent = 'Aktiv jordvarmeboring';
+      if (location) location.textContent = 'Streymoy · afventer Jarðhitis borehold';
+      if (badge) badge.textContent = 'DATO AFVENTER';
+      card.dataset.locationVersion = VERSION;
+    });
+
+    document.querySelectorAll('.producer-location-card').forEach(card => {
+      if (!hasScene(card, '11A')) return;
+      const title = card.querySelector('.producer-location-title');
+      const status = card.querySelector('.producer-location-status');
+      const comment = card.querySelector('.producer-location-comment');
+      if (title) title.textContent = 'Jarðhiti';
+      if (status) status.textContent = 'Afventer borehold';
+      if (comment) comment.textContent = 'Scene 11A er en aktiv jordvarmeboring. Den filmes, når boreholdet kommer tilbage til Streymoy fra Suðuroy.';
+      card.dataset.locationVersion = VERSION;
+    });
+  }
+
   function updateLocations() {
     const schedule = document.getElementById('panel-schedule');
     const nextScenes = document.getElementById('panel-next-scenes');
@@ -108,6 +139,7 @@
 
     updateScene4A(schedule, nextScenes);
     updateIndoorLocation(schedule, nextScenes);
+    restoreScene11A();
     return true;
   }
 
