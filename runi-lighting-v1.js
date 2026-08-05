@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2026-08-05-2025';
+  const VERSION = '2026-08-05-2036';
   const PERSON_ID = 'runi';
   const PERSON_NAME = 'Rúni Friis Kjær';
 
@@ -55,7 +55,7 @@
   function updateSummaryForRuni() {
     const summary = document.getElementById('plan-summary');
     if (!summary) return;
-    summary.innerHTML = `<strong>${PERSON_NAME}</strong>1 opgave · scene 4A`;
+    summary.innerHTML = `<strong><span class="current-person">${PERSON_NAME}</span> · 1 opgave</strong><span>Lysmand · kun egne opgaver og deadlines.</span>`;
     summary.dataset.runiSummary = VERSION;
   }
 
@@ -199,11 +199,15 @@
 
   if (install()) return;
 
-  const observer = new MutationObserver(() => {
-    ensurePersonOption();
-    syncSchedule();
-    ensureTeamCard();
+  let observer = new MutationObserver(() => {
+    if (!install()) return;
+    observer.disconnect();
+    observer = null;
   });
   observer.observe(document.documentElement, { childList: true, subtree: true });
-  window.setTimeout(() => observer.disconnect(), 10000);
+  window.setTimeout(() => {
+    install();
+    observer?.disconnect();
+    observer = null;
+  }, 5000);
 })();
