@@ -12,27 +12,19 @@ export default async (request, context) => {
 <script>
   document.documentElement.classList.add('sev-booting');
   window.setTimeout(() => {
-    if (document.documentElement.classList.contains('sev-booting')) {
-      document.documentElement.classList.remove('sev-booting');
-      document.documentElement.classList.add('sev-ready');
-    }
-  }, 6000);
+    document.documentElement.classList.remove('sev-booting');
+    document.documentElement.classList.add('sev-ready');
+  }, 1500);
 </script>`;
 
   const portalStyles = `
 <style>
-  html.sev-booting nav.tabs,
-  html.sev-booting .weather-shortcut,
-  html.sev-booting main {
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  html.sev-ready nav.tabs,
-  html.sev-ready .weather-shortcut,
-  html.sev-ready main {
-    opacity: 1;
-    transition: opacity 140ms ease;
+  /* Vis altid grundportalen med det samme. JavaScript-forbedringer må ikke låse siden. */
+  nav.tabs,
+  .weather-shortcut,
+  main {
+    opacity: 1 !important;
+    pointer-events: auto !important;
   }
 
   #panel-next-scenes .next-scenes-page-grid > .shoot-calendar-card .next-shoot-list,
@@ -67,8 +59,7 @@ export default async (request, context) => {
     '<script src="/scene-location-updates-v2.js?v=3e0ef28fe5965a4fa0c47f8b84cc355067e3e99f" defer></script>',
     '<script src="/runi-lighting-v1.js?v=999c28ef8af188be26f5f284a43bf916538a6409" defer></script>',
     '<script src="/scene-links-v1.js?v=c6bfbd35afd9d5029a3c82113e05f972106bc3f6" defer></script>',
-    '<script src="/skala-final-lock-v1.js?v=010103c49ce01e5025ec9b103f3f8a31eb820118" defer></script>',
-    '<script src="/schedule-selector-health-v1.js?v=41e79bb5c6a41ace06f7fc9585dba5f726a33aa6" defer></script>'
+    '<script src="/skala-final-lock-v1.js?v=010103c49ce01e5025ec9b103f3f8a31eb820118" defer></script>'
   ].join('');
 
   html = html
