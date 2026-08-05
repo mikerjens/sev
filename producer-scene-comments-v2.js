@@ -1,18 +1,19 @@
 (() => {
-  const VERSION = '2026-08-05-1446';
+  const VERSION = '2026-08-05-1638';
 
   const groups = [
     {
-      location: 'Drengens værelse · samme location',
-      status: 'Location scouting',
+      location: 'Airbnb i Elduvík · samme location',
+      status: 'Afventer tilladelse fra ejer',
       scenes: [
         ['1A', 'Drengen tænder lyset.'],
         ['2A', 'Drengen sidder og læser.'],
         ['2B', 'Nærbillede af bogen og det historiske foto.'],
+        ['2C', 'Det historiske billede og fiskerdelen optages som del af samme setup.'],
         ['15A', 'Måske begynder det med dig.'],
         ['16A', 'Drengen slukker lyset.']
       ],
-      comment: 'Thomas scouter efter location. Huset skal helst passe med vinduerne i location i scene 9.'
+      comment: 'Michael skal spørge ejeren af Airbnb-huset i Elduvík, om det er muligt at filme der. Der fastsættes først en optagedato, når ejeren har godkendt optagelsen. Huset skal også vurderes i forhold til vinduerne i scene 9.'
     },
     {
       location: 'Gadelys-location',
