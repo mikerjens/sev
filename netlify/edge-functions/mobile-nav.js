@@ -68,7 +68,8 @@ export default async (request, context) => {
     '<script src="/scene-location-updates-v2.js?v=3e0ef28fe5965a4fa0c47f8b84cc355067e3e99f" defer></script>',
     '<script src="/scene-links-v1.js?v=c6bfbd35afd9d5029a3c82113e05f972106bc3f6" defer></script>',
     '<script src="/skala-final-lock-v1.js?v=010103c49ce01e5025ec9b103f3f8a31eb820118" defer></script>',
-    '<script src="/runi-team-v1.js?v=a373264fdcd2a9a200ef6e14ae754a2ba7c8fa87" defer></script>'
+    '<script src="/runi-team-v1.js?v=a373264fdcd2a9a200ef6e14ae754a2ba7c8fa87" defer></script>',
+    '<script src="/personal-schedule-guide-v1.js?v=9996d4f77642c390b30125065cbaea216dfe485b" defer></script>'
   ].join('');
 
   html = html
