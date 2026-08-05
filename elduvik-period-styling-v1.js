@@ -1,5 +1,5 @@
 (() => {
-  const VERSION = '2026-08-05-1726';
+  const VERSION = '2026-08-05-1736';
   const TASK_ID = 'task-elduvik-period-styling';
   const DATE_ID = 'task-elduvik-period-styling-date';
   const NOTE_CLASS = 'elduvik-period-styling-note';
@@ -34,7 +34,7 @@
           <span class="task-chip">Høj prioritet</span>
           <span class="task-chip owner">Elisabeth Vitalis Tausen</span>
         </div>
-        <div class="task-copy"><b>Opgave:</b> SANSIR-teamet og Elisabeth skal finde og booke en stylist samt en makeupartist, som kan skabe et troværdigt 1970'er-look til sønnen og moren. Kostumer, styling og makeup ligger hos SANSIR/Elisabeth og ikke hos KOVBOY FILM.</div>
+        <div class="task-copy"><b>Opgave:</b> SANSIR-teamet og Elisabeth skal finde og booke en stylist samt en makeupartist, som kan skabe et troværdigt 1970'er-look til sønnen og moren. Kostumer, styling og makeup koordineres af SANSIR-teamet og Elisabeth.</div>
         <div class="task-done"><b>Vigtig hårinstruks fra Thomas Koba:</b> Drengens hår må ikke klippes før optagelsen. Stylisten skal arbejde med hans nuværende hårlængde.</div>
         <div class="task-done"><b>Færdig når:</b> Stylist og makeupartist er bekræftet, 1970'er-tøjet til dreng og mor er valgt, og hår- og makeupplanen er godkendt.</div>
       </article>`;
@@ -57,7 +57,7 @@
         <strong>Kostume · hår · stylist · makeup</strong>
         <b>Dreng og mor skal fremstå som i 1970'erne.</b> Begge skal have tidssvarende tøj, styling og makeup, fordi handlingen foregår for mange år siden.<br>
         <b>Drengens hår må ikke klippes før optagelsen</b> – instruks fra Thomas Koba.<br>
-        SANSIR-teamet og Elisabeth har ansvaret for at skaffe stylist og makeupartist. Denne leverance ligger <b>ikke hos KOVBOY FILM</b>.
+        SANSIR-teamet og Elisabeth koordinerer stylist og makeupartist.
       </div>`;
   }
 
