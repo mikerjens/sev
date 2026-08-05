@@ -8,6 +8,15 @@ export default async (request, context) => {
 
   let html = await response.text();
 
+  const schedulePreflight = `
+<script>
+  try {
+    const preferred = localStorage.getItem('sev-task-person') || 'all';
+    sessionStorage.setItem('sev-task-person-preferred', preferred);
+    localStorage.setItem('sev-task-person', 'all');
+  } catch (_) {}
+</script>`;
+
   const mobileNavStyles = `
 <style>
   html:not([data-schedule-ready="true"]) #plan-summary {
@@ -44,6 +53,7 @@ export default async (request, context) => {
     '<script src="/scene-status-v4.js?v=e8d3483f81edc0161a7e46956111965456b57c17" defer></script>',
     '<script src="/producer-scene-comments-v2.js?v=f4c9994b7ec8dbea6162283703c24c6fe74e36c2" defer></script>',
     '<script src="/next-scenes-calendar-v1.js?v=a69caf14c0bd3fc3d0c0eabd12d8849d9398eccb" defer></script>',
+    '<script src="/schedule-choice-bridge-v1.js?v=080f826deec590f727216c9f9e5a033be67d935e" defer></script>',
     '<script src="/schedule-portal-v1.js?v=a8b51bf30294bb164955f7356bffa67c293c04aa" defer></script>'
   ].join('');
 
@@ -51,7 +61,7 @@ export default async (request, context) => {
     .replace(/Crew &amp; Contributors/g, "TEAM")
     .replace(/Crew & Contributors/g, "TEAM")
     .replace(/>Crew</g, ">TEAM<")
-    .replace("</head>", `${mobileNavStyles}</head>`)
+    .replace("</head>", `${schedulePreflight}${mobileNavStyles}</head>`)
     .replace("</body>", `${authoritativeScripts}</body>`);
 
   const headers = new Headers(response.headers);
