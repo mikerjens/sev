@@ -64,7 +64,7 @@ export default async (request, context) => {
 
   const portalScripts = [
     '<script src="/sev-portal-stable-v1.js?v=cc45112b14ae1aa825e27e0f191fc0500608bf94" defer></script>',
-    '<script src="/scene-4a-elduvik-v1.js?v=b89866c6c6777c1d42f84e73f6e768770e13faf1" defer></script>'
+    '<script src="/scene-4a-elduvik-v1.js?v=07d434cfdd0e8e61d0fe3781c41e879c9c120bc8" defer></script>'
   ].join('');
 
   html = html
