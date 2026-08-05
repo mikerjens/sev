@@ -29,7 +29,16 @@
     }
   }
 
+  function labelHomeControl() {
+    const home = document.getElementById('home-button');
+    if (!home) return;
+    home.setAttribute('aria-label', 'HJEM · Åbn Plan & opgaver');
+    home.setAttribute('title', 'HJEM · Plan & opgaver');
+  }
+
   function isHomeControl(target) {
+    if (!(target instanceof Element)) return false;
+
     const control = target.closest('button, a, [role="button"]');
     if (!control) return false;
 
@@ -37,11 +46,13 @@
       return true;
     }
 
-    if (control.closest('header.top .brand-row') && control === control.closest('header.top .brand-row > button, header.top .brand-row > a, header.top .brand-row > [role="button"]')) {
-      return true;
-    }
+    const topLeftControl = control.closest(
+      'header.top .brand-row > button, header.top .brand-row > a, header.top .brand-row > [role="button"]'
+    );
+    if (topLeftControl === control) return true;
 
-    return /^HJEM$/i.test((control.textContent || '').trim());
+    const label = (control.textContent || '').trim();
+    return label.length <= 40 && /\bHJEM\b/i.test(label);
   }
 
   clearRememberedTab();
@@ -53,14 +64,21 @@
   }, true);
 
   document.addEventListener('sev:portal-ready', () => {
+    labelHomeControl();
     openPlanAndTasks({ scrollToTop: false });
   }, { once: true });
 
+  window.addEventListener('pageshow', () => {
+    openPlanAndTasks({ scrollToTop: false });
+  });
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
+      labelHomeControl();
       openPlanAndTasks({ scrollToTop: false });
     }, { once: true });
   } else {
+    labelHomeControl();
     openPlanAndTasks({ scrollToTop: false });
   }
 })();
