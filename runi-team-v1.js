@@ -1,14 +1,30 @@
 (() => {
   'use strict';
 
-  const VERSION = '2026-08-05-2053';
+  const VERSION = '2026-08-06-1225';
   const PERSON_ID = 'runi';
   const PERSON = {
+    id: 'runi-friis-kjaer',
     name: 'Rúni Friis Kjær',
     role: 'Lysmand',
     email: 'rfk@friiframe.fo',
-    phone: '+298 218218'
+    phone: '+298 218218',
+    telHref: '+298218218',
+    note: 'Ansvarlig for lys på scene 4A i Elduvík den 10. august kl. 21:30.'
   };
+
+  const TEAM_MEMBERS = [
+    PERSON,
+    {
+      id: 'heidi-mortensen',
+      name: 'Heidi Mortensen',
+      role: 'Stylist',
+      email: 'heidi@atlanta.fo',
+      phone: '+298 790050',
+      telHref: '+298790050',
+      note: 'Stylist på SEV26-produktionen.'
+    }
+  ];
 
   function taskMarkup() {
     return `<article class="task-card high" data-runi-scene-4a-task="${VERSION}">
@@ -28,13 +44,13 @@
     </article>`;
   }
 
-  function searchMatches() {
+  function searchMatches(member) {
     const query = (document.getElementById('team-search')?.value || '')
       .trim()
       .toLocaleLowerCase('da-DK');
     if (!query) return true;
 
-    const searchable = `${PERSON.name} ${PERSON.role} ${PERSON.email} ${PERSON.phone}`
+    const searchable = `${member.name} ${member.role} ${member.email} ${member.phone}`
       .toLocaleLowerCase('da-DK');
     return searchable.includes(query);
   }
@@ -47,7 +63,27 @@
     count.textContent = `${total} ${total === 1 ? 'person' : 'personer'}`;
   }
 
-  function installTeamCard() {
+  function memberCard(member) {
+    const card = document.createElement('article');
+    card.className = 'team-card';
+    card.dataset.teamMember = member.id;
+    card.innerHTML = `
+      <div class="team-card-top">
+        <div>
+          <div class="team-card-name">${member.name}</div>
+          <div class="team-card-type">${member.role}</div>
+        </div>
+        <span class="team-status">Bekræftet</span>
+      </div>
+      <p class="team-card-note">${member.note}</p>
+      <div class="team-contact-list">
+        <a href="mailto:${member.email}">✉ ${member.email}</a>
+        <a href="tel:${member.telHref}">☎ ${member.phone}</a>
+      </div>`;
+    return card;
+  }
+
+  function installTeamCards() {
     const groups = document.getElementById('team-groups');
     if (!groups) return false;
 
@@ -60,32 +96,17 @@
     const grid = group.querySelector('.team-card-grid');
     if (!grid) return false;
 
-    const existing = grid.querySelector('[data-team-member="runi-friis-kjaer"]');
-    if (!searchMatches()) {
-      existing?.remove();
-      updateTeamCount(group);
-      return true;
-    }
+    TEAM_MEMBERS.forEach(member => {
+      const selector = `[data-team-member="${member.id}"]`;
+      const existing = grid.querySelector(selector);
 
-    if (!existing) {
-      const card = document.createElement('article');
-      card.className = 'team-card';
-      card.dataset.teamMember = 'runi-friis-kjaer';
-      card.innerHTML = `
-        <div class="team-card-top">
-          <div>
-            <div class="team-card-name">${PERSON.name}</div>
-            <div class="team-card-type">${PERSON.role}</div>
-          </div>
-          <span class="team-status">Bekræftet</span>
-        </div>
-        <p class="team-card-note">Ansvarlig for lys på scene 4A i Elduvík den 10. august kl. 21:30.</p>
-        <div class="team-contact-list">
-          <a href="mailto:${PERSON.email}">✉ ${PERSON.email}</a>
-          <a href="tel:+298218218">☎ ${PERSON.phone}</a>
-        </div>`;
-      grid.appendChild(card);
-    }
+      if (!searchMatches(member)) {
+        existing?.remove();
+        return;
+      }
+
+      if (!existing) grid.appendChild(memberCard(member));
+    });
 
     updateTeamCount(group);
     return true;
@@ -169,13 +190,13 @@
   }
 
   function install() {
-    installTeamCard();
+    installTeamCards();
     syncSchedule();
   }
 
   document.addEventListener('sev:portal-ready', install, { once: true });
   document.addEventListener('input', event => {
-    if (event.target?.id === 'team-search') window.setTimeout(installTeamCard, 0);
+    if (event.target?.id === 'team-search') window.setTimeout(installTeamCards, 0);
   }, true);
 
   install();
