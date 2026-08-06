@@ -71,7 +71,7 @@ export default async (request, context) => {
     '<script src="/runi-team-v1.js?v=a373264fdcd2a9a200ef6e14ae754a2ba7c8fa87" defer></script>',
     '<script src="/personal-schedule-guide-v1.js?v=9996d4f77642c390b30125065cbaea216dfe485b" defer></script>',
     '<script src="/scene-5a-filmed-v1.js?v=1f882c065b5a15c3bc6997be64ba8e37ca821103" defer></script>',
-    '<script src="/calendar-shoot-links-v1.js?v=3d50ad5e788f79af1cbfa3fbc16cbb394af41343" defer></script>'
+    '<script src="/calendar-shoot-links-v1.js?v=8c8cbfc899c4848f2d1abd0d5f5f25a1bf08e127" defer></script>'
   ].join('');
 
   html = html
