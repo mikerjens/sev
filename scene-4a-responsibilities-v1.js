@@ -1,10 +1,11 @@
 (() => {
   'use strict';
 
-  const VERSION = '2026-08-06-1218';
+  const VERSION = '2026-08-06-1234';
   const TOR_ID = 'tor';
   const TOR_NAME = 'Tór Verland Johansen';
   const RUNI_NAME = 'Rúni Friis Kjær';
+  const HEIDI_NAME = 'Heidi Mortensen';
 
   const TASKS = {
     children: {
@@ -151,9 +152,9 @@
       const title = card.querySelector('.task-title')?.textContent.trim() || '';
       if (!/^Film scene 4A under gadelyset$/i.test(title)) return;
       const owner = card.querySelector('.task-chip.owner');
-      if (owner) owner.textContent = `Ansvar: Michael Koba · Thomas Koba · ${TOR_NAME} · ${RUNI_NAME}`;
+      if (owner) owner.textContent = `Ansvar: Michael Koba · Thomas Koba · ${TOR_NAME} · ${RUNI_NAME} · ${HEIDI_NAME}`;
       const copy = card.querySelector('.task-copy');
-      if (copy) copy.innerHTML = `<b>Opgaven:</b> Film de tre børn under gadelyset i Elduvík. ${TOR_NAME} sørger for børnene og aftalerne med deres forældre. ${RUNI_NAME} planlægger, medbringer, opsætter og betjener lyset.`;
+      if (copy) copy.innerHTML = `<b>Opgaven:</b> Film de tre børn under gadelyset i Elduvík. ${TOR_NAME} sørger for børnene og aftalerne med deres forældre. Når kontaktoplysningerne er modtaget, afstemmer ${HEIDI_NAME} børnenes tøj med familierne og skaffer en fodbold. ${RUNI_NAME} planlægger, medbringer, opsætter og betjener lyset.`;
       card.dataset.scene4aResponsibility = VERSION;
     });
 
@@ -167,6 +168,32 @@
       <div class="v2-task-main"><strong>${data.title}</strong><span>${data.time}</span></div>
       <div class="v2-task-side"><span class="v2-owner">${data.owner}</span><span class="v2-task-status">${data.status}</span></div>
     </div>`;
+  }
+
+  function ensurePriorityRow(list, data) {
+    let row = [...list.querySelectorAll('.v2-task-row')]
+      .find(item => item.querySelector('strong')?.textContent.trim() === data.title);
+    if (!row) {
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = priorityRowMarkup(data);
+      row = wrapper.firstElementChild;
+      list.appendChild(row);
+    }
+
+    const title = row.querySelector('strong');
+    const time = row.querySelector('.v2-task-main span');
+    let owner = row.querySelector('.v2-owner');
+    const status = row.querySelector('.v2-task-status');
+    if (title) title.textContent = data.title;
+    if (time) time.textContent = data.time;
+    if (!owner) {
+      owner = document.createElement('span');
+      owner.className = 'v2-owner';
+      row.querySelector('.v2-task-side')?.prepend(owner);
+    }
+    if (owner) owner.textContent = data.owner;
+    if (status) status.textContent = data.status;
+    row.dataset.scene4aPriority = VERSION;
   }
 
   function updateFrontPagePriorities() {
@@ -199,20 +226,19 @@
       row.dataset.scene4aPriority = VERSION;
     });
 
-    const runiTitle = 'Planlæg og gennemfør lys til scene 4A';
-    let runiRow = [...list.querySelectorAll('.v2-task-row')]
-      .find(item => item.querySelector('strong')?.textContent.trim() === runiTitle);
-    if (!runiRow) {
-      const wrapper = document.createElement('div');
-      wrapper.innerHTML = priorityRowMarkup({
-        title: runiTitle,
-        time: 'Før optagelsen 10. august kl. 21:30',
-        status: 'Planlagt',
-        owner: RUNI_NAME
-      });
-      runiRow = wrapper.firstElementChild;
-      list.appendChild(runiRow);
-    }
+    ensurePriorityRow(list, {
+      title: 'Planlæg og gennemfør lys til scene 4A',
+      time: 'Før optagelsen 10. august kl. 21:30',
+      status: 'Planlagt',
+      owner: RUNI_NAME
+    });
+
+    ensurePriorityRow(list, {
+      title: 'Afstem børnenes tøj og skaf en fodbold til scene 4A',
+      time: 'Afventer navne og forældrekontakter fra Tór',
+      status: 'Afventer Tór',
+      owner: HEIDI_NAME
+    });
 
     const count = primary.querySelector('.v2-section-heading small');
     if (count) count.textContent = `${list.querySelectorAll('.v2-task-row').length} prioriterede punkter`;
@@ -223,7 +249,7 @@
       const scenes = card.querySelector('.producer-scenes')?.textContent || card.textContent || '';
       if (!/\b4A\b/.test(scenes)) return;
       const comment = card.querySelector('.producer-location-comment, .producer-comment');
-      if (comment) comment.textContent = `${TOR_NAME} finder de tre børn og får aftaler samt forældretilladelser på plads. ${RUNI_NAME} ordner lyset til scene 4A.`;
+      if (comment) comment.textContent = `${TOR_NAME} finder de tre børn og får aftaler samt forældretilladelser på plads. ${HEIDI_NAME} afventer kontaktoplysningerne, afstemmer derefter børnenes tøj med familierne og skaffer en fodbold. ${RUNI_NAME} ordner lyset til scene 4A.`;
       card.dataset.scene4aResponsibility = VERSION;
     });
   }
