@@ -77,7 +77,8 @@ export default async (request, context) => {
     '<script src="/skala-task-correction-v1.js?v=59d527e341832551a4137822507e0e4838ef97db" defer></script>',
     '<script src="/scene-4a-responsibilities-v1.js?v=cf4950eb69e6394afbc67d3c1e217c8db9bc1d19" defer></script>',
     '<script src="/my-tasks-v1.js?v=4c6ef0db69dae3291df2d5f7118ce3c2685ca150" defer></script>',
-    '<script src="/helena-cast-merge-v1.js?v=c8999904412b9c4994a9777ac2aea7a804a1ac68" defer></script>'
+    '<script src="/helena-cast-merge-v1.js?v=c8999904412b9c4994a9777ac2aea7a804a1ac68" defer></script>',
+    '<script src="/helena-task-selector-v1.js?v=0c06dfb6c6cb040941f41d1542d6f9171c2c42ab" defer></script>'
   ].join('');
 
   html = html
