@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2026-08-06-1232';
+  const VERSION = '2026-08-06-2048';
 
   const RUNI = {
     id: 'runi-friis-kjaer',
@@ -11,7 +11,9 @@
     email: 'rfk@friiframe.fo',
     phone: '+298 218218',
     telHref: '+298218218',
-    note: 'Ansvarlig for lys på scene 4A i Elduvík den 10. august kl. 21:30.'
+    note: 'Ansvarlig for lys på scene 4A i Elduvík den 10. august kl. 21:30.',
+    groupPattern: /Filmhold og produktion/i,
+    groupTitle: 'Filmhold og produktion'
   };
 
   const HEIDI = {
@@ -22,10 +24,24 @@
     email: 'heidi@atlanta.fo',
     phone: '+298 790050',
     telHref: '+298790050',
-    note: 'Stylist på scene 4A i Elduvík den 10. august kl. 21:30. Afventer børnenes navne og forældrekontakter fra Tór Verland Johansen.'
+    note: 'Stylist på scene 4A i Elduvík den 10. august kl. 21:30. Afventer børnenes navne og forældrekontakter fra Tór Verland Johansen.',
+    groupPattern: /Filmhold og produktion/i,
+    groupTitle: 'Filmhold og produktion'
   };
 
-  const TEAM_MEMBERS = [RUNI, HEIDI];
+  const HELENA = {
+    id: 'helena-hedinsdottir-guttesen',
+    name: 'Helena Heðinsdóttir Guttesen',
+    role: 'Skuespiller · mor',
+    email: '',
+    phone: '+298 274450',
+    telHref: '+298274450',
+    note: 'Spiller mor i SEV26-filmen.',
+    groupPattern: /Skuespillere|Medvirkende|Cast/i,
+    groupTitle: 'Skuespillere og medvirkende'
+  };
+
+  const TEAM_MEMBERS = [RUNI, HEIDI, HELENA];
 
   const PERSONAL_TASKS = {
     [RUNI.personId]: {
@@ -74,7 +90,7 @@
       .toLocaleLowerCase('da-DK');
     if (!query) return true;
 
-    const searchable = `${member.name} ${member.role} ${member.email} ${member.phone} ${member.note}`
+    const searchable = `${member.name} ${member.role} ${member.email || ''} ${member.phone} ${member.note}`
       .toLocaleLowerCase('da-DK');
     return searchable.includes(query);
   }
@@ -87,10 +103,37 @@
     count.textContent = `${total} ${total === 1 ? 'person' : 'personer'}`;
   }
 
+  function createGroup(groups, member) {
+    const group = document.createElement('section');
+    group.className = 'team-group';
+    group.dataset.teamGroupCreated = member.id;
+    group.innerHTML = `
+      <div class="team-group-head">
+        <div>
+          <div class="team-group-title">${member.groupTitle}</div>
+          <div class="team-group-description">Skuespillere og øvrige medvirkende på produktionen.</div>
+        </div>
+        <span class="team-group-count">0 personer</span>
+      </div>
+      <div class="team-card-grid"></div>`;
+    groups.appendChild(group);
+    return group;
+  }
+
+  function findOrCreateGroup(groups, member) {
+    return [...groups.querySelectorAll('.team-group')]
+      .find(section => member.groupPattern.test(
+        section.querySelector('.team-group-title')?.textContent || ''
+      )) || createGroup(groups, member);
+  }
+
   function memberCard(member) {
     const card = document.createElement('article');
     card.className = 'team-card';
     card.dataset.teamMember = member.id;
+    const emailLink = member.email
+      ? `<a href="mailto:${member.email}">✉ ${member.email}</a>`
+      : '';
     card.innerHTML = `
       <div class="team-card-top">
         <div>
@@ -101,7 +144,7 @@
       </div>
       <p class="team-card-note">${member.note}</p>
       <div class="team-contact-list">
-        <a href="mailto:${member.email}">✉ ${member.email}</a>
+        ${emailLink}
         <a href="tel:${member.telHref}">☎ ${member.phone}</a>
       </div>`;
     return card;
@@ -111,29 +154,29 @@
     const groups = document.getElementById('team-groups');
     if (!groups) return false;
 
-    const group = [...groups.querySelectorAll('.team-group')]
-      .find(section => /Filmhold og produktion/i.test(
-        section.querySelector('.team-group-title')?.textContent || ''
-      ));
-    if (!group) return false;
-
-    const grid = group.querySelector('.team-card-grid');
-    if (!grid) return false;
-
     TEAM_MEMBERS.forEach(member => {
+      const targetGroup = findOrCreateGroup(groups, member);
+      const grid = targetGroup.querySelector('.team-card-grid');
+      if (!grid) return;
+
       const selector = `[data-team-member="${member.id}"]`;
-      const existing = grid.querySelector(selector);
+      const existing = groups.querySelector(selector);
 
       if (!searchMatches(member)) {
         existing?.remove();
+        updateTeamCount(targetGroup);
         return;
       }
 
-      if (!existing) grid.appendChild(memberCard(member));
-      else existing.replaceWith(memberCard(member));
+      const card = memberCard(member);
+      if (existing) existing.replaceWith(card);
+      else grid.appendChild(card);
+
+      if (card.parentElement !== grid) grid.appendChild(card);
+      updateTeamCount(targetGroup);
     });
 
-    updateTeamCount(group);
+    groups.querySelectorAll('.team-group').forEach(updateTeamCount);
     return true;
   }
 
@@ -182,7 +225,8 @@
   }
 
   function ensureOptions(select) {
-    TEAM_MEMBERS.forEach(member => {
+    const taskMembers = Object.values(PERSONAL_TASKS).map(task => task.member);
+    taskMembers.forEach(member => {
       let option = select.querySelector(`option[value="${member.personId}"]`);
       if (!option) {
         option = document.createElement('option');
