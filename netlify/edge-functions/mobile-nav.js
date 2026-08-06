@@ -74,7 +74,8 @@ export default async (request, context) => {
     '<script src="/calendar-shoot-links-v1.js?v=8c8cbfc899c4848f2d1abd0d5f5f25a1bf08e127" defer></script>',
     '<script src="/portal-v2-priority.js?v=bdbe4400f82710743b3303c727abae67bfceec34" defer></script>',
     '<script src="/frontpage-production-status-v1.js?v=e07b6c379fac865513a2d9729dc610f519d256c6" defer></script>',
-    '<script src="/skala-task-correction-v1.js?v=59d527e341832551a4137822507e0e4838ef97db" defer></script>'
+    '<script src="/skala-task-correction-v1.js?v=59d527e341832551a4137822507e0e4838ef97db" defer></script>',
+    '<script src="/scene-4a-responsibilities-v1.js?v=0bcf1e32f9e23a0c224d3fe5f117954f91242f73" defer></script>'
   ].join('');
 
   html = html
