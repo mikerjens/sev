@@ -75,7 +75,8 @@ export default async (request, context) => {
     '<script src="/portal-v2-priority.js?v=bdbe4400f82710743b3303c727abae67bfceec34" defer></script>',
     '<script src="/frontpage-production-status-v1.js?v=e07b6c379fac865513a2d9729dc610f519d256c6" defer></script>',
     '<script src="/skala-task-correction-v1.js?v=59d527e341832551a4137822507e0e4838ef97db" defer></script>',
-    '<script src="/scene-4a-responsibilities-v1.js?v=cf4950eb69e6394afbc67d3c1e217c8db9bc1d19" defer></script>'
+    '<script src="/scene-4a-responsibilities-v1.js?v=cf4950eb69e6394afbc67d3c1e217c8db9bc1d19" defer></script>',
+    '<script src="/my-tasks-v1.js?v=4c6ef0db69dae3291df2d5f7118ce3c2685ca150" defer></script>'
   ].join('');
 
   html = html
