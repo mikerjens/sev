@@ -68,7 +68,7 @@ export default async (request, context) => {
     '<script src="/scene-location-updates-v2.js?v=3e0ef28fe5965a4fa0c47f8b84cc355067e3e99f" defer></script>',
     '<script src="/scene-links-v1.js?v=c6bfbd35afd9d5029a3c82113e05f972106bc3f6" defer></script>',
     '<script src="/skala-final-lock-v1.js?v=010103c49ce01e5025ec9b103f3f8a31eb820118" defer></script>',
-    '<script src="/runi-team-v1.js?v=30a55097edc4a86fc3e832a45a14adc41938cf28" defer></script>',
+    '<script src="/runi-team-v1.js?v=20f4326214be77e95207cdc07b33fe62cb1a5e3e" defer></script>',
     '<script src="/personal-schedule-guide-v1.js?v=9996d4f77642c390b30125065cbaea216dfe485b" defer></script>',
     '<script src="/scene-5a-filmed-v1.js?v=1f882c065b5a15c3bc6997be64ba8e37ca821103" defer></script>',
     '<script src="/calendar-shoot-links-v1.js?v=8c8cbfc899c4848f2d1abd0d5f5f25a1bf08e127" defer></script>',
