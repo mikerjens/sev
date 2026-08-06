@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2026-08-06-1116';
+  const VERSION = '2026-08-06-1121';
   const MONTH_PREFIX = '2026-08-';
 
   function dateFromCell(cell) {
@@ -16,17 +16,33 @@
     return match ? match[1].toUpperCase() : '';
   }
 
-  function findShootEvent(scene) {
+  function dayFromDateKey(dateKey) {
+    return Number.parseInt((dateKey || '').slice(-2), 10);
+  }
+
+  function cardMatchesDate(card, dateKey) {
+    if (!dateKey) return false;
+    if (card.dataset.shootDate === dateKey) return true;
+    const day = dayFromDateKey(dateKey);
+    if (!Number.isFinite(day)) return false;
+    const dateText = card.querySelector('.next-shoot-date')?.textContent || '';
+    return new RegExp(`(^|\\D)${day}(\\D|$)`).test(dateText);
+  }
+
+  function findShootEvent(scene, dateKey) {
     const cards = [...document.querySelectorAll('#panel-next-scenes .next-scenes-page-events .next-shoot-event')];
-    if (!scene) return cards[0] || null;
-    return cards.find(card => [...card.querySelectorAll('.next-shoot-scenes strong')]
-      .some(chip => chip.textContent.trim().toUpperCase() === scene)) || null;
+    if (scene) {
+      const sceneMatch = cards.find(card => [...card.querySelectorAll('.next-shoot-scenes strong')]
+        .some(chip => chip.textContent.trim().toUpperCase() === scene));
+      if (sceneMatch) return sceneMatch;
+    }
+    return cards.find(card => cardMatchesDate(card, dateKey)) || null;
   }
 
   function openShoot(dateKey, scene) {
     window.openPortalTab?.('next-scenes');
     window.setTimeout(() => {
-      const target = findShootEvent(scene);
+      const target = findShootEvent(scene, dateKey);
       if (!target) return;
       target.id = `optagelse-${dateKey || scene.toLowerCase()}`;
       target.classList.remove('calendar-target-shoot');
@@ -34,7 +50,7 @@
       target.classList.add('calendar-target-shoot');
       target.scrollIntoView({ behavior: 'smooth', block: 'center' });
       window.setTimeout(() => target.classList.remove('calendar-target-shoot'), 2400);
-    }, 80);
+    }, 100);
   }
 
   function currentShootCell(card) {
@@ -52,41 +68,53 @@
     openShoot(dateFromCell(cell), sceneFromCell(cell));
   }
 
-  function enhanceCalendar(card) {
-    if (card.dataset.shootLinks === VERSION) return;
-    card.dataset.shootLinks = VERSION;
-
-    card.querySelectorAll('.mini-cal-day.has-shoot').forEach(cell => {
-      cell.setAttribute('role', 'button');
-      cell.setAttribute('tabindex', '0');
-      cell.setAttribute('title', 'Åbn den aktuelle optagelse');
-      cell.addEventListener('click', event => {
-        event.stopPropagation();
-        activateCell(cell);
-      });
-      cell.addEventListener('keydown', event => {
-        if (event.key !== 'Enter' && event.key !== ' ') return;
-        event.preventDefault();
-        activateCell(cell);
-      });
+  function enhanceCell(cell) {
+    if (cell.dataset.shootLink === VERSION) return;
+    cell.dataset.shootLink = VERSION;
+    cell.setAttribute('role', 'button');
+    cell.setAttribute('tabindex', '0');
+    cell.setAttribute('title', 'Åbn optagelsen denne dag');
+    cell.addEventListener('click', event => {
+      event.stopPropagation();
+      activateCell(cell);
     });
+    cell.addEventListener('keydown', event => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      activateCell(cell);
+    });
+  }
 
+  function enhanceHeader(card) {
     const header = card.querySelector('.shoot-calendar-head');
-    if (header) {
-      header.setAttribute('role', 'button');
-      header.setAttribute('tabindex', '0');
-      header.setAttribute('title', 'Åbn den aktuelle optagelse');
-      const openCurrent = () => {
-        const cell = currentShootCell(card);
-        if (cell) activateCell(cell);
-      };
-      header.addEventListener('click', openCurrent);
-      header.addEventListener('keydown', event => {
-        if (event.key !== 'Enter' && event.key !== ' ') return;
-        event.preventDefault();
-        openCurrent();
-      });
-    }
+    if (!header || header.dataset.shootLink === VERSION) return;
+    header.dataset.shootLink = VERSION;
+    header.setAttribute('role', 'button');
+    header.setAttribute('tabindex', '0');
+    header.setAttribute('title', 'Åbn den næste aktuelle optagelse');
+    const openCurrent = () => {
+      const cell = currentShootCell(card);
+      if (cell) activateCell(cell);
+    };
+    header.addEventListener('click', openCurrent);
+    header.addEventListener('keydown', event => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      openCurrent();
+    });
+  }
+
+  function enhanceCalendar(card) {
+    card.querySelectorAll('.mini-cal-day.has-shoot').forEach(enhanceCell);
+    enhanceHeader(card);
+  }
+
+  function labelShootCards() {
+    document.querySelectorAll('#panel-next-scenes .next-scenes-page-events .next-shoot-event').forEach(card => {
+      const text = card.querySelector('.next-shoot-date')?.textContent || '';
+      const match = text.match(/(?:^|\D)(5|10|17)(?:\D|$)/);
+      if (match) card.dataset.shootDate = `${MONTH_PREFIX}${match[1].padStart(2, '0')}`;
+    });
   }
 
   function installStyles() {
@@ -110,6 +138,7 @@
 
   function install() {
     installStyles();
+    labelShootCards();
     document.querySelectorAll('.shoot-calendar-card').forEach(enhanceCalendar);
   }
 
@@ -121,6 +150,6 @@
   }
 
   const observer = new MutationObserver(install);
-  observer.observe(document.documentElement, { childList: true, subtree: true });
+  observer.observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'aria-label'] });
   window.setTimeout(install, 1200);
 })();
