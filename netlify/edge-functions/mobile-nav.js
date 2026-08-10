@@ -35,12 +35,6 @@ export default async (request, context) => {
     transition: opacity 140ms ease;
   }
 
-  #panel-next-scenes .next-scenes-page-grid > .shoot-calendar-card .next-shoot-list,
-  #panel-next-scenes .next-scenes-page-grid > .shoot-calendar-card .calendar-undated,
-  #panel-next-scenes .next-scenes-page-grid > .shoot-calendar-card .calendar-filmed {
-    display: none;
-  }
-
   @media (max-width: 700px) {
     nav.tabs {
       display: grid;
@@ -62,24 +56,16 @@ export default async (request, context) => {
   }
 </style>`;
 
+  // Keep one authoritative correction layer after the stable portal.
+  // This avoids old location/casting/team patches rewriting the approved plan.
   const portalScripts = [
     '<script src="/home-plan-default-v1.js?v=af6c5d23efcd3eade324b3bba5ba469a2a25d232" defer></script>',
     '<script src="/sev-portal-stable-v1.js?v=cc45112b14ae1aa825e27e0f191fc0500608bf94" defer></script>',
-    '<script src="/scene-location-updates-v2.js?v=3e0ef28fe5965a4fa0c47f8b84cc355067e3e99f" defer></script>',
+    '<script src="/approved-production-plan-v1.js?v=6af81a1f26c43ac61244f0b71c9826d4858ee271" defer></script>',
     '<script src="/scene-links-v1.js?v=c6bfbd35afd9d5029a3c82113e05f972106bc3f6" defer></script>',
-    '<script src="/skala-final-lock-v1.js?v=010103c49ce01e5025ec9b103f3f8a31eb820118" defer></script>',
-    '<script src="/runi-team-v1.js?v=20f4326214be77e95207cdc07b33fe62cb1a5e3e" defer></script>',
-    '<script src="/personal-schedule-guide-v1.js?v=9996d4f77642c390b30125065cbaea216dfe485b" defer></script>',
-    '<script src="/scene-5a-filmed-v1.js?v=1f882c065b5a15c3bc6997be64ba8e37ca821103" defer></script>',
-    '<script src="/calendar-shoot-links-v1.js?v=8c8cbfc899c4848f2d1abd0d5f5f25a1bf08e127" defer></script>',
     '<script src="/portal-v2-priority.js?v=bdbe4400f82710743b3303c727abae67bfceec34" defer></script>',
     '<script src="/frontpage-production-status-v1.js?v=e07b6c379fac865513a2d9729dc610f519d256c6" defer></script>',
-    '<script src="/skala-task-correction-v1.js?v=59d527e341832551a4137822507e0e4838ef97db" defer></script>',
-    '<script src="/scene-4a-responsibilities-v1.js?v=cf4950eb69e6394afbc67d3c1e217c8db9bc1d19" defer></script>',
-    '<script src="/scene-4a-casting-status-v1.js?v=656dd7899d217b9749c35b9568f65796751eca11" defer></script>',
-    '<script src="/my-tasks-v1.js?v=4c6ef0db69dae3291df2d5f7118ce3c2685ca150" defer></script>',
-    '<script src="/helena-cast-merge-v1.js?v=c8999904412b9c4994a9777ac2aea7a804a1ac68" defer></script>',
-    '<script src="/helena-task-selector-v1.js?v=0c06dfb6c6cb040941f41d1542d6f9171c2c42ab" defer></script>'
+    '<script src="/my-tasks-v1.js?v=f8f37d92ac8af7b55f15bd9cf94d007c535b868b" defer></script>'
   ].join('');
 
   html = html
