@@ -1,4 +1,33 @@
 export default async (request, context) => {
+  const requestUrl = new URL(request.url);
+
+  // Same-origin storyboard PDF proxy. This removes the Google Drive redirect from
+  // the iframe, so Chrome can reliably respect #page=N when a scene is selected.
+  if (requestUrl.pathname === "/storyboard.pdf") {
+    const source = "https://drive.google.com/uc?export=download&id=1tb161Lvzr8Y5R7OdyTiWflT76jwbmgEN&confirm=t";
+    const upstreamHeaders = new Headers();
+    const range = request.headers.get("range");
+    if (range) upstreamHeaders.set("range", range);
+
+    const upstream = await fetch(source, { headers: upstreamHeaders, redirect: "follow" });
+    if (!upstream.ok && upstream.status !== 206) {
+      return new Response("Storyboard kunne ikke indlæses", { status: 502 });
+    }
+
+    const headers = new Headers(upstream.headers);
+    headers.set("content-type", "application/pdf");
+    headers.set("content-disposition", 'inline; filename="SEV26_storyboard_vers_1.pdf"');
+    headers.set("cache-control", "public, max-age=3600");
+    headers.delete("x-frame-options");
+    headers.delete("content-security-policy");
+
+    return new Response(upstream.body, {
+      status: upstream.status,
+      statusText: upstream.statusText,
+      headers,
+    });
+  }
+
   const response = await context.next();
   const contentType = response.headers.get("content-type") || "";
 
@@ -56,7 +85,7 @@ export default async (request, context) => {
     '<script src="/scene-links-light-v2.js?v=4d10dd8e9212eed5a03cdad6592e6a632ef8e2b2" defer></script>',
     '<script src="/filmed-scenes-authoritative-v2.js?v=3e74ac1de472df822dd06a22fc62798bd2847164" defer></script>',
     '<script src="/team-contacts-doc-aug10-v1.js?v=ab8a94a497bf5705672d30839ac82c13ad626d29" defer></script>',
-    '<script src="/storyboard-stability-v2.js?v=560c2b165d88fde8d7ee45a0a8815152e34c2a1b" defer></script>'
+    '<script src="/storyboard-stability-v3.js?v=b24176d4e5e31be17f95958a2670725ae9b3610d" defer></script>'
   ].join('');
 
   html = html
