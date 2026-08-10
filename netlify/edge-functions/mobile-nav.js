@@ -48,11 +48,11 @@ export default async (request, context) => {
   }
 </style>`;
 
-  // One standalone authoritative portal layer. It does not depend on the old
-  // production-task or correction scripts being ready before it can show the plan.
+  // One standalone authoritative portal layer. The detailed Plan & optagelser
+  // page is always HJEM and repairs itself if an older script rewrites the panel.
   const portalScripts = [
     '<script src="/portal-loading-safety-v1.js?v=dd04919e3c91f5947bbd7e3de7bf2f41535b8c0e" defer></script>',
-    '<script src="/portal-approved-core-v2.js?v=abfb64bceff6d6d91c46ff4376b0bae2a90d7ac9" defer></script>',
+    '<script src="/portal-approved-core-v3.js?v=1e78b5b238e0e24b4fc7df5324f23fe138a27fb3" defer></script>',
     '<script src="/scene-links-v1.js?v=c6bfbd35afd9d5029a3c82113e05f972106bc3f6" defer></script>'
   ].join('');
 
