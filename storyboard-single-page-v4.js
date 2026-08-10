@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2026-08-10-1448';
+  const VERSION = '2026-08-10-2052';
   const LOCAL_PDF = '/storyboard.pdf';
   const DRIVE_VIEW = 'https://drive.google.com/file/d/1tb161Lvzr8Y5R7OdyTiWflT76jwbmgEN/view?usp=drive_link';
   const PDFJS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
@@ -55,7 +55,7 @@
     '18A': { pages: '26', title: 'Animeret SEV-logo' }
   };
 
-  const FILMED = new Set(['3A', '5A', '6A', '7A']);
+  const FILMED = new Set(['3A', '4A', '5A', '6A', '7A']);
   let pdfDocumentPromise = null;
   let pdfJsPromise = null;
   let renderGeneration = 0;
