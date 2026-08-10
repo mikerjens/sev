@@ -96,7 +96,8 @@ export default async (request, context) => {
     '<script src="/team-contacts-doc-aug10-v1.js?v=c99ae7af3cf283b536037b3a4d03bd56d3f53247" defer></script>',
     '<script src="/storyboard-single-page-v4.js?v=dd44d38648954002e3040c2b97e22c9b857d4003" defer></script>',
     '<script src="/portal-release-3.0.js?v=aebdea47448a583dca9aaa474c246ccba856ef97" defer></script>',
-    '<script src="/location-skalabudin-link-v1.js?v=cab50fb49dfd9247b274725fd5d44adfe3edd1ed" defer></script>'
+    '<script src="/location-skalabudin-link-v1.js?v=cab50fb49dfd9247b274725fd5d44adfe3edd1ed" defer></script>',
+    '<script src="/hide-filmed-from-schedule-v1.js?v=b309adb22c6bdf916f98d1c4c0fc4b822c6b05f1" defer></script>'
   ].join('');
 
   html = html
