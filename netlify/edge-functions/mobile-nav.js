@@ -8,31 +8,24 @@ export default async (request, context) => {
 
   let html = await response.text();
 
+  // Never hide the portal while enhancement scripts are loading.
+  // The base page must remain usable even if one later script is slow or fails.
   const portalBoot = `
 <script>
-  document.documentElement.classList.add('sev-booting');
-  window.setTimeout(() => {
-    if (document.documentElement.classList.contains('sev-booting')) {
-      document.documentElement.classList.remove('sev-booting');
-      document.documentElement.classList.add('sev-ready');
-    }
-  }, 6000);
+  document.documentElement.classList.remove('sev-booting');
+  document.documentElement.classList.add('sev-ready');
 </script>`;
 
   const portalStyles = `
 <style>
   html.sev-booting nav.tabs,
   html.sev-booting .weather-shortcut,
-  html.sev-booting main {
-    opacity: 0;
-    pointer-events: none;
-  }
-
+  html.sev-booting main,
   html.sev-ready nav.tabs,
   html.sev-ready .weather-shortcut,
   html.sev-ready main {
-    opacity: 1;
-    transition: opacity 140ms ease;
+    opacity: 1 !important;
+    pointer-events: auto !important;
   }
 
   @media (max-width: 700px) {
@@ -58,6 +51,7 @@ export default async (request, context) => {
 
   // Stable base + one approved production-plan data layer.
   const portalScripts = [
+    '<script src="/portal-loading-safety-v1.js?v=dd04919e3c91f5947bbd7e3de7bf2f41535b8c0e" defer></script>',
     '<script src="/home-plan-default-v1.js?v=af6c5d23efcd3eade324b3bba5ba469a2a25d232" defer></script>',
     '<script src="/sev-portal-stable-v1.js?v=cc45112b14ae1aa825e27e0f191fc0500608bf94" defer></script>',
     '<script src="/approved-production-plan-v1.js?v=6af81a1f26c43ac61244f0b71c9826d4858ee271" defer></script>',
