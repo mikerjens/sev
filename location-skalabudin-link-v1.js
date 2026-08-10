@@ -1,9 +1,8 @@
 (() => {
   'use strict';
 
-  const VERSION = '2026-08-10-1512';
+  const VERSION = '2026-08-10-1516';
   const LOCATION_URL = 'https://www.airbnb.dk/rooms/17985150?unique_share_id=d24602e0-e283-4688-8c00-39153d143b81&viralityEntryPoint=1&s=76&source_impression_id=p3_1786370596_P3Bm4DyxDVfA1x9G';
-  let scheduled = false;
 
   function addStyles() {
     if (document.getElementById('sev-location-link-styles')) return;
@@ -19,20 +18,13 @@
     document.head.appendChild(style);
   }
 
-  function findCard() {
-    const root = document.querySelector('#panel-schedule [data-plan-v3-root]');
-    if (!root) return null;
-    return [...root.querySelectorAll('.ap3-shoot')].find(item => {
-      const text = (item.textContent || '').replace(/\s+/g, ' ');
-      return /17\. AUGUST/i.test(text) && /Indendørs optagelser/i.test(text) && /Skálabúðin/i.test(text);
-    }) || null;
+  function isSkalabudinCard(card) {
+    const text = (card?.textContent || '').replace(/\s+/g, ' ');
+    return /17\. AUGUST/i.test(text) && /Indendørs optagelser/i.test(text) && /Skálabúðin/i.test(text);
   }
 
-  function patchLocation() {
-    scheduled = false;
-    addStyles();
-    const card = findCard();
-    if (!card) return false;
+  function patchCard(card) {
+    if (!card || !isSkalabudinCard(card)) return false;
 
     const location = card.querySelector('.ap3-location');
     if (location && !location.querySelector('.sev-location-link')) {
@@ -62,27 +54,34 @@
     return true;
   }
 
-  function schedulePatch() {
-    if (scheduled) return;
-    scheduled = true;
-    window.requestAnimationFrame(patchLocation);
+  function patchAllLocations() {
+    addStyles();
+    let patched = 0;
+    document.querySelectorAll('#panel-schedule .ap3-shoot, #panel-my-schedule .ap3-shoot').forEach(card => {
+      if (patchCard(card)) patched += 1;
+    });
+    return patched;
+  }
+
+  function patchAfterRender() {
+    [0, 60, 180, 450].forEach(delay => window.setTimeout(patchAllLocations, delay));
   }
 
   function start() {
-    patchLocation();
-    [250, 800, 1600, 3400].forEach(delay => window.setTimeout(patchLocation, delay));
+    patchAfterRender();
 
-    const panel = document.getElementById('panel-schedule');
-    if (panel && !panel.dataset.locationObserverV1) {
-      panel.dataset.locationObserverV1 = VERSION;
-      const observer = new MutationObserver(() => schedulePatch());
-      observer.observe(panel, { childList: true, subtree: true });
-    }
+    // Personal schedules are rendered on demand. Re-apply the location link after
+    // a name is selected or the user opens HJEM / Mit skema. No MutationObserver
+    // is used here so this helper stays light and cannot make the portal sluggish.
+    document.addEventListener('change', event => {
+      const target = event.target instanceof Element ? event.target : null;
+      if (target?.matches('#ap3-home-person, #panel-my-schedule select')) patchAfterRender();
+    }, true);
 
     document.addEventListener('click', event => {
       const target = event.target instanceof Element ? event.target : null;
-      if (target?.closest('nav.tabs button[data-tab="schedule"], .brand, [data-home]')) {
-        window.setTimeout(patchLocation, 0);
+      if (target?.closest('nav.tabs button[data-tab="schedule"], nav.tabs button[data-tab="my-schedule"], [data-open-personal], .brand, [data-home]')) {
+        patchAfterRender();
       }
     }, true);
   }
