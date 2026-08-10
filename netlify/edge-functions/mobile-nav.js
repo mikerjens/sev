@@ -56,7 +56,7 @@ export default async (request, context) => {
     '<script src="/scene-links-light-v2.js?v=4d10dd8e9212eed5a03cdad6592e6a632ef8e2b2" defer></script>',
     '<script src="/filmed-scenes-authoritative-v2.js?v=3e74ac1de472df822dd06a22fc62798bd2847164" defer></script>',
     '<script src="/team-contacts-doc-aug10-v1.js?v=ab8a94a497bf5705672d30839ac82c13ad626d29" defer></script>',
-    '<script src="/storyboard-stability-v2.js?v=357e57f6660c2e824969ba46d10438be2a2d3c62" defer></script>'
+    '<script src="/storyboard-stability-v2.js?v=560c2b165d88fde8d7ee45a0a8815152e34c2a1b" defer></script>'
   ].join('');
 
   html = html
