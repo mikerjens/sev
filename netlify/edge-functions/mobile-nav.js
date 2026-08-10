@@ -55,7 +55,7 @@ export default async (request, context) => {
     '<script src="/portal-approved-core-v3.js?v=1e78b5b238e0e24b4fc7df5324f23fe138a27fb3" defer></script>',
     '<script src="/scene-links-v1.js?v=c6bfbd35afd9d5029a3c82113e05f972106bc3f6" defer></script>',
     '<script src="/filmed-scenes-authoritative-v1.js?v=6dcd13ec3238d045ce5bca079224758f2a071e50" defer></script>',
-    '<script src="/team-contacts-doc-aug10-v1.js?v=6122d75af72b01d43ff867c3c4b7c33306629a97" defer></script>'
+    '<script src="/team-contacts-doc-aug10-v1.js?v=ab8a94a497bf5705672d30839ac82c13ad626d29" defer></script>'
   ].join('');
 
   html = html
