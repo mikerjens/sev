@@ -1,10 +1,10 @@
 export default async (request, context) => {
   const requestUrl = new URL(request.url);
 
-  // Portal 2.0 owns TEAM and storyboard navigation. The old correction script
+  // Portal 3.0 owns TEAM and storyboard navigation. The old correction script
   // dynamically loaded by weather-faroe.js used to overwrite TEAM with only five people.
   if (requestUrl.pathname === "/production-team-correction.js") {
-    return new Response("// Disabled by SEV Produktionsportal 2.0: legacy TEAM/storyboard correction.\n", {
+    return new Response("// Disabled by SEV Produktionsportal 3.0: legacy TEAM/storyboard correction.\n", {
       status: 200,
       headers: {
         "content-type": "application/javascript; charset=utf-8",
@@ -52,7 +52,7 @@ export default async (request, context) => {
 <script>
   document.documentElement.classList.remove('sev-booting');
   document.documentElement.classList.add('sev-ready');
-  document.documentElement.dataset.sevPortalVersion = '2.0';
+  document.documentElement.dataset.sevPortalVersion = '3.0';
 </script>`;
 
   const portalStyles = `
@@ -95,7 +95,7 @@ export default async (request, context) => {
     '<script src="/filmed-scenes-authoritative-v2.js?v=3e74ac1de472df822dd06a22fc62798bd2847164" defer></script>',
     '<script src="/team-contacts-doc-aug10-v1.js?v=c99ae7af3cf283b536037b3a4d03bd56d3f53247" defer></script>',
     '<script src="/storyboard-single-page-v4.js?v=cad987d2839425f24d550b2da190599600a6db86" defer></script>',
-    '<script src="/portal-release-2.0.js?v=d938b2fa72d18f1792b8d98d081e384862414fe9" defer></script>'
+    '<script src="/portal-release-3.0.js?v=aebdea47448a583dca9aaa474c246ccba856ef97" defer></script>'
   ].join('');
 
   html = html
@@ -110,7 +110,7 @@ export default async (request, context) => {
   headers.set("cache-control", "no-store, no-cache, must-revalidate, max-age=0");
   headers.set("pragma", "no-cache");
   headers.set("expires", "0");
-  headers.set("x-sev-portal-version", "2.0");
+  headers.set("x-sev-portal-version", "3.0");
 
   return new Response(html, {
     status: response.status,
