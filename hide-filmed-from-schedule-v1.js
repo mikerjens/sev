@@ -1,0 +1,62 @@
+(() => {
+  'use strict';
+
+  const VERSION = '2026-08-10-2056';
+  const FILMED = new Set(['3A', '4A', '5A', '6A', '7A']);
+  let applying = false;
+  let queued = false;
+
+  function removeFilmedShoots(panel) {
+    if (!panel) return;
+    panel.querySelectorAll('.ap3-shoot').forEach(card => {
+      const scenes = [...card.querySelectorAll('[data-scene-link]')]
+        .map(link => String(link.dataset.sceneLink || '').toUpperCase())
+        .filter(Boolean);
+      if (scenes.length && scenes.every(scene => FILMED.has(scene))) card.remove();
+    });
+  }
+
+  function updatePersonalSummary() {
+    const panel = document.getElementById('panel-my-schedule');
+    const summary = panel?.querySelector('.ap3-person-summary');
+    if (!panel || !summary) return;
+    const count = panel.querySelectorAll('.ap3-plan-list .ap3-shoot').length;
+    summary.innerHTML = summary.innerHTML.replace(/\d+ planlagte optagelser/, `${count} planlagte optagelser`);
+  }
+
+  function apply() {
+    if (applying) return;
+    applying = true;
+    try {
+      removeFilmedShoots(document.getElementById('panel-schedule'));
+      removeFilmedShoots(document.getElementById('panel-my-schedule'));
+      updatePersonalSummary();
+      document.documentElement.dataset.hideFilmedFromSchedule = VERSION;
+    } finally {
+      applying = false;
+    }
+  }
+
+  function scheduleApply() {
+    if (queued) return;
+    queued = true;
+    window.requestAnimationFrame(() => {
+      queued = false;
+      apply();
+    });
+  }
+
+  const observer = new MutationObserver(() => {
+    if (!applying) scheduleApply();
+  });
+
+  function start() {
+    apply();
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+    window.setTimeout(apply, 600);
+    window.setTimeout(apply, 1600);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
+  else start();
+})();
