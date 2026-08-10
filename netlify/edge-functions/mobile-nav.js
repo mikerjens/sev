@@ -56,15 +56,13 @@ export default async (request, context) => {
   }
 </style>`;
 
-  // Keep one authoritative correction layer after the stable portal.
-  // This avoids old location/casting/team patches rewriting the approved plan.
+  // Stable base + one approved plan layer. Old location/casting/team overrides are intentionally not injected.
   const portalScripts = [
     '<script src="/home-plan-default-v1.js?v=af6c5d23efcd3eade324b3bba5ba469a2a25d232" defer></script>',
     '<script src="/sev-portal-stable-v1.js?v=cc45112b14ae1aa825e27e0f191fc0500608bf94" defer></script>',
     '<script src="/approved-production-plan-v1.js?v=6af81a1f26c43ac61244f0b71c9826d4858ee271" defer></script>',
     '<script src="/scene-links-v1.js?v=c6bfbd35afd9d5029a3c82113e05f972106bc3f6" defer></script>',
     '<script src="/portal-v2-priority.js?v=bdbe4400f82710743b3303c727abae67bfceec34" defer></script>',
-    '<script src="/frontpage-production-status-v1.js?v=e07b6c379fac865513a2d9729dc610f519d256c6" defer></script>',
     '<script src="/my-tasks-v1.js?v=f8f37d92ac8af7b55f15bd9cf94d007c535b868b" defer></script>'
   ].join('');
 
