@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2026-08-10-1425';
+  const VERSION = '2026-08-10-1433';
   const FILE_ID = '1tb161Lvzr8Y5R7OdyTiWflT76jwbmgEN';
   const DRIVE_VIEW = `https://drive.google.com/file/d/${FILE_ID}/view?usp=drive_link`;
   const INLINE_PDF = `https://drive.google.com/uc?export=view&id=${FILE_ID}`;
@@ -56,6 +56,14 @@
   function updateSceneCards() {
     const panel = document.getElementById('panel-storyboard');
     if (!panel) return;
+
+    const head = panel.querySelector('.section-head');
+    if (head) {
+      const h2 = head.querySelector('h2');
+      const p = head.querySelector('p');
+      if (h2) h2.textContent = 'Storyboard og sceneoversigt';
+      if (p) p.textContent = 'Vælg en scene for at åbne den tilhørende side i storyboardet.';
+    }
 
     panel.querySelectorAll('.storyboard-scene-card[data-storyboard-scene]').forEach(card => {
       const sceneId = card.dataset.storyboardScene;
@@ -134,12 +142,16 @@
     }
   }
 
+  function activeSceneId() {
+    return document.querySelector('#panel-storyboard .storyboard-scene-card.active[data-storyboard-scene]')?.dataset.storyboardScene || '1A';
+  }
+
   function installFrameHandlers() {
     const frame = document.getElementById('storyboard-frame');
     if (!frame || frame.dataset.stableHandlers === VERSION) return;
     frame.dataset.stableHandlers = VERSION;
     frame.addEventListener('load', () => {
-      frame.dataset.stableLoaded = 'true';
+      if (frame.src !== 'about:blank') frame.dataset.stableLoaded = 'true';
     });
   }
 
@@ -150,10 +162,20 @@
     document.addEventListener('click', event => {
       const target = event.target instanceof Element ? event.target : null;
       const sceneButton = target?.closest('#panel-storyboard [data-storyboard-scene]');
-      if (!sceneButton) return;
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      openScene(sceneButton.dataset.storyboardScene);
+      if (sceneButton) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        openScene(sceneButton.dataset.storyboardScene);
+        return;
+      }
+
+      const storyboardTab = target?.closest('nav.tabs button[data-tab="storyboard"]');
+      if (storyboardTab) {
+        const frame = document.getElementById('storyboard-frame');
+        if (frame && !frame.dataset.stablePage) {
+          window.setTimeout(() => openScene(activeSceneId(), { scroll: false }), 0);
+        }
+      }
     }, true);
   }
 
@@ -167,8 +189,12 @@
     installClickHandler();
     window.openStoryboardScene = openScene;
 
-    const active = panel.querySelector('.storyboard-scene-card.active[data-storyboard-scene]')?.dataset.storyboardScene || '1A';
-    if (!frame.dataset.stablePage) openScene(active, { scroll: false });
+    // Do not load the 3.6 MB storyboard in the background. It loads on demand
+    // when Storyboard is opened or a scene link is clicked.
+    if (!frame.dataset.stablePage) {
+      frame.src = 'about:blank';
+      frame.dataset.stableLoaded = 'false';
+    }
 
     panel.dataset.storyboardStableV2 = VERSION;
     return true;
