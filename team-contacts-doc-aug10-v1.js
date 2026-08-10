@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2026-08-10-1412';
+  const VERSION = '2.0-2026-08-10-1443';
   const CORE_VERSION = '2026-08-10-1348';
 
   const groups = [
@@ -37,7 +37,7 @@
       description: 'Forældrekontakter til de tre børn. Alle børnetilladelser er på plads.',
       members: [
         { name: 'Lias Vitalis Tausen · 5 år', role: 'Barn · scene 4A', phone: '+298 299365', email: 'elisabeth_v_b@hotmail.com', note: 'Forælder: Elisabeth Vitalis Tausen · tilladelse OK.' },
-        { name: 'Nora Vitalis Joensen · 6 år', role: 'Barn · scene 4A', phone: '+298 272030', email: 'palj90@hotmail.com', note: 'Forælder: Pál Vitalis Joensen · tilladelse OK.' },
+        { name: 'Rókur Thomsen', role: 'Barn · scene 4A', phone: '+298 558075', email: 'annikapo@hotmail.com', note: 'Forælder: Annika Poulsen · erstatter Nora · tilladelse OK.' },
         { name: 'Vón Thomsen · 7 år', role: 'Barn · scene 4A', phone: '+298 558075', email: 'annikapo@hotmail.com', note: 'Forælder: Annika Poulsen · tilladelse OK.' }
       ]
     },
@@ -92,14 +92,11 @@
     }).join('');
 
     panel.innerHTML = `<div data-team-doc-v1-root="${VERSION}">
-      <div class="ap3-head"><h2>TEAM</h2><p>Alle nødvendige kontaktoplysninger til filmhold, SANSIR, skuespillere, forældre, locations og leverandører er samlet her. Ajourført fra den godkendte produktionsplan 10. august 2026.</p></div>
+      <div class="ap3-head"><h2>TEAM</h2><p>Alle nødvendige kontaktoplysninger til filmhold, SANSIR, skuespillere, forældre, locations og leverandører er samlet her. Ajourført fra produktionsplanen 10. august 2026 · portal 2.0.</p></div>
       <div class="team-search-row"><input id="team-doc-search" type="search" value="${esc(filter)}" placeholder="Søg efter navn, rolle, telefon eller e-mail…" aria-label="Søg i TEAM"></div>
       <div>${html || '<div class="ap3-empty">Ingen kontakter matcher søgningen.</div>'}</div>
     </div>`;
 
-    // IMPORTANT: keep the core portal's TEAM version marker intact.
-    // Without this, core-v3 and this contact layer continuously rewrite each other,
-    // which can keep the browser's main thread busy and make all buttons appear dead.
     panel.dataset.approvedTeamV3 = CORE_VERSION;
     panel.dataset.teamContactsDocV1 = VERSION;
     panel.querySelector('#team-doc-search')?.addEventListener('input', event => render(event.target.value));
@@ -107,8 +104,6 @@
   }
 
   function start() {
-    // Deferred scripts run after core-v3, so one render is enough.
-    // No MutationObserver here: competing DOM observers were the source of the UI lock-up.
     if (!render()) window.setTimeout(render, 300);
   }
 
