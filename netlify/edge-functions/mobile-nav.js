@@ -92,7 +92,7 @@ export default async (request, context) => {
     '<script src="/portal-loading-safety-v1.js?v=dd04919e3c91f5947bbd7e3de7bf2f41535b8c0e" defer></script>',
     '<script src="/portal-approved-core-v3.js?v=1e78b5b238e0e24b4fc7df5324f23fe138a27fb3" defer></script>',
     '<script src="/scene-links-light-v2.js?v=4d10dd8e9212eed5a03cdad6592e6a632ef8e2b2" defer></script>',
-    '<script src="/filmed-scenes-authoritative-v2.js?v=3e74ac1de472df822dd06a22fc62798bd2847164" defer></script>',
+    '<script src="/filmed-scenes-authoritative-v2.js?v=a8fecf98d064de1c0dcc29fa2a0dc756860e962a" defer></script>',
     '<script src="/team-contacts-doc-aug10-v1.js?v=c99ae7af3cf283b536037b3a4d03bd56d3f53247" defer></script>',
     '<script src="/storyboard-single-page-v4.js?v=dd44d38648954002e3040c2b97e22c9b857d4003" defer></script>',
     '<script src="/portal-release-3.0.js?v=aebdea47448a583dca9aaa474c246ccba856ef97" defer></script>',
