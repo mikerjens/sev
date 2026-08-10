@@ -1,8 +1,7 @@
 export default async (request, context) => {
   const requestUrl = new URL(request.url);
 
-  // Same-origin storyboard PDF proxy. This removes the Google Drive redirect from
-  // the iframe, so Chrome can reliably respect #page=N when a scene is selected.
+  // Same-origin storyboard PDF proxy for the single-page renderer.
   if (requestUrl.pathname === "/storyboard.pdf") {
     const source = "https://drive.google.com/uc?export=download&id=1tb161Lvzr8Y5R7OdyTiWflT76jwbmgEN&confirm=t";
     const upstreamHeaders = new Headers();
@@ -37,7 +36,6 @@ export default async (request, context) => {
 
   let html = await response.text();
 
-  // The portal is always visible. No loading gate is allowed to hide the plan.
   const portalBoot = `
 <script>
   document.documentElement.classList.remove('sev-booting');
@@ -77,15 +75,13 @@ export default async (request, context) => {
   }
 </style>`;
 
-  // One authoritative portal layer. Storyboard and status helpers are deliberately
-  // lightweight and avoid competing DOM observers.
   const portalScripts = [
     '<script src="/portal-loading-safety-v1.js?v=dd04919e3c91f5947bbd7e3de7bf2f41535b8c0e" defer></script>',
     '<script src="/portal-approved-core-v3.js?v=1e78b5b238e0e24b4fc7df5324f23fe138a27fb3" defer></script>',
     '<script src="/scene-links-light-v2.js?v=4d10dd8e9212eed5a03cdad6592e6a632ef8e2b2" defer></script>',
     '<script src="/filmed-scenes-authoritative-v2.js?v=3e74ac1de472df822dd06a22fc62798bd2847164" defer></script>',
     '<script src="/team-contacts-doc-aug10-v1.js?v=ab8a94a497bf5705672d30839ac82c13ad626d29" defer></script>',
-    '<script src="/storyboard-stability-v3.js?v=b24176d4e5e31be17f95958a2670725ae9b3610d" defer></script>'
+    '<script src="/storyboard-single-page-v4.js?v=cad987d2839425f24d550b2da190599600a6db86" defer></script>'
   ].join('');
 
   html = html
