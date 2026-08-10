@@ -80,8 +80,9 @@ export default async (request, context) => {
     '<script src="/portal-approved-core-v3.js?v=1e78b5b238e0e24b4fc7df5324f23fe138a27fb3" defer></script>',
     '<script src="/scene-links-light-v2.js?v=4d10dd8e9212eed5a03cdad6592e6a632ef8e2b2" defer></script>',
     '<script src="/filmed-scenes-authoritative-v2.js?v=3e74ac1de472df822dd06a22fc62798bd2847164" defer></script>',
-    '<script src="/team-contacts-doc-aug10-v1.js?v=ab8a94a497bf5705672d30839ac82c13ad626d29" defer></script>',
-    '<script src="/storyboard-single-page-v4.js?v=cad987d2839425f24d550b2da190599600a6db86" defer></script>'
+    '<script src="/team-contacts-doc-aug10-v1.js?v=9af9b5ba5b3083101bffd9536d917833d6d66f7c" defer></script>',
+    '<script src="/storyboard-single-page-v4.js?v=cad987d2839425f24d550b2da190599600a6db86" defer></script>',
+    '<script src="/portal-release-2.0.js?v=d938b2fa72d18f1792b8d98d081e384862414fe9" defer></script>'
   ].join('');
 
   html = html
@@ -96,6 +97,7 @@ export default async (request, context) => {
   headers.set("cache-control", "no-store, no-cache, must-revalidate, max-age=0");
   headers.set("pragma", "no-cache");
   headers.set("expires", "0");
+  headers.set("x-sev-portal-version", "2.0");
 
   return new Response(html, {
     status: response.status,
