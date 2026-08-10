@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.0-2026-08-10-1443';
+  const VERSION = '2.0-2026-08-10-1452';
   const CORE_VERSION = '2026-08-10-1348';
 
   const groups = [
@@ -76,6 +76,13 @@
   function render(filter = '') {
     const panel = document.getElementById('panel-crew');
     if (!panel) return false;
+
+    const crewTab = document.querySelector('nav.tabs button[data-tab="crew"]');
+    if (crewTab) {
+      crewTab.textContent = 'TEAM';
+      crewTab.setAttribute('aria-label', 'TEAM · alle kontaktoplysninger');
+    }
+
     const query = filter.trim().toLocaleLowerCase('da-DK');
     const html = groups.map(group => {
       const members = group.members.filter(member => [
@@ -103,8 +110,28 @@
     return true;
   }
 
+  function installTeamTabRepair() {
+    if (document.documentElement.dataset.teamTabRepair === VERSION) return;
+    document.documentElement.dataset.teamTabRepair = VERSION;
+    document.addEventListener('click', event => {
+      const target = event.target instanceof Element ? event.target : null;
+      if (!target?.closest('nav.tabs button[data-tab="crew"]')) return;
+      window.setTimeout(() => render(''), 0);
+    }, true);
+  }
+
   function start() {
+    installTeamTabRepair();
     if (!render()) window.setTimeout(render, 300);
+    // Two bounded repairs cover late legacy scripts without using a MutationObserver.
+    window.setTimeout(() => {
+      const panel = document.getElementById('panel-crew');
+      if (panel && !panel.querySelector(`[data-team-doc-v1-root="${VERSION}"]`)) render();
+    }, 900);
+    window.setTimeout(() => {
+      const panel = document.getElementById('panel-crew');
+      if (panel && !panel.querySelector(`[data-team-doc-v1-root="${VERSION}"]`)) render();
+    }, 2200);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
