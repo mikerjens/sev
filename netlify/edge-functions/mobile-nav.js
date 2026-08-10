@@ -1,6 +1,18 @@
 export default async (request, context) => {
   const requestUrl = new URL(request.url);
 
+  // Portal 2.0 owns TEAM and storyboard navigation. The old correction script
+  // dynamically loaded by weather-faroe.js used to overwrite TEAM with only five people.
+  if (requestUrl.pathname === "/production-team-correction.js") {
+    return new Response("// Disabled by SEV Produktionsportal 2.0: legacy TEAM/storyboard correction.\n", {
+      status: 200,
+      headers: {
+        "content-type": "application/javascript; charset=utf-8",
+        "cache-control": "no-store, no-cache, must-revalidate, max-age=0",
+      },
+    });
+  }
+
   // Same-origin storyboard PDF proxy for the single-page renderer.
   if (requestUrl.pathname === "/storyboard.pdf") {
     const source = "https://drive.google.com/uc?export=download&id=1tb161Lvzr8Y5R7OdyTiWflT76jwbmgEN&confirm=t";
@@ -40,6 +52,7 @@ export default async (request, context) => {
 <script>
   document.documentElement.classList.remove('sev-booting');
   document.documentElement.classList.add('sev-ready');
+  document.documentElement.dataset.sevPortalVersion = '2.0';
 </script>`;
 
   const portalStyles = `
@@ -80,7 +93,7 @@ export default async (request, context) => {
     '<script src="/portal-approved-core-v3.js?v=1e78b5b238e0e24b4fc7df5324f23fe138a27fb3" defer></script>',
     '<script src="/scene-links-light-v2.js?v=4d10dd8e9212eed5a03cdad6592e6a632ef8e2b2" defer></script>',
     '<script src="/filmed-scenes-authoritative-v2.js?v=3e74ac1de472df822dd06a22fc62798bd2847164" defer></script>',
-    '<script src="/team-contacts-doc-aug10-v1.js?v=9af9b5ba5b3083101bffd9536d917833d6d66f7c" defer></script>',
+    '<script src="/team-contacts-doc-aug10-v1.js?v=c99ae7af3cf283b536037b3a4d03bd56d3f53247" defer></script>',
     '<script src="/storyboard-single-page-v4.js?v=cad987d2839425f24d550b2da190599600a6db86" defer></script>',
     '<script src="/portal-release-2.0.js?v=d938b2fa72d18f1792b8d98d081e384862414fe9" defer></script>'
   ].join('');
