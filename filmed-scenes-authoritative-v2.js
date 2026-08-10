@@ -1,8 +1,9 @@
 (() => {
   'use strict';
-  const VERSION = '2026-08-10-1427';
+  const VERSION = '2026-08-10-2052';
   const FILMED = [
     {scene:'3A',title:'Klaksvík',location:'Klaksvík'},
+    {scene:'4A',title:'Børn under gadelyset',location:'Klaksvík'},
     {scene:'5A',title:'Remote village night',location:'Funningur'},
     {scene:'6A',title:'Dæmning, turbine, Eiðisvatn og Eiðisverkið',location:'Eiði / Eiðisvatn / Eiðisverkið'},
     {scene:'7A',title:'Vindmøller',location:'Eystnes'}
@@ -19,7 +20,7 @@
     addStyles();
     const root=document.querySelector('#panel-schedule [data-plan-v3-root]');
     const planList=root?.querySelector('.ap3-plan-list');
-    if(root&&planList){let section=root.querySelector('#authoritative-filmed-scenes'); if(!section){section=document.createElement('section');section.id='authoritative-filmed-scenes';planList.insertAdjacentElement('afterend',section)} section.innerHTML=`<div class="afs-head"><div><h3>Filmede scener</h3><p>Disse scener er optaget og skal ikke længere planlægges.</p></div><span class="afs-count">4 SCENER FILMET</span></div><div class="afs-grid">${FILMED.map(card).join('')}</div>`}
+    if(root&&planList){let section=root.querySelector('#authoritative-filmed-scenes'); if(!section){section=document.createElement('section');section.id='authoritative-filmed-scenes';planList.insertAdjacentElement('afterend',section)} section.innerHTML=`<div class="afs-head"><div><h3>Filmede scener</h3><p>Disse scener er optaget og skal ikke længere planlægges.</p></div><span class="afs-count">${FILMED.length} SCENER FILMET</span></div><div class="afs-grid">${FILMED.map(card).join('')}</div>`}
     document.querySelectorAll('.storyboard-scene-card[data-storyboard-scene]').forEach(card=>{const id=card.dataset.storyboardScene;card.classList.toggle('filmed-authoritative',ids.has(id));card.querySelectorAll('.storyboard-authoritative-filmed-tag').forEach(tag=>tag.remove());if(ids.has(id)){const tag=document.createElement('span');tag.className='storyboard-authoritative-filmed-tag';tag.textContent='✓ FILMET';card.appendChild(tag)}});
   }
   function start(){install();window.setTimeout(install,500)}
