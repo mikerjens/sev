@@ -99,6 +99,7 @@ export default async (request, context) => {
     '<script src="/location-skalabudin-link-v1.js?v=cab50fb49dfd9247b274725fd5d44adfe3edd1ed" defer></script>',
     '<script src="/production-update-aug11-v1.js?v=97d0bc27d7ebdcfaf2e8b76e7249cc77467b8751" defer></script>',
     '<script src="/scene13b-aug19-v1.js?v=375010c113ea5a4f64783dea27068a5153baed45" defer></script>',
+    '<script src="/scene10a-aug19-v1.js?v=8c607188c147b0d9cb8bfd22ec58d080b964b49e" defer></script>',
     '<script src="/hide-filmed-from-schedule-v1.js?v=b309adb22c6bdf916f98d1c4c0fc4b822c6b05f1" defer></script>'
   ].join('');
 
