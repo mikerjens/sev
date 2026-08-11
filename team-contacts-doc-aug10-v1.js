@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.0-2026-08-10-1452';
+  const VERSION = '3.0-2026-08-11-1105';
   const CORE_VERSION = '2026-08-10-1348';
 
   const groups = [
@@ -11,7 +11,7 @@
       members: [
         { name: 'Michael Koba', role: 'Filmproducer · KOVBOY FILM / FIXER.FO', phone: '+298 591011', email: 'michael@kovboyfilm.com' },
         { name: 'Thomas Koba', role: 'Instruktør og filmmaker · KOVBOY FILM', phone: '+298 239100', email: 'thomas@kovboyfilm.com' },
-        { name: 'Rúni Friis Kjær', role: 'Grip / lys', phone: '+298 218218', email: 'rfk@friisframe.fo', note: 'Crew på de planlagte optagedage 10., 17. og 18. august.' },
+        { name: 'Rúni Friis Kjær', role: 'Grip / lys', phone: '+298 218218', email: 'rfk@friisframe.fo', note: 'Crew på de planlagte optagedage.' },
         { name: 'Heidi Mortensen', role: 'Styling & props', phone: '+298 790050', email: 'heidi@atlanta.fo', note: 'Crew 17. august. Mulig styling/props 18. august.' }
       ]
     },
@@ -26,10 +26,10 @@
     },
     {
       title: 'Skuespillere og medvirkende',
-      description: 'Bekræftede skuespillere samt medvirkende, hvor kontakt stadig afventer.',
+      description: 'Bekræftede skuespillere og kontaktoplysninger.',
       members: [
         { name: 'Helena Heðinsdóttir Guttesen', role: 'Hovedskuespiller · mor', phone: '+298 274450', email: 'helena.h.jorgensen@gmail.com', note: 'Medvirker 17. og 18. august.' },
-        { name: 'Dreng X', role: 'Skuespiller · dreng', note: 'Navn og kontaktoplysninger afventer.' }
+        { name: 'Heini Dam Lassen', role: 'Skuespiller · dreng', phone: '+298 251290', note: 'Forælder: Birgith Lassen · medvirker 17. august.' }
       ]
     },
     {
@@ -37,7 +37,7 @@
       description: 'Forældrekontakter til de tre børn. Alle børnetilladelser er på plads.',
       members: [
         { name: 'Lias Vitalis Tausen · 5 år', role: 'Barn · scene 4A', phone: '+298 299365', email: 'elisabeth_v_b@hotmail.com', note: 'Forælder: Elisabeth Vitalis Tausen · tilladelse OK.' },
-        { name: 'Rókur Thomsen', role: 'Barn · scene 4A', phone: '+298 558075', email: 'annikapo@hotmail.com', note: 'Forælder: Annika Poulsen · erstatter Nora · tilladelse OK.' },
+        { name: 'Rókur Thomsen', role: 'Barn · scene 4A', phone: '+298 558075', email: 'annikapo@hotmail.com', note: 'Forælder: Annika Poulsen · tilladelse OK.' },
         { name: 'Vón Thomsen · 7 år', role: 'Barn · scene 4A', phone: '+298 558075', email: 'annikapo@hotmail.com', note: 'Forælder: Annika Poulsen · tilladelse OK.' }
       ]
     },
@@ -99,7 +99,7 @@
     }).join('');
 
     panel.innerHTML = `<div data-team-doc-v1-root="${VERSION}">
-      <div class="ap3-head"><h2>TEAM</h2><p>Alle nødvendige kontaktoplysninger til filmhold, SANSIR, skuespillere, forældre, locations og leverandører er samlet her. Ajourført fra produktionsplanen 10. august 2026 · portal 2.0.</p></div>
+      <div class="ap3-head"><h2>TEAM</h2><p>Alle nødvendige kontaktoplysninger til filmhold, SANSIR, skuespillere, forældre, locations og leverandører er samlet her. Ajourført fra SEV produktionsplan · portal 3.0.</p></div>
       <div class="team-search-row"><input id="team-doc-search" type="search" value="${esc(filter)}" placeholder="Søg efter navn, rolle, telefon eller e-mail…" aria-label="Søg i TEAM"></div>
       <div>${html || '<div class="ap3-empty">Ingen kontakter matcher søgningen.</div>'}</div>
     </div>`;
@@ -123,7 +123,6 @@
   function start() {
     installTeamTabRepair();
     if (!render()) window.setTimeout(render, 300);
-    // Two bounded repairs cover late legacy scripts without using a MutationObserver.
     window.setTimeout(() => {
       const panel = document.getElementById('panel-crew');
       if (panel && !panel.querySelector(`[data-team-doc-v1-root="${VERSION}"]`)) render();
