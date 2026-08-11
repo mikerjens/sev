@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '3.0-2026-08-11-1142';
+  const VERSION = '3.0-2026-08-11-1305';
   const CORE_VERSION = '2026-08-10-1348';
 
   const groups = [
@@ -12,7 +12,7 @@
         { name: 'Michael Koba', role: 'Filmproducer · KOVBOY FILM / FIXER.FO', phone: '+298 591011', email: 'michael@kovboyfilm.com' },
         { name: 'Thomas Koba', role: 'Instruktør og filmmaker · KOVBOY FILM', phone: '+298 239100', email: 'thomas@kovboyfilm.com' },
         { name: 'Rúni Friis Kjær', role: 'Grip / lys', phone: '+298 218218', email: 'rfk@friisframe.fo', note: 'Crew på de planlagte optagedage.' },
-        { name: 'Heidi Mortensen', role: 'Styling & props', phone: '+298 790050', email: 'heidi@atlanta.fo', note: 'Crew 17. august. Mulig styling/props 18. august.' }
+        { name: 'Heidi Mortensen', role: 'Styling & props', phone: '+298 790050', email: 'heidi@atlanta.fo', note: 'Crew 17. august. Styling 19. august; styling/props til 9A–9C skal endeligt bekræftes.' }
       ]
     },
     {
@@ -28,8 +28,8 @@
       title: 'Skuespillere og medvirkende',
       description: 'Bekræftede skuespillere og kontaktoplysninger.',
       members: [
-        { name: 'Helena Heðinsdóttir Guttesen', role: 'Hovedskuespiller · mor', phone: '+298 274450', email: 'helena.h.jorgensen@gmail.com', note: 'Medvirker 17. og 18. august.' },
-        { name: 'Heini Dam Lassen', role: 'Skuespiller · dreng', phone: '+298 251290', email: 'birgithlassen@gmail.com', note: 'Forælder: Birgit Lassen · medvirker 17. og 18. august.' }
+        { name: 'Helena Heðinsdóttir Guttesen', role: 'Hovedskuespiller · mor', phone: '+298 274450', email: 'helena.h.jorgensen@gmail.com', note: 'Medvirker 17. og 19. august.' },
+        { name: 'Heini Dam Lassen', role: 'Skuespiller · dreng', phone: '+298 251290', email: 'birgithlassen@gmail.com', note: 'Forælder: Birgit Lassen · medvirker 17. og 19. august.' }
       ]
     },
     {
@@ -45,7 +45,7 @@
       title: 'Locations, leverandører og faglige kontakter',
       description: 'Kontakter til locations, varmepumpe og jordvarmeboring.',
       members: [
-        { name: 'Eyðbjørn Joensen', role: 'Locationejer · Fjalsvegur 24, Vestmanna', phone: '+298 265883', note: 'Location til scene 9A, 9B og 9C den 18. august.' },
+        { name: 'Eyðbjørn Joensen', role: 'Locationejer · Fjalsvegur 24, Vestmanna', phone: '+298 265883', note: 'Location til scene 9A, 9B og 9C den 19. august.' },
         { name: 'Tummas Pauli Mohr', role: 'Varmepumpeleverandør · Demich', phone: '+298 290333', note: 'Kontakt vedrørende varmepumpen til Vestmanna-scenerne. Ingen e-mail registreret.' },
         { name: 'Ørvur Heinesen', role: 'Jarðhiti · jordvarmeboring', phone: '+298 288433', note: 'Kontakt til scene 11A. Ingen e-mail registreret.' }
       ]
