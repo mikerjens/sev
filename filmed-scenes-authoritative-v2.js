@@ -1,9 +1,9 @@
 (() => {
   'use strict';
-  const VERSION = '2026-08-10-2052';
+  const VERSION = '2026-08-11-1106';
   const FILMED = [
     {scene:'3A',title:'Klaksvík',location:'Klaksvík'},
-    {scene:'4A',title:'Børn under gadelyset',location:'Klaksvík'},
+    {scene:'4A',title:'Børn under gadelyset',location:'Elduvík'},
     {scene:'5A',title:'Remote village night',location:'Funningur'},
     {scene:'6A',title:'Dæmning, turbine, Eiðisvatn og Eiðisverkið',location:'Eiði / Eiðisvatn / Eiðisverkið'},
     {scene:'7A',title:'Vindmøller',location:'Eystnes'}
