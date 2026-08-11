@@ -92,11 +92,12 @@ export default async (request, context) => {
     '<script src="/portal-loading-safety-v1.js?v=dd04919e3c91f5947bbd7e3de7bf2f41535b8c0e" defer></script>',
     '<script src="/portal-approved-core-v3.js?v=1e78b5b238e0e24b4fc7df5324f23fe138a27fb3" defer></script>',
     '<script src="/scene-links-light-v2.js?v=4d10dd8e9212eed5a03cdad6592e6a632ef8e2b2" defer></script>',
-    '<script src="/filmed-scenes-authoritative-v2.js?v=a8fecf98d064de1c0dcc29fa2a0dc756860e962a" defer></script>',
-    '<script src="/team-contacts-doc-aug10-v1.js?v=c99ae7af3cf283b536037b3a4d03bd56d3f53247" defer></script>',
+    '<script src="/filmed-scenes-authoritative-v2.js?v=6fbd588d01f34c927faa182c4251449e4f973d54" defer></script>',
+    '<script src="/team-contacts-doc-aug10-v1.js?v=3a92b677c39c1d87ffec3f9c021b77c60358be6c" defer></script>',
     '<script src="/storyboard-single-page-v4.js?v=dd44d38648954002e3040c2b97e22c9b857d4003" defer></script>',
     '<script src="/portal-release-3.0.js?v=aebdea47448a583dca9aaa474c246ccba856ef97" defer></script>',
     '<script src="/location-skalabudin-link-v1.js?v=cab50fb49dfd9247b274725fd5d44adfe3edd1ed" defer></script>',
+    '<script src="/production-update-aug11-v1.js?v=f1b3a24c32042f6fc38832801b03da2d91b39114" defer></script>',
     '<script src="/hide-filmed-from-schedule-v1.js?v=b309adb22c6bdf916f98d1c4c0fc4b822c6b05f1" defer></script>'
   ].join('');
 
