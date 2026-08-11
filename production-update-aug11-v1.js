@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2026-08-11-1110';
+  const VERSION = '2026-08-11-1115';
   const STORAGE_KEY = 'sev-task-person';
   const HEINI_ID = 'heini';
   const HEINI_LABEL = 'Heini Dam Lassen · Skuespiller · dreng';
@@ -17,9 +17,18 @@
     document.head.appendChild(style);
   }
 
+  function cardText(card) {
+    return (card?.textContent || '').replace(/\s+/g, ' ');
+  }
+
   function isAug17Card(card) {
-    const text = (card?.textContent || '').replace(/\s+/g, ' ');
+    const text = cardText(card);
     return /17\. AUGUST/i.test(text) && /Indendørs optagelser/i.test(text) && /Skálabúðin/i.test(text);
+  }
+
+  function isAug18Card(card) {
+    const text = cardText(card);
+    return /18\. AUGUST/i.test(text) && /Vestmanna/i.test(text) && /9A/i.test(text) && /9B/i.test(text) && /9C/i.test(text);
   }
 
   function ensureLocationLink(card) {
@@ -35,12 +44,34 @@
     }
   }
 
-  function patchAug17Card(card) {
-    if (!card || !isAug17Card(card)) return false;
-
+  function replaceDrengX(card) {
     card.querySelectorAll('.ap3-person').forEach(person => {
       if (/Dreng X/i.test(person.textContent || '')) person.textContent = 'Heini Dam Lassen · skuespiller · dreng';
     });
+
+    const boxes = [...card.querySelectorAll('.ap3-detail-box')];
+    const readyBox = boxes.find(box => /På plads/i.test(box.querySelector('h4')?.textContent || ''));
+    const missingBox = boxes.find(box => /Mangler/i.test(box.querySelector('h4')?.textContent || ''));
+
+    if (missingBox) {
+      missingBox.querySelectorAll('li').forEach(li => {
+        if (/Dreng X/i.test(li.textContent || '') || /navn og kontaktoplysninger/i.test(li.textContent || '')) li.remove();
+      });
+    }
+
+    if (readyBox) {
+      const list = readyBox.querySelector('ul');
+      if (list && ![...list.querySelectorAll('li')].some(li => /Heini Dam Lassen/i.test(li.textContent || ''))) {
+        const li = document.createElement('li');
+        li.textContent = 'Heini Dam Lassen er bekræftet som dreng.';
+        list.appendChild(li);
+      }
+    }
+  }
+
+  function patchAug17Card(card) {
+    if (!card || !isAug17Card(card)) return false;
+    replaceDrengX(card);
 
     const timeGrid = card.querySelector('.ap3-time-grid');
     if (timeGrid) {
@@ -58,31 +89,27 @@
       }
     }
 
-    const boxes = [...card.querySelectorAll('.ap3-detail-box')];
-    const readyBox = boxes.find(box => /På plads/i.test(box.querySelector('h4')?.textContent || ''));
-    const missingBox = boxes.find(box => /Mangler/i.test(box.querySelector('h4')?.textContent || ''));
-
-    if (missingBox) {
-      missingBox.querySelectorAll('li').forEach(li => {
-        if (/Dreng X/i.test(li.textContent || '')) li.remove();
-      });
-    }
-
+    const readyBox = [...card.querySelectorAll('.ap3-detail-box')].find(box => /På plads/i.test(box.querySelector('h4')?.textContent || ''));
     if (readyBox) {
       readyBox.querySelectorAll('li').forEach(li => {
         if (/alle tre mødetider/i.test(li.textContent || '')) li.textContent = 'Crew, make-up, skuespillermøde og optagestart er fastlagt.';
       });
-      const list = readyBox.querySelector('ul');
-      if (list && ![...list.querySelectorAll('li')].some(li => /Heini Dam Lassen/i.test(li.textContent || ''))) {
-        const li = document.createElement('li');
-        li.textContent = 'Heini Dam Lassen er bekræftet som dreng.';
-        list.appendChild(li);
-      }
     }
 
     ensureLocationLink(card);
     card.dataset.productionUpdateAug11 = VERSION;
     return true;
+  }
+
+  function patchAug18Card(card) {
+    if (!card || !isAug18Card(card)) return false;
+    replaceDrengX(card);
+    card.dataset.productionUpdateAug11 = VERSION;
+    return true;
+  }
+
+  function patchCard(card) {
+    return patchAug17Card(card) || patchAug18Card(card);
   }
 
   function ensureHeiniOption(select) {
@@ -117,14 +144,20 @@
 
   function renderHeiniPersonal() {
     const panel = document.getElementById('panel-my-schedule');
-    const source = [...document.querySelectorAll('#panel-schedule .ap3-shoot')].find(isAug17Card);
-    if (!panel || !source) return false;
+    const allSourceCards = [...document.querySelectorAll('#panel-schedule .ap3-shoot')];
+    const sources = allSourceCards.filter(card => isAug17Card(card) || isAug18Card(card));
+    if (!panel || !sources.length) return false;
 
-    const card = source.cloneNode(true);
-    patchAug17Card(card);
+    const cards = sources.map(source => {
+      const card = source.cloneNode(true);
+      patchCard(card);
+      return card;
+    });
 
-    panel.innerHTML = `<div class="ap3-head"><h2>Mit skema</h2><p>Vælg dit navn. Herefter vises kun de optagedage og åbne scener, der vedrører dig.</p></div><div class="ap3-namebox"><label for="ap3-person-select">VÆLG DIT NAVN</label><p>Valget gemmes på denne enhed.</p>${buildPersonalSelect(HEINI_ID)}</div><div class="ap3-person-summary"><strong>Heini Dam Lassen</strong>Skuespiller · dreng · 1 planlagt optagelse.</div><div class="ap3-plan-list" id="heini-personal-plan"></div>`;
-    panel.querySelector('#heini-personal-plan')?.appendChild(card);
+    panel.innerHTML = `<div class="ap3-head"><h2>Mit skema</h2><p>Vælg dit navn. Herefter vises kun de optagedage og åbne scener, der vedrører dig.</p></div><div class="ap3-namebox"><label for="ap3-person-select">VÆLG DIT NAVN</label><p>Valget gemmes på denne enhed.</p>${buildPersonalSelect(HEINI_ID)}</div><div class="ap3-person-summary"><strong>Heini Dam Lassen</strong>Skuespiller · dreng · ${cards.length} planlagte optagelser.</div><div class="ap3-plan-list" id="heini-personal-plan"></div>`;
+    const plan = panel.querySelector('#heini-personal-plan');
+    cards.forEach(card => plan?.appendChild(card));
+
     panel.querySelector('#ap3-person-select')?.addEventListener('change', event => {
       const value = event.target.value;
       if (value === HEINI_ID) return;
@@ -140,7 +173,7 @@
 
   function patchVisiblePlans() {
     addStyles();
-    document.querySelectorAll('#panel-schedule .ap3-shoot, #panel-my-schedule .ap3-shoot').forEach(patchAug17Card);
+    document.querySelectorAll('#panel-schedule .ap3-shoot, #panel-my-schedule .ap3-shoot').forEach(patchCard);
     ensureSelectors();
     if (currentPerson() === HEINI_ID && document.getElementById('panel-my-schedule')?.classList.contains('active')) renderHeiniPersonal();
     document.documentElement.dataset.productionUpdateAug11 = VERSION;
@@ -152,13 +185,19 @@
 
     document.addEventListener('change', event => {
       const select = event.target instanceof HTMLSelectElement ? event.target : null;
-      if (!select || !['ap3-home-person', 'ap3-person-select'].includes(select.id) || select.value !== HEINI_ID) return;
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      try { localStorage.setItem(STORAGE_KEY, HEINI_ID); } catch (_) {}
-      renderHeiniPersonal();
-      if (typeof window.openPortalTab === 'function') window.openPortalTab('my-schedule');
-      else document.querySelector('nav.tabs button[data-tab="my-schedule"]')?.click();
+      if (!select || !['ap3-home-person', 'ap3-person-select'].includes(select.id)) return;
+
+      if (select.value === HEINI_ID) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        try { localStorage.setItem(STORAGE_KEY, HEINI_ID); } catch (_) {}
+        renderHeiniPersonal();
+        if (typeof window.openPortalTab === 'function') window.openPortalTab('my-schedule');
+        else document.querySelector('nav.tabs button[data-tab="my-schedule"]')?.click();
+        return;
+      }
+
+      window.setTimeout(patchVisiblePlans, 0);
     }, true);
 
     document.addEventListener('click', event => {
