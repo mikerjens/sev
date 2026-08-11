@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '3.0-2026-08-11-1105';
+  const VERSION = '3.0-2026-08-11-1114';
   const CORE_VERSION = '2026-08-10-1348';
 
   const groups = [
@@ -29,7 +29,7 @@
       description: 'Bekræftede skuespillere og kontaktoplysninger.',
       members: [
         { name: 'Helena Heðinsdóttir Guttesen', role: 'Hovedskuespiller · mor', phone: '+298 274450', email: 'helena.h.jorgensen@gmail.com', note: 'Medvirker 17. og 18. august.' },
-        { name: 'Heini Dam Lassen', role: 'Skuespiller · dreng', phone: '+298 251290', note: 'Forælder: Birgith Lassen · medvirker 17. august.' }
+        { name: 'Heini Dam Lassen', role: 'Skuespiller · dreng', phone: '+298 251290', note: 'Forælder: Birgith Lassen · medvirker 17. og 18. august.' }
       ]
     },
     {
