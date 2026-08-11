@@ -1,13 +1,12 @@
 (() => {
   'use strict';
 
-  const VERSION = '2026-08-10-2052';
+  const VERSION = '2026-08-11-1236';
   const LOCAL_PDF = '/storyboard.pdf';
   const DRIVE_VIEW = 'https://drive.google.com/file/d/1tb161Lvzr8Y5R7OdyTiWflT76jwbmgEN/view?usp=drive_link';
   const PDFJS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
   const PDFJS_WORKER_URL = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-  // Physical storyboard pages. Production subdivisions use their own page where relevant.
   const SCENES = {
     '1A':  { page: 4,  title: 'Lyskontakt og åbningsbillede', card: '1A' },
     '2A':  { page: 5,  title: 'Drengen læser', card: '2A' },
@@ -34,9 +33,16 @@
     '18A': { page: 26, title: 'Animeret SEV-logo', card: '18A' }
   };
 
+  // B/C-delene hører til samme synlige scenegruppe. Kun A-kortet vises i shortcut-listen.
+  const GROUPS = {
+    '2A': ['2A', '2B', '2C'], '2B': ['2A', '2B', '2C'], '2C': ['2A', '2B', '2C'],
+    '9A': ['9A', '9B', '9C'], '9B': ['9A', '9B', '9C'], '9C': ['9A', '9B', '9C'],
+    '13A': ['13A', '13B'], '13B': ['13A', '13B']
+  };
+
   const CARD_LABELS = {
     '1A':  { pages: '4', title: 'Lyskontakt og åbningsbillede' },
-    '2A':  { pages: '5–7', title: 'Drengen læser, arkivfoto og fiskere' },
+    '2A':  { pages: '5–7', title: 'Drengen læser, bog/foto og arkiv' },
     '3A':  { pages: '8', title: 'Drone over Klaksvík om natten' },
     '4A':  { pages: '9', title: 'Børn under gadelyset' },
     '5A':  { pages: '10', title: 'Funningur / Remote village night' },
@@ -68,7 +74,6 @@
       return Promise.resolve(window.pdfjsLib);
     }
     if (pdfJsPromise) return pdfJsPromise;
-
     pdfJsPromise = new Promise((resolve, reject) => {
       const existing = document.querySelector('script[data-sev-pdfjs]');
       if (existing) {
@@ -79,7 +84,6 @@
         existing.addEventListener('error', reject, { once: true });
         return;
       }
-
       const script = document.createElement('script');
       script.src = PDFJS_URL;
       script.async = true;
@@ -91,7 +95,6 @@
       script.onerror = () => reject(new Error('PDF.js kunne ikke indlæses'));
       document.head.appendChild(script);
     });
-
     return pdfJsPromise;
   }
 
@@ -106,92 +109,144 @@
     return document.querySelector('#panel-storyboard .storyboard-frame-wrap');
   }
 
-  function preparePreview() {
+  function groupFor(sceneId) {
+    return GROUPS[sceneId] || [sceneId];
+  }
+
+  function preparePreview(groupSize = 1) {
     const wrap = previewWrap();
     if (!wrap) return null;
     wrap.style.aspectRatio = 'auto';
     wrap.style.minHeight = '0';
     wrap.style.position = 'relative';
-    wrap.style.overflow = 'hidden';
     wrap.style.background = '#090d10';
+    wrap.style.overflowX = 'hidden';
+    wrap.style.overflowY = groupSize > 1 ? 'auto' : 'hidden';
+    wrap.style.maxHeight = groupSize > 1 ? '78vh' : 'none';
+    wrap.style.scrollBehavior = 'smooth';
     return wrap;
   }
 
-  function showLoading(sceneId, page) {
-    const wrap = preparePreview();
+  function showLoading(sceneId, groupIds) {
+    const wrap = preparePreview(groupIds.length);
     if (!wrap) return;
-    wrap.innerHTML = `<div class="storyboard-single-page-loading" style="min-height:360px;display:grid;place-items:center;color:var(--text-muted);font-family:'IBM Plex Mono',monospace;font-size:11px">Indlæser scene ${sceneId} · side ${page}…</div>`;
+    const pages = groupIds.map(id => SCENES[id].page).join(', ');
+    wrap.innerHTML = `<div class="storyboard-single-page-loading" style="min-height:360px;display:grid;place-items:center;color:var(--text-muted);font-family:'IBM Plex Mono',monospace;font-size:11px">Indlæser scene ${sceneId} · side ${pages}…</div>`;
   }
 
-  function showError(sceneId, page) {
-    const wrap = preparePreview();
+  function showError(sceneId) {
+    const wrap = preparePreview(1);
     if (!wrap) return;
-    wrap.innerHTML = `<div style="min-height:320px;display:grid;place-items:center;padding:24px;text-align:center;color:var(--text-muted)"><div><strong style="display:block;color:var(--text);margin-bottom:7px">Preview kunne ikke indlæses</strong><span>Scene ${sceneId} · PDF-side ${page}</span></div></div>`;
+    wrap.innerHTML = `<div style="min-height:320px;display:grid;place-items:center;padding:24px;text-align:center;color:var(--text-muted)"><div><strong style="display:block;color:var(--text);margin-bottom:7px">Preview kunne ikke indlæses</strong><span>Scene ${sceneId}</span></div></div>`;
   }
 
-  async function renderSinglePage(sceneId) {
+  async function renderSceneGroup(sceneId) {
     const scene = SCENES[sceneId];
     if (!scene) return;
+    const groupIds = groupFor(sceneId);
     currentSceneId = sceneId;
     const generation = ++renderGeneration;
-    showLoading(sceneId, scene.page);
+    showLoading(sceneId, groupIds);
 
     try {
       const pdf = await getPdfDocument();
       if (generation !== renderGeneration) return;
-      const page = await pdf.getPage(scene.page);
-      if (generation !== renderGeneration) return;
-
-      const wrap = preparePreview();
+      const wrap = preparePreview(groupIds.length);
       if (!wrap) return;
-      const baseViewport = page.getViewport({ scale: 1 });
-      const availableWidth = Math.max(320, wrap.clientWidth || 760);
-      const cssScale = availableWidth / baseViewport.width;
-      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
-      const cssViewport = page.getViewport({ scale: cssScale });
-      const renderViewport = page.getViewport({ scale: cssScale * pixelRatio });
 
-      const canvas = document.createElement('canvas');
-      canvas.className = 'storyboard-single-page-canvas';
-      canvas.dataset.scene = sceneId;
-      canvas.dataset.page = String(scene.page);
-      canvas.width = Math.floor(renderViewport.width);
-      canvas.height = Math.floor(renderViewport.height);
-      canvas.style.display = 'block';
-      canvas.style.width = `${Math.floor(cssViewport.width)}px`;
-      canvas.style.height = `${Math.floor(cssViewport.height)}px`;
-      canvas.style.maxWidth = '100%';
-      canvas.style.margin = '0 auto';
-      canvas.style.background = '#fff';
+      const container = document.createElement('div');
+      container.className = 'storyboard-scene-group-preview';
+      container.style.display = 'grid';
+      container.style.gap = groupIds.length > 1 ? '12px' : '0';
+      container.style.padding = groupIds.length > 1 ? '10px' : '0';
+      wrap.replaceChildren(container);
 
-      wrap.replaceChildren(canvas);
-      await page.render({ canvasContext: canvas.getContext('2d'), viewport: renderViewport }).promise;
+      for (const id of groupIds) {
+        if (generation !== renderGeneration) return;
+        const info = SCENES[id];
+        const page = await pdf.getPage(info.page);
+        if (generation !== renderGeneration) return;
+
+        const section = document.createElement('section');
+        section.className = 'storyboard-group-page';
+        section.dataset.scene = id;
+        section.dataset.page = String(info.page);
+        section.style.background = '#090d10';
+
+        if (groupIds.length > 1) {
+          const label = document.createElement('div');
+          label.className = 'storyboard-group-page-label';
+          label.textContent = `SCENE ${id} · PDF-SIDE ${info.page} · ${info.title}`;
+          label.style.padding = '8px 10px';
+          label.style.color = 'var(--current)';
+          label.style.fontFamily = "'IBM Plex Mono', monospace";
+          label.style.fontSize = '10px';
+          label.style.fontWeight = '850';
+          label.style.border = '1px solid var(--border)';
+          label.style.borderBottom = '0';
+          label.style.borderRadius = '7px 7px 0 0';
+          section.appendChild(label);
+        }
+
+        const baseViewport = page.getViewport({ scale: 1 });
+        const availableWidth = Math.max(320, (wrap.clientWidth || 760) - (groupIds.length > 1 ? 20 : 0));
+        const cssScale = availableWidth / baseViewport.width;
+        const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+        const cssViewport = page.getViewport({ scale: cssScale });
+        const renderViewport = page.getViewport({ scale: cssScale * pixelRatio });
+
+        const canvas = document.createElement('canvas');
+        canvas.className = 'storyboard-single-page-canvas';
+        canvas.dataset.scene = id;
+        canvas.dataset.page = String(info.page);
+        canvas.width = Math.floor(renderViewport.width);
+        canvas.height = Math.floor(renderViewport.height);
+        canvas.style.display = 'block';
+        canvas.style.width = `${Math.floor(cssViewport.width)}px`;
+        canvas.style.height = `${Math.floor(cssViewport.height)}px`;
+        canvas.style.maxWidth = '100%';
+        canvas.style.margin = '0 auto';
+        canvas.style.background = '#fff';
+        if (groupIds.length > 1) {
+          canvas.style.borderRadius = '0 0 7px 7px';
+          canvas.style.border = '1px solid var(--border)';
+        }
+        section.appendChild(canvas);
+        container.appendChild(section);
+
+        await page.render({ canvasContext: canvas.getContext('2d'), viewport: renderViewport }).promise;
+      }
+
       if (generation !== renderGeneration) return;
       wrap.dataset.singleStoryboardPage = String(scene.page);
+      wrap.dataset.storyboardGroup = groupIds.join(',');
+
+      const requestedIndex = groupIds.indexOf(sceneId);
+      if (requestedIndex > 0) {
+        const target = container.querySelector(`[data-scene="${sceneId}"]`);
+        if (target) wrap.scrollTop = Math.max(0, target.offsetTop - 8);
+      } else {
+        wrap.scrollTop = 0;
+      }
     } catch (error) {
-      if (generation === renderGeneration) showError(sceneId, scene.page);
-      console.error('[SEV storyboard] single-page render failed', error);
+      if (generation === renderGeneration) showError(sceneId);
+      console.error('[SEV storyboard] grouped render failed', error);
     }
   }
 
   function openStoryboardTab() {
-    if (typeof window.openPortalTab === 'function') {
-      window.openPortalTab('storyboard');
-    } else {
-      document.querySelector('nav.tabs button[data-tab="storyboard"]')?.click();
-    }
+    if (typeof window.openPortalTab === 'function') window.openPortalTab('storyboard');
+    else document.querySelector('nav.tabs button[data-tab="storyboard"]')?.click();
   }
 
   function updateLabels() {
     const panel = document.getElementById('panel-storyboard');
     if (!panel) return;
-
     const head = panel.querySelector('.section-head');
     if (head) {
-      head.querySelector('h2') && (head.querySelector('h2').textContent = 'Storyboard og sceneoversigt');
-      head.querySelector('p') && (head.querySelector('p').textContent = 'Klik på en scene. Previewet viser kun den valgte storyboard-side.');
+      if (head.querySelector('h2')) head.querySelector('h2').textContent = 'Storyboard og sceneoversigt';
+      if (head.querySelector('p')) head.querySelector('p').textContent = 'Klik på en scene. Hvis den har B/C-dele, vises hele scenegruppen i previewet — rul ned for at se dem.';
     }
-
     panel.querySelectorAll('.storyboard-scene-card[data-storyboard-scene]').forEach(card => {
       const label = CARD_LABELS[card.dataset.storyboardScene];
       if (!label) return;
@@ -199,7 +254,6 @@
       const page = card.querySelector('.storyboard-page-number');
       if (title) title.textContent = label.title;
       if (page) page.textContent = `side ${label.pages}`;
-
       card.classList.remove('filmed');
       card.querySelectorAll('.storyboard-filmed-tag').forEach(tag => tag.remove());
       if (!FILMED.has(card.dataset.storyboardScene)) {
@@ -211,12 +265,13 @@
 
   function openScene(sceneId, options = {}) {
     const requested = String(sceneId || '').toUpperCase();
-    const scene = SCENES[requested] || SCENES['1A'];
+    const resolvedId = SCENES[requested] ? requested : '1A';
+    const scene = SCENES[resolvedId];
+    const groupIds = groupFor(resolvedId);
     const panel = document.getElementById('panel-storyboard');
     if (!panel) return;
 
     openStoryboardTab();
-
     panel.querySelectorAll('.storyboard-scene-card[data-storyboard-scene]').forEach(card => {
       card.classList.toggle('active', card.dataset.storyboardScene === scene.card);
     });
@@ -226,8 +281,16 @@
     const pageLink = panel.querySelector('#storyboard-page-link');
     const fullLink = panel.querySelector('.storyboard-action.primary');
 
-    if (selectedTitle) selectedTitle.textContent = `Scene ${requested} · ${scene.title}`;
-    if (selectedPage) selectedPage.textContent = `PDF-side ${scene.page}`;
+    if (selectedTitle) selectedTitle.textContent = `Scene ${resolvedId} · ${scene.title}`;
+    if (selectedPage) {
+      if (groupIds.length > 1 && resolvedId === groupIds[0]) {
+        selectedPage.textContent = `PDF-sider ${SCENES[groupIds[0]].page}–${SCENES[groupIds[groupIds.length - 1]].page} · rul ned for ${groupIds.slice(1).join(' og ')}`;
+      } else if (groupIds.length > 1) {
+        selectedPage.textContent = `PDF-side ${scene.page} · del af scenegruppe ${groupIds.join(' / ')}`;
+      } else {
+        selectedPage.textContent = `PDF-side ${scene.page}`;
+      }
+    }
     if (pageLink) {
       pageLink.href = `${LOCAL_PDF}#page=${scene.page}`;
       pageLink.textContent = 'Åbn den valgte side';
@@ -237,11 +300,8 @@
       fullLink.textContent = 'Åbn hele PDF-filen';
     }
 
-    renderSinglePage(requested);
-
-    if (options.scroll !== false) {
-      panel.querySelector('#storyboard-viewer-shell')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    renderSceneGroup(resolvedId);
+    if (options.scroll !== false) panel.querySelector('#storyboard-viewer-shell')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   function activeSceneId() {
@@ -251,11 +311,9 @@
   function installClicks() {
     if (document.documentElement.dataset.storyboardSinglePageClicks === VERSION) return;
     document.documentElement.dataset.storyboardSinglePageClicks = VERSION;
-
     document.addEventListener('click', event => {
       const target = event.target instanceof Element ? event.target : null;
       if (!target) return;
-
       const sceneButton = target.closest('#panel-storyboard [data-storyboard-scene]');
       if (sceneButton) {
         event.preventDefault();
@@ -263,11 +321,8 @@
         openScene(sceneButton.dataset.storyboardScene);
         return;
       }
-
       const storyboardTab = target.closest('nav.tabs button[data-tab="storyboard"]');
-      if (storyboardTab && !currentSceneId) {
-        window.setTimeout(() => openScene(activeSceneId(), { scroll: false }), 0);
-      }
+      if (storyboardTab && !currentSceneId) window.setTimeout(() => openScene(activeSceneId(), { scroll: false }), 0);
     }, true);
   }
 
@@ -275,12 +330,9 @@
     const panel = document.getElementById('panel-storyboard');
     const wrap = previewWrap();
     if (!panel || !wrap) return false;
-
     updateLabels();
     installClicks();
     window.openStoryboardScene = openScene;
-
-    // Remove the browser PDF viewer entirely; it always exposes neighbouring pages.
     wrap.replaceChildren();
     wrap.style.minHeight = '0';
     wrap.style.aspectRatio = 'auto';
@@ -301,7 +353,7 @@
   window.addEventListener('resize', () => {
     if (!currentSceneId) return;
     window.clearTimeout(resizeTimer);
-    resizeTimer = window.setTimeout(() => renderSinglePage(currentSceneId), 180);
+    resizeTimer = window.setTimeout(() => renderSceneGroup(currentSceneId), 180);
   }, { passive: true });
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
