@@ -130,7 +130,7 @@ export default async (request, context) => {
     '<script src="/production-update-aug12-v1.js?v=cf1dd12230346fddd3a98c2065a939427c12f617" defer></script>',
     '<script src="/scene14a-aug19-v1.js?v=c63b7e91d358d3a0324165eb25ea98ca26412310" defer></script>',
     '<script src="/hide-filmed-from-schedule-v1.js?v=b309adb22c6bdf916f98d1c4c0fc4b822c6b05f1" defer></script>',
-    '<script src="/schedule-integrity-aug12-v1.js?v=0d8a49975b29ea7ccf05b6c653c31c78968e24ca" defer></script>',
+    '<script src="/schedule-integrity-aug12-v1.js?v=be9fcbd5183b198173321b50de4df444f611c34f" defer></script>',
     '<script src="/aug19-move-warning-v1.js?v=633d925c90bab9fdb0487658916d9e15e1bb4b35" defer></script>'
   ].join('');
 
