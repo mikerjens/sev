@@ -1,9 +1,9 @@
 (() => {
   'use strict';
 
-  const VERSION = '2026-08-12-1253';
+  const VERSION = '2026-08-12-1458';
   const STORAGE_KEY = 'sev-task-person';
-  const RELEVANT = new Set(['michael', 'thomas', 'heidi']);
+  const RELEVANT = new Set(['michael', 'thomas', 'heidi', 'bjarni']);
 
   const CARD_HTML = `<article class="ap3-shoot" data-production-plan-aug11="aug19-10a" data-scene10a-aug19="${VERSION}">
     <div class="ap3-shoot-top"><div><div class="ap3-kicker">ONSDAG 19. AUGUST</div><h3>Tøj på tørresnoren</h3><div class="ap3-location">📍 Miðalsbrekka, Vestmanna</div></div><span class="ap3-status">PLANLAGT</span></div>
@@ -43,9 +43,14 @@
   }
 
   function currentPerson() {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY) || '';
+      if (stored && stored !== 'all') return stored;
+    } catch (_) {}
     const select = document.getElementById('ap3-person-select');
     if (select?.value) return select.value;
-    try { return localStorage.getItem(STORAGE_KEY) || ''; } catch (_) { return ''; }
+    const homeSelect = document.getElementById('ap3-home-person');
+    return homeSelect?.value || '';
   }
 
   function syncPersonal() {
@@ -86,7 +91,10 @@
 
     document.addEventListener('change', event => {
       const select = event.target instanceof HTMLSelectElement ? event.target : null;
-      if (select && ['ap3-home-person', 'ap3-person-select'].includes(select.id)) window.setTimeout(refresh, 60);
+      if (select && ['ap3-home-person', 'ap3-person-select'].includes(select.id)) {
+        try { localStorage.setItem(STORAGE_KEY, select.value || ''); } catch (_) {}
+        [40, 160, 500].forEach(delay => window.setTimeout(refresh, delay));
+      }
     }, true);
   }
 
