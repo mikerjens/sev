@@ -126,11 +126,11 @@ export default async (request, context) => {
     '<script src="/location-skalabudin-link-v1.js?v=cab50fb49dfd9247b274725fd5d44adfe3edd1ed" defer></script>',
     '<script src="/production-update-aug11-v1.js?v=97d0bc27d7ebdcfaf2e8b76e7249cc77467b8751" defer></script>',
     '<script src="/scene13b-aug19-v1.js?v=375010c113ea5a4f64783dea27068a5153baed45" defer></script>',
-    '<script src="/scene10a-aug19-v1.js?v=15796a864072551ef3c03e1ab5f225c580505552" defer></script>',
+    '<script src="/scene10a-aug19-v1.js?v=e0284f2344d8d8810b3273d43380b1036d86c41a" defer></script>',
     '<script src="/production-update-aug12-v1.js?v=cf1dd12230346fddd3a98c2065a939427c12f617" defer></script>',
     '<script src="/scene14a-aug19-v1.js?v=c63b7e91d358d3a0324165eb25ea98ca26412310" defer></script>',
     '<script src="/hide-filmed-from-schedule-v1.js?v=b309adb22c6bdf916f98d1c4c0fc4b822c6b05f1" defer></script>',
-    '<script src="/schedule-integrity-aug12-v1.js?v=1489938153936a6c0b3d4a6d4eaab65c0b7d15c6" defer></script>',
+    '<script src="/schedule-integrity-aug12-v1.js?v=0d8a49975b29ea7ccf05b6c653c31c78968e24ca" defer></script>',
     '<script src="/aug19-move-warning-v1.js?v=633d925c90bab9fdb0487658916d9e15e1bb4b35" defer></script>'
   ].join('');
 
