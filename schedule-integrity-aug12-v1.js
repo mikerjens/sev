@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2026-08-12-1458';
+  const VERSION = '2026-08-12-1504';
   const STORAGE_KEY = 'sev-task-person';
   let sessionPerson = '';
 
@@ -132,6 +132,32 @@
     });
   }
 
+  function ensurePersonalList(panel, person) {
+    let list = panel?.querySelector('.ap3-plan-list');
+    if (list || !panel || !person) return list;
+
+    panel.querySelectorAll('.ap3-empty').forEach(empty => empty.remove());
+
+    if (person === 'bjarni' && !panel.querySelector('[data-bjarni-summary]')) {
+      const summary = document.createElement('div');
+      summary.className = 'ap3-person-summary';
+      summary.dataset.bjarniSummary = VERSION;
+      summary.innerHTML = '<strong>Bjarni Lamhauge</strong>Skuespiller · scene 10A';
+      const namebox = panel.querySelector('.ap3-namebox');
+      if (namebox) namebox.insertAdjacentElement('afterend', summary);
+      else panel.prepend(summary);
+    }
+
+    list = document.createElement('div');
+    list.className = 'ap3-plan-list';
+    const summary = panel.querySelector('.ap3-person-summary');
+    const namebox = panel.querySelector('.ap3-namebox');
+    if (summary) summary.insertAdjacentElement('afterend', list);
+    else if (namebox) namebox.insertAdjacentElement('afterend', list);
+    else panel.appendChild(list);
+    return list;
+  }
+
   function homeCardFor(config) {
     const list = document.querySelector('#panel-schedule .ap3-plan-list');
     if (!list) return null;
@@ -154,13 +180,16 @@
 
   function syncPersonalWednesday() {
     const panel = document.getElementById('panel-my-schedule');
-    const list = panel?.querySelector('.ap3-plan-list');
-    if (!panel || !list) return;
+    if (!panel) return;
 
     ensurePersonOptions();
     const person = currentPerson();
     syncSelectedOptions(person);
+    const list = ensurePersonalList(panel, person);
+    if (!list) return;
+
     removeWednesdayCards(list);
+    list.querySelectorAll(':scope > .ap3-empty').forEach(empty => empty.remove());
 
     if (!person) return;
 
