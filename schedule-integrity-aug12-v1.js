@@ -1,8 +1,9 @@
 (() => {
   'use strict';
 
-  const VERSION = '2026-08-12-1403';
+  const VERSION = '2026-08-12-1458';
   const STORAGE_KEY = 'sev-task-person';
+  let sessionPerson = '';
 
   const WEDNESDAY = [
     { key: 'aug19-10a', scenes: ['10A'], relevant: new Set(['michael','thomas','heidi','bjarni']) },
@@ -104,12 +105,31 @@
     ensureBjarniOption(document.getElementById('ap3-person-select'));
   }
 
+  function storedPerson() {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY) || '';
+      return stored === 'all' ? '' : stored;
+    } catch (_) {
+      return '';
+    }
+  }
+
   function currentPerson() {
+    if (sessionPerson) return sessionPerson;
+    const stored = storedPerson();
+    if (stored) return stored;
     const select = document.getElementById('ap3-person-select');
     if (select?.value) return select.value;
     const homeSelect = document.getElementById('ap3-home-person');
-    if (homeSelect?.value) return homeSelect.value;
-    try { return localStorage.getItem(STORAGE_KEY) || ''; } catch (_) { return ''; }
+    return homeSelect?.value || '';
+  }
+
+  function syncSelectedOptions(person) {
+    if (!person) return;
+    ['ap3-home-person', 'ap3-person-select'].forEach(id => {
+      const select = document.getElementById(id);
+      if (select?.querySelector(`option[value="${person}"]`)) select.value = person;
+    });
   }
 
   function homeCardFor(config) {
@@ -139,6 +159,7 @@
 
     ensurePersonOptions();
     const person = currentPerson();
+    syncSelectedOptions(person);
     removeWednesdayCards(list);
 
     if (!person) return;
@@ -154,6 +175,7 @@
 
     patchAllTimes(panel);
     panel.dataset.personalScheduleVerifiedAug12 = VERSION;
+    panel.dataset.personalSchedulePerson = person;
   }
 
   function refresh() {
@@ -164,6 +186,14 @@
     document.documentElement.dataset.scheduleIntegrityAug12 = VERSION;
   }
 
+  function repeatedSync() {
+    [30, 140, 360, 800].forEach(delay => window.setTimeout(() => {
+      ensurePersonOptions();
+      if (document.getElementById('panel-my-schedule')?.classList.contains('active')) syncPersonalWednesday();
+      patchAllTimes(document.getElementById('panel-my-schedule'));
+    }, delay));
+  }
+
   function installEvents() {
     if (document.documentElement.dataset.scheduleIntegrityAug12Events === VERSION) return;
     document.documentElement.dataset.scheduleIntegrityAug12Events = VERSION;
@@ -172,23 +202,22 @@
       const target = event.target instanceof Element ? event.target : null;
       if (!target) return;
       if (target.closest('nav.tabs button[data-tab="schedule"], nav.tabs button[data-tab="my-schedule"], [data-open-personal], .brand, [data-home]')) {
-        window.setTimeout(refresh, 160);
+        window.setTimeout(refresh, 120);
+        repeatedSync();
       }
     }, true);
 
     document.addEventListener('change', event => {
       const select = event.target instanceof HTMLSelectElement ? event.target : null;
       if (!select || !['ap3-home-person','ap3-person-select'].includes(select.id)) return;
-      try { localStorage.setItem(STORAGE_KEY, select.value || ''); } catch (_) {}
-      window.setTimeout(() => {
-        ensurePersonOptions();
-        if (document.getElementById('panel-my-schedule')?.classList.contains('active')) syncPersonalWednesday();
-        refresh();
-      }, 180);
+      sessionPerson = select.value || '';
+      try { localStorage.setItem(STORAGE_KEY, sessionPerson); } catch (_) {}
+      repeatedSync();
     }, true);
   }
 
   function start() {
+    sessionPerson = storedPerson();
     installEvents();
     refresh();
     [500, 1200, 2300, 3800].forEach(delay => window.setTimeout(refresh, delay));
