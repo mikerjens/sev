@@ -65,6 +65,20 @@ export default async (request, context) => {
     display: none !important;
   }
 
+  .ap3-kicker {
+    display: inline-flex !important;
+    align-items: center;
+    padding: 6px 10px !important;
+    color: var(--signal) !important;
+    background: rgba(246,176,66,.14) !important;
+    border: 1px solid rgba(246,176,66,.55) !important;
+    border-radius: 6px;
+    font-size: 13px !important;
+    font-weight: 900 !important;
+    letter-spacing: .08em !important;
+    line-height: 1.2;
+  }
+
   html.sev-booting nav.tabs,
   html.sev-booting .weather-shortcut,
   html.sev-booting main,
@@ -92,6 +106,11 @@ export default async (request, context) => {
       text-align: left;
       font-size: 11px;
       line-height: 1.25;
+    }
+
+    .ap3-kicker {
+      font-size: 12px !important;
+      padding: 6px 9px !important;
     }
   }
 </style>`;
