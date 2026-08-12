@@ -57,6 +57,10 @@ export default async (request, context) => {
 
   const portalStyles = `
 <style>
+  .status-banner {
+    display: none !important;
+  }
+
   html.sev-booting nav.tabs,
   html.sev-booting .weather-shortcut,
   html.sev-booting main,
