@@ -61,6 +61,10 @@ export default async (request, context) => {
     display: none !important;
   }
 
+  #panel-schedule .ap3-head > p {
+    display: none !important;
+  }
+
   html.sev-booting nav.tabs,
   html.sev-booting .weather-shortcut,
   html.sev-booting main,
