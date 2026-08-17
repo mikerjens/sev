@@ -1,10 +1,11 @@
 (() => {
   'use strict';
-  const VERSION = '2026-08-17-1646';
+  const VERSION = '2026-08-17-1656';
   const FILMED = [
     {scene:'1A',title:'Lyskontakt og åbningsbillede',location:'Skálabúðin, Tórshavn'},
     {scene:'2A',title:'Drengen læser',location:'Skálabúðin, Tórshavn'},
     {scene:'2B',title:'Nærbillede af bog/foto',location:'Skálabúðin, Tórshavn'},
+    {scene:'2C',title:'Arkivfoto / historisk materiale',location:'Postproduktion / arkivmateriale'},
     {scene:'3A',title:'Klaksvík',location:'Klaksvík'},
     {scene:'4A',title:'Børn under gadelyset',location:'Elduvík'},
     {scene:'5A',title:'Remote village night',location:'Funningur'},
