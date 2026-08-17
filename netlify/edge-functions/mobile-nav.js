@@ -119,7 +119,7 @@ export default async (request, context) => {
     '<script src="/portal-loading-safety-v1.js?v=dd04919e3c91f5947bbd7e3de7bf2f41535b8c0e" defer></script>',
     '<script src="/portal-approved-core-v3.js?v=1e78b5b238e0e24b4fc7df5324f23fe138a27fb3" defer></script>',
     '<script src="/scene-links-light-v2.js?v=4d10dd8e9212eed5a03cdad6592e6a632ef8e2b2" defer></script>',
-    '<script src="/filmed-scenes-authoritative-v2.js?v=6fbd588d01f34c927faa182c4251449e4f973d54" defer></script>',
+    '<script src="/filmed-scenes-authoritative-v2.js?v=63a5b7cf6de9be741f0f78763f439c24fb87e5b3" defer></script>',
     '<script src="/team-contacts-doc-aug10-v1.js?v=1473a85e6ffe43784eb9c7993b13aefd1a199b57" defer></script>',
     '<script src="/storyboard-single-page-v4.js?v=baacecde95d422bc11cc13136983ea8ce631057e" defer></script>',
     '<script src="/portal-release-3.0.js?v=aebdea47448a583dca9aaa474c246ccba856ef97" defer></script>',
@@ -129,7 +129,7 @@ export default async (request, context) => {
     '<script src="/scene10a-aug19-v1.js?v=e0284f2344d8d8810b3273d43380b1036d86c41a" defer></script>',
     '<script src="/production-update-aug12-v1.js?v=cf1dd12230346fddd3a98c2065a939427c12f617" defer></script>',
     '<script src="/scene14a-aug19-v1.js?v=c63b7e91d358d3a0324165eb25ea98ca26412310" defer></script>',
-    '<script src="/hide-filmed-from-schedule-v1.js?v=b309adb22c6bdf916f98d1c4c0fc4b822c6b05f1" defer></script>',
+    '<script src="/hide-filmed-from-schedule-v1.js?v=25f5356fbe2bdb7ca9a339dd28c14f5895861193" defer></script>',
     '<script src="/schedule-integrity-aug12-v1.js?v=be9fcbd5183b198173321b50de4df444f611c34f" defer></script>',
     '<script src="/aug19-move-warning-v1.js?v=633d925c90bab9fdb0487658916d9e15e1bb4b35" defer></script>'
   ].join('');
