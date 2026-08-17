@@ -1,12 +1,17 @@
 (() => {
   'use strict';
-  const VERSION = '2026-08-11-1106';
+  const VERSION = '2026-08-17-1646';
   const FILMED = [
+    {scene:'1A',title:'Lyskontakt og åbningsbillede',location:'Skálabúðin, Tórshavn'},
+    {scene:'2A',title:'Drengen læser',location:'Skálabúðin, Tórshavn'},
+    {scene:'2B',title:'Nærbillede af bog/foto',location:'Skálabúðin, Tórshavn'},
     {scene:'3A',title:'Klaksvík',location:'Klaksvík'},
     {scene:'4A',title:'Børn under gadelyset',location:'Elduvík'},
     {scene:'5A',title:'Remote village night',location:'Funningur'},
     {scene:'6A',title:'Dæmning, turbine, Eiðisvatn og Eiðisverkið',location:'Eiði / Eiðisvatn / Eiðisverkið'},
-    {scene:'7A',title:'Vindmøller',location:'Eystnes'}
+    {scene:'7A',title:'Vindmøller',location:'Eystnes'},
+    {scene:'15A',title:'Måske begynder det med dig',location:'Skálabúðin, Tórshavn'},
+    {scene:'16A',title:'Lyset slukkes',location:'Skálabúðin, Tórshavn'}
   ];
   const ids = new Set(FILMED.map(item => item.scene));
   const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[c]);
