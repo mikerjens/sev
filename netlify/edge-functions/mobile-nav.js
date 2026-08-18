@@ -65,7 +65,7 @@ export default async (request, context) => {
     display: none !important;
   }
 
-  /* Never show obsolete schedule data while the final Aug 19 plan is being rebuilt. */
+  /* Do not expose superseded schedule data while the current plan is rebuilt. */
   html:not(.sev-current-plan-ready) #panel-schedule,
   html:not(.sev-current-plan-ready) #panel-my-schedule {
     visibility: hidden !important;
@@ -121,9 +121,8 @@ export default async (request, context) => {
   }
 </style>`;
 
-  // The current Aug 19 production script is the single authority for tomorrow's schedule.
-  // Older Aug 11/12 scene overlays are intentionally not loaded because they contained
-  // superseded times and could overwrite the current personal schedule after name changes.
+  // The Aug 22 production script is the single authority for the next shoot.
+  // Superseded Aug 19 schedule/glance/banner/guard scripts are intentionally not loaded.
   const portalScripts = [
     '<script src="/portal-loading-safety-v1.js?v=dd04919e3c91f5947bbd7e3de7bf2f41535b8c0e" defer></script>',
     '<script src="/portal-approved-core-v3.js?v=1e78b5b238e0e24b4fc7df5324f23fe138a27fb3" defer></script>',
@@ -134,11 +133,7 @@ export default async (request, context) => {
     '<script src="/portal-release-3.0.js?v=aebdea47448a583dca9aaa474c246ccba856ef97" defer></script>',
     '<script src="/location-skalabudin-link-v1.js?v=cab50fb49dfd9247b274725fd5d44adfe3edd1ed" defer></script>',
     '<script src="/hide-filmed-from-schedule-v1.js?v=25f5356fbe2bdb7ca9a339dd28c14f5895861193" defer></script>',
-    '<script src="/production-aug19-authoritative-v1.js?v=7adc068c401e07dfc875a788b2ddcb66676c250c" defer></script>',
-    '<script src="/tomorrow-glance-aug19-v1.js?v=0a7cbd27450dc3ef86c64146984bd3f2944c8dbd" defer></script>',
-    '<script src="/production-confirmed-aug19-banner-v1.js?v=fa29eb910720a10574cb9bc3c4ae3c1d93a13997" defer></script>',
-    '<script src="/current-plan-guard-aug19-v1.js?v=117dc76636f1dcf43cd109e0cab801b3b0d288f1" defer></script>',
-    '<script src="/pending-scene8a-v1.js?v=1e6f98c86a31fcb69e34f42e8601cc51e49052c8" defer></script>'
+    '<script src="/production-aug22-authoritative-v1.js?v=1492e13f09f5019f6873ee25e5fe6a9dd8f11017" defer></script>'
   ].join('');
 
   html = html
