@@ -130,7 +130,8 @@ export default async (request, context) => {
     '<script src="/production-update-aug12-v1.js?v=cf1dd12230346fddd3a98c2065a939427c12f617" defer></script>',
     '<script src="/scene14a-aug19-v1.js?v=c63b7e91d358d3a0324165eb25ea98ca26412310" defer></script>',
     '<script src="/hide-filmed-from-schedule-v1.js?v=25f5356fbe2bdb7ca9a339dd28c14f5895861193" defer></script>',
-    '<script src="/schedule-integrity-aug12-v1.js?v=be9fcbd5183b198173321b50de4df444f611c34f" defer></script>'
+    '<script src="/schedule-integrity-aug12-v1.js?v=be9fcbd5183b198173321b50de4df444f611c34f" defer></script>',
+    '<script src="/production-aug19-authoritative-v1.js?v=52e827ab5ccbe8719d26ce08c61c135bc8c075d0" defer></script>'
   ].join('');
 
   html = html
