@@ -65,6 +65,12 @@ export default async (request, context) => {
     display: none !important;
   }
 
+  /* Never show obsolete schedule data while the final Aug 19 plan is being rebuilt. */
+  html:not(.sev-current-plan-ready) #panel-schedule,
+  html:not(.sev-current-plan-ready) #panel-my-schedule {
+    visibility: hidden !important;
+  }
+
   .ap3-kicker {
     display: inline-flex !important;
     align-items: center;
@@ -133,7 +139,8 @@ export default async (request, context) => {
     '<script src="/schedule-integrity-aug12-v1.js?v=be9fcbd5183b198173321b50de4df444f611c34f" defer></script>',
     '<script src="/production-aug19-authoritative-v1.js?v=7adc068c401e07dfc875a788b2ddcb66676c250c" defer></script>',
     '<script src="/tomorrow-glance-aug19-v1.js?v=0a7cbd27450dc3ef86c64146984bd3f2944c8dbd" defer></script>',
-    '<script src="/production-confirmed-aug19-banner-v1.js?v=fa29eb910720a10574cb9bc3c4ae3c1d93a13997" defer></script>'
+    '<script src="/production-confirmed-aug19-banner-v1.js?v=fa29eb910720a10574cb9bc3c4ae3c1d93a13997" defer></script>',
+    '<script src="/current-plan-guard-aug19-v1.js?v=117dc76636f1dcf43cd109e0cab801b3b0d288f1" defer></script>'
   ].join('');
 
   html = html
