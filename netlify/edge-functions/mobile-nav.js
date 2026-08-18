@@ -133,7 +133,8 @@ export default async (request, context) => {
     '<script src="/portal-release-3.0.js?v=aebdea47448a583dca9aaa474c246ccba856ef97" defer></script>',
     '<script src="/location-skalabudin-link-v1.js?v=cab50fb49dfd9247b274725fd5d44adfe3edd1ed" defer></script>',
     '<script src="/hide-filmed-from-schedule-v1.js?v=25f5356fbe2bdb7ca9a339dd28c14f5895861193" defer></script>',
-    '<script src="/production-aug22-authoritative-v1.js?v=1492e13f09f5019f6873ee25e5fe6a9dd8f11017" defer></script>'
+    '<script src="/production-aug22-authoritative-v1.js?v=1492e13f09f5019f6873ee25e5fe6a9dd8f11017" defer></script>',
+    '<script src="/filmed-aug17-cleanup-v1.js?v=ea194bf0ea25796003203c82c8ab36b6c8f659a7" defer></script>'
   ].join('');
 
   html = html
