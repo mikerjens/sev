@@ -121,6 +121,9 @@ export default async (request, context) => {
   }
 </style>`;
 
+  // The current Aug 19 production script is the single authority for tomorrow's schedule.
+  // Older Aug 11/12 scene overlays are intentionally not loaded because they contained
+  // superseded times and could overwrite the current personal schedule after name changes.
   const portalScripts = [
     '<script src="/portal-loading-safety-v1.js?v=dd04919e3c91f5947bbd7e3de7bf2f41535b8c0e" defer></script>',
     '<script src="/portal-approved-core-v3.js?v=1e78b5b238e0e24b4fc7df5324f23fe138a27fb3" defer></script>',
@@ -130,13 +133,7 @@ export default async (request, context) => {
     '<script src="/storyboard-single-page-v4.js?v=baacecde95d422bc11cc13136983ea8ce631057e" defer></script>',
     '<script src="/portal-release-3.0.js?v=aebdea47448a583dca9aaa474c246ccba856ef97" defer></script>',
     '<script src="/location-skalabudin-link-v1.js?v=cab50fb49dfd9247b274725fd5d44adfe3edd1ed" defer></script>',
-    '<script src="/production-update-aug11-v1.js?v=97d0bc27d7ebdcfaf2e8b76e7249cc77467b8751" defer></script>',
-    '<script src="/scene13b-aug19-v1.js?v=375010c113ea5a4f64783dea27068a5153baed45" defer></script>',
-    '<script src="/scene10a-aug19-v1.js?v=e0284f2344d8d8810b3273d43380b1036d86c41a" defer></script>',
-    '<script src="/production-update-aug12-v1.js?v=cf1dd12230346fddd3a98c2065a939427c12f617" defer></script>',
-    '<script src="/scene14a-aug19-v1.js?v=c63b7e91d358d3a0324165eb25ea98ca26412310" defer></script>',
     '<script src="/hide-filmed-from-schedule-v1.js?v=25f5356fbe2bdb7ca9a339dd28c14f5895861193" defer></script>',
-    '<script src="/schedule-integrity-aug12-v1.js?v=be9fcbd5183b198173321b50de4df444f611c34f" defer></script>',
     '<script src="/production-aug19-authoritative-v1.js?v=7adc068c401e07dfc875a788b2ddcb66676c250c" defer></script>',
     '<script src="/tomorrow-glance-aug19-v1.js?v=0a7cbd27450dc3ef86c64146984bd3f2944c8dbd" defer></script>',
     '<script src="/production-confirmed-aug19-banner-v1.js?v=fa29eb910720a10574cb9bc3c4ae3c1d93a13997" defer></script>',
