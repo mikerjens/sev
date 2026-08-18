@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2026-08-18-1030';
+  const VERSION = '2026-08-18-1036';
   const STORAGE_KEY = 'sev-task-person';
   const DATE_LABEL = 'ONSDAG 19. AUGUST';
 
@@ -29,8 +29,8 @@
     {
       key: 'aug19-13ab', scenes: ['13A','13B'], title: 'Hus og solpaneler', location: 'Vestmanna · location afstemmes med Thomas Koba',
       times: [['Optagelse', '12:00–13:30']],
-      people: ['Thomas Koba · Instruktør og filmmaker', 'Michael Koba · Filmproducer', 'Helena Heðinsdóttir Guttesen · mor', 'Heini Dam Lassen · dreng', 'Heidi Mortensen · Styling'],
-      relevant: new Set(['michael','thomas','heidi','helena','heini']),
+      people: ['Thomas Koba · Instruktør og filmmaker', 'Rúni Friis Kjær · Grip / lys', 'Michael Koba · Filmproducer', 'Helena Heðinsdóttir Guttesen · mor', 'Heini Dam Lassen · dreng', 'Heidi Mortensen · Styling'],
+      relevant: new Set(['michael','thomas','runi','heidi','helena','heini']),
       equipment: ['Samme tøj som i scene 9A, 9B og 9C'],
       missing: ['Præcis location i Vestmanna skal afstemmes med Thomas Koba.'],
       notes: ['Stillfoto: “Man ser dreng bagfra, mens han beskytter øjnene og kigger på huset med solpaneler”.']
@@ -38,8 +38,8 @@
     {
       key: 'aug19-12a', scenes: ['12A'], title: 'Grøn energi fra et vandløb', location: 'Ukendt',
       times: [['Optagelse', '14:00–15:00']],
-      people: ['Thomas Koba · Instruktør og filmmaker', 'Michael Koba · Filmproducer', 'Helena Heðinsdóttir Guttesen · mor', 'Heini Dam Lassen · dreng', 'Heidi Mortensen · Styling'],
-      relevant: new Set(['michael','thomas','heidi','helena','heini']),
+      people: ['Thomas Koba · Instruktør og filmmaker', 'Rúni Friis Kjær · Grip / lys', 'Michael Koba · Filmproducer', 'Helena Heðinsdóttir Guttesen · mor', 'Heini Dam Lassen · dreng', 'Heidi Mortensen · Styling'],
+      relevant: new Set(['michael','thomas','runi','heidi','helena','heini']),
       equipment: ['Samme tøj som i scene 9A, 9B og 9C'],
       missing: ['Location er endnu ikke fastlagt.'],
       notes: ['Stillfoto: “Man ser dreng og mor pege på kilde/vandløb”.']
@@ -47,8 +47,8 @@
     {
       key: 'aug19-14a', scenes: ['14A'], title: 'Dreng blæser udenfor', location: 'Ukendt',
       times: [['Optagelse', '15:00–17:00']],
-      people: ['Thomas Koba · Instruktør og filmmaker', 'Michael Koba · Filmproducer', 'Heini Dam Lassen · dreng', 'Heidi Mortensen · Styling'],
-      relevant: new Set(['michael','thomas','heidi','heini']),
+      people: ['Thomas Koba · Instruktør og filmmaker', 'Rúni Friis Kjær · Grip / lys', 'Michael Koba · Filmproducer', 'Heini Dam Lassen · dreng', 'Heidi Mortensen · Styling'],
+      relevant: new Set(['michael','thomas','runi','heidi','heini']),
       equipment: ['Lille plastikvindmølle', 'Samme tøj som i scene 9A, 9B og 9C'],
       missing: ['Location er endnu ikke fastlagt.'],
       notes: ['Stillfoto: “Dreng med legetøjsvindmølle”.']
