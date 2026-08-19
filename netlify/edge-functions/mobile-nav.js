@@ -121,8 +121,8 @@ export default async (request, context) => {
   }
 </style>`;
 
-  // The Aug 22 production script is the single authority for the next shoot.
-  // Superseded Aug 19 schedule/glance/banner/guard scripts are intentionally not loaded.
+  // The current production script remains the detail authority for the next shoot.
+  // The final date override moves the entire shoot to Tuesday 25 August.
   const portalScripts = [
     '<script src="/portal-loading-safety-v1.js?v=dd04919e3c91f5947bbd7e3de7bf2f41535b8c0e" defer></script>',
     '<script src="/portal-approved-core-v3.js?v=1e78b5b238e0e24b4fc7df5324f23fe138a27fb3" defer></script>',
@@ -135,7 +135,8 @@ export default async (request, context) => {
     '<script src="/hide-filmed-from-schedule-v1.js?v=25f5356fbe2bdb7ca9a339dd28c14f5895861193" defer></script>',
     '<script src="/production-aug22-authoritative-v1.js?v=1492e13f09f5019f6873ee25e5fe6a9dd8f11017" defer></script>',
     '<script src="/filmed-aug17-cleanup-v1.js?v=ea194bf0ea25796003203c82c8ab36b6c8f659a7" defer></script>',
-    '<script src="/status-banner-aug19-v1.js?v=88eee30dde2381462769abe7729ff2b9784ed8cb" defer></script>'
+    '<script src="/status-banner-aug19-v1.js?v=88eee30dde2381462769abe7729ff2b9784ed8cb" defer></script>',
+    '<script src="/production-date-aug25-v1.js?v=a1bc0a609a8be32c370a436481a28cd99ffcd543" defer></script>'
   ].join('');
 
   html = html
