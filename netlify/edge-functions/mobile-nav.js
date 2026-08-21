@@ -13,7 +13,6 @@ export default async (request, context) => {
     });
   }
 
-  // Same-origin storyboard PDF proxy for the custom scene renderer.
   if (requestUrl.pathname === "/storyboard.pdf") {
     const source = "https://drive.google.com/uc?export=download&id=1tb161Lvzr8Y5R7OdyTiWflT76jwbmgEN&confirm=t";
     const upstreamHeaders = new Headers();
@@ -42,9 +41,7 @@ export default async (request, context) => {
   const response = await context.next();
   const contentType = response.headers.get("content-type") || "";
 
-  if (!contentType.includes("text/html")) {
-    return response;
-  }
+  if (!contentType.includes("text/html")) return response;
 
   let html = await response.text();
 
@@ -57,19 +54,10 @@ export default async (request, context) => {
 
   const portalStyles = `
 <style>
-  .status-banner {
-    display: none !important;
-  }
-
-  #panel-schedule .ap3-head > p {
-    display: none !important;
-  }
-
-  /* Do not expose superseded schedule data while the current plan is rebuilt. */
+  .status-banner { display: none !important; }
+  #panel-schedule .ap3-head > p { display: none !important; }
   html:not(.sev-current-plan-ready) #panel-schedule,
-  html:not(.sev-current-plan-ready) #panel-my-schedule {
-    visibility: hidden !important;
-  }
+  html:not(.sev-current-plan-ready) #panel-my-schedule { visibility: hidden !important; }
 
   .ap3-kicker {
     display: inline-flex !important;
@@ -103,7 +91,6 @@ export default async (request, context) => {
       overflow: visible;
       padding: 0 20px;
     }
-
     nav.tabs button {
       width: 100%;
       margin-right: 0;
@@ -113,26 +100,20 @@ export default async (request, context) => {
       font-size: 11px;
       line-height: 1.25;
     }
-
-    .ap3-kicker {
-      font-size: 12px !important;
-      padding: 6px 9px !important;
-    }
+    .ap3-kicker { font-size: 12px !important; padding: 6px 9px !important; }
   }
 </style>`;
 
-  // The current production script remains the detail authority for the next shoot.
-  // The final date override moves the entire shoot to Tuesday 25 August.
   const portalScripts = [
     '<script src="/portal-loading-safety-v1.js?v=dd04919e3c91f5947bbd7e3de7bf2f41535b8c0e" defer></script>',
     '<script src="/portal-approved-core-v3.js?v=1e78b5b238e0e24b4fc7df5324f23fe138a27fb3" defer></script>',
     '<script src="/scene-links-light-v2.js?v=4d10dd8e9212eed5a03cdad6592e6a632ef8e2b2" defer></script>',
-    '<script src="/filmed-scenes-authoritative-v2.js?v=9da2ae9c12b0f41e8639a8762aa05f380be7f6fb" defer></script>',
+    '<script src="/filmed-scenes-authoritative-v2.js?v=33d7b63bb6a3e276db534687f9772345dca670f9" defer></script>',
     '<script src="/team-contacts-doc-aug10-v1.js?v=1473a85e6ffe43784eb9c7993b13aefd1a199b57" defer></script>',
     '<script src="/storyboard-single-page-v4.js?v=baacecde95d422bc11cc13136983ea8ce631057e" defer></script>',
     '<script src="/portal-release-3.0.js?v=aebdea47448a583dca9aaa474c246ccba856ef97" defer></script>',
     '<script src="/location-skalabudin-link-v1.js?v=cab50fb49dfd9247b274725fd5d44adfe3edd1ed" defer></script>',
-    '<script src="/hide-filmed-from-schedule-v1.js?v=25f5356fbe2bdb7ca9a339dd28c14f5895861193" defer></script>',
+    '<script src="/hide-filmed-from-schedule-v1.js?v=f3e602ec479042c376917663053e4cca7ea7ae91" defer></script>',
     '<script src="/production-aug22-authoritative-v1.js?v=1492e13f09f5019f6873ee25e5fe6a9dd8f11017" defer></script>',
     '<script src="/filmed-aug17-cleanup-v1.js?v=ea194bf0ea25796003203c82c8ab36b6c8f659a7" defer></script>',
     '<script src="/production-date-aug25-v1.js?v=a1bc0a609a8be32c370a436481a28cd99ffcd543" defer></script>'
