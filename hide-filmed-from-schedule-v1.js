@@ -1,8 +1,8 @@
 (() => {
   'use strict';
 
-  const VERSION = '2026-08-17-1646';
-  const FILMED = new Set(['1A', '2A', '2B', '3A', '4A', '5A', '6A', '7A', '15A', '16A']);
+  const VERSION = '2026-08-21-2028';
+  const FILMED = new Set(['1A', '2A', '2B', '3A', '4A', '5A', '6A', '7A', '11A', '15A', '16A']);
   let applying = false;
   let queued = false;
 
@@ -13,6 +13,23 @@
         .map(link => String(link.dataset.sceneLink || '').toUpperCase())
         .filter(Boolean);
       if (scenes.length && scenes.every(scene => FILMED.has(scene))) card.remove();
+    });
+  }
+
+  function removeFilmedPending(panel) {
+    if (!panel) return;
+    panel.querySelectorAll('.ap3-pending-row').forEach(row => {
+      const scenes = [...row.querySelectorAll('[data-scene-link]')]
+        .map(link => String(link.dataset.sceneLink || '').toUpperCase())
+        .filter(Boolean);
+      if (scenes.length && scenes.every(scene => FILMED.has(scene))) row.remove();
+    });
+    panel.querySelectorAll('.ap3-section').forEach(section => {
+      const pending = section.querySelector('.ap3-pending');
+      if (!pending) return;
+      const count = pending.querySelectorAll('.ap3-pending-row').length;
+      const counter = section.querySelector('.ap3-count');
+      if (counter) counter.textContent = `${count} STATUSGRUPPER`;
     });
   }
 
@@ -28,8 +45,12 @@
     if (applying) return;
     applying = true;
     try {
-      removeFilmedShoots(document.getElementById('panel-schedule'));
-      removeFilmedShoots(document.getElementById('panel-my-schedule'));
+      const home = document.getElementById('panel-schedule');
+      const personal = document.getElementById('panel-my-schedule');
+      removeFilmedShoots(home);
+      removeFilmedShoots(personal);
+      removeFilmedPending(home);
+      removeFilmedPending(personal);
       updatePersonalSummary();
       document.documentElement.dataset.hideFilmedFromSchedule = VERSION;
     } finally {
