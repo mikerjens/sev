@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION = '2026-08-21-2028';
+  const VERSION = '2026-08-24-0856';
   const FILMED = [
     {scene:'1A',title:'Lyskontakt og åbningsbillede',location:'Skálabúðin, Tórshavn'},
     {scene:'2A',title:'Drengen læser',location:'Skálabúðin, Tórshavn'},
@@ -11,6 +11,7 @@
     {scene:'5A',title:'Remote village night',location:'Funningur'},
     {scene:'6A',title:'Dæmning, turbine, Eiðisvatn og Eiðisverkið',location:'Eiði / Eiðisvatn / Eiðisverkið'},
     {scene:'7A',title:'Vindmøller',location:'Eystnes'},
+    {scene:'8A',title:'Drone view over Færøerne',location:'Færøerne'},
     {scene:'11A',title:'Aktiv jordvarmeboring',location:'Jarðhiti / borelocation'},
     {scene:'15A',title:'Måske begynder det med dig',location:'Skálabúðin, Tórshavn'},
     {scene:'16A',title:'Lyset slukkes',location:'Skálabúðin, Tórshavn'}
