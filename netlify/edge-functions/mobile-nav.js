@@ -1,8 +1,6 @@
 export default async (request, context) => {
   const requestUrl = new URL(request.url);
 
-  // Portal 3.0 owns TEAM and storyboard navigation. The old correction script
-  // dynamically loaded by weather-faroe.js used to overwrite TEAM with only five people.
   if (requestUrl.pathname === "/production-team-correction.js") {
     return new Response("// Disabled by SEV Produktionsportal 3.0: legacy TEAM/storyboard correction.\n", {
       status: 200,
@@ -40,7 +38,6 @@ export default async (request, context) => {
 
   const response = await context.next();
   const contentType = response.headers.get("content-type") || "";
-
   if (!contentType.includes("text/html")) return response;
 
   let html = await response.text();
@@ -104,22 +101,19 @@ export default async (request, context) => {
   }
 </style>`;
 
+  // Only one current production authority is loaded. Superseded Aug 19/Aug 22/date
+  // overlays have been removed to prevent old schedule data from flashing or returning.
   const portalScripts = [
     '<script src="/portal-loading-safety-v1.js?v=dd04919e3c91f5947bbd7e3de7bf2f41535b8c0e" defer></script>',
     '<script src="/portal-approved-core-v3.js?v=1e78b5b238e0e24b4fc7df5324f23fe138a27fb3" defer></script>',
     '<script src="/scene-links-light-v2.js?v=4d10dd8e9212eed5a03cdad6592e6a632ef8e2b2" defer></script>',
-    '<script src="/filmed-scenes-authoritative-v2.js?v=33d7b63bb6a3e276db534687f9772345dca670f9" defer></script>',
+    '<script src="/filmed-scenes-authoritative-v2.js?v=b0a70ac19d2d8e92f3408a0db8421378774e10ff" defer></script>',
     '<script src="/team-contacts-doc-aug10-v1.js?v=1473a85e6ffe43784eb9c7993b13aefd1a199b57" defer></script>',
     '<script src="/storyboard-single-page-v4.js?v=baacecde95d422bc11cc13136983ea8ce631057e" defer></script>',
     '<script src="/portal-release-3.0.js?v=aebdea47448a583dca9aaa474c246ccba856ef97" defer></script>',
     '<script src="/location-skalabudin-link-v1.js?v=cab50fb49dfd9247b274725fd5d44adfe3edd1ed" defer></script>',
-    '<script src="/hide-filmed-from-schedule-v1.js?v=f3e602ec479042c376917663053e4cca7ea7ae91" defer></script>',
-    '<script src="/production-aug22-authoritative-v1.js?v=1492e13f09f5019f6873ee25e5fe6a9dd8f11017" defer></script>',
-    '<script src="/filmed-aug17-cleanup-v1.js?v=ea194bf0ea25796003203c82c8ab36b6c8f659a7" defer></script>',
-    '<script src="/production-date-aug25-v1.js?v=a1bc0a609a8be32c370a436481a28cd99ffcd543" defer></script>',
-    '<script src="/production-aug25-final-v1.js?v=7e414e3ef35b48c28a2985da393af18c5354f2ca" defer></script>',
-    '<script src="/scene8a-filmed-final-v1.js?v=2f66021d26521baa2f74c15540316c5b479802a3" defer></script>',
-    '<script src="/scene10a-pending-v1.js?v=fdc6c60b810742798edf7c8de72bbd38ff99bac1" defer></script>'
+    '<script src="/hide-filmed-from-schedule-v1.js?v=f0567ab70af6937a78486e47ef03b3e87085ed3d" defer></script>',
+    '<script src="/production-current-authoritative-v1.js?v=653fa1188ffa8ac5ea93d138bdb192eedb6180e8" defer></script>'
   ].join('');
 
   html = html
