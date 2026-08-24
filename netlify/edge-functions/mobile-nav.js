@@ -116,7 +116,8 @@ export default async (request, context) => {
     '<script src="/hide-filmed-from-schedule-v1.js?v=f3e602ec479042c376917663053e4cca7ea7ae91" defer></script>',
     '<script src="/production-aug22-authoritative-v1.js?v=1492e13f09f5019f6873ee25e5fe6a9dd8f11017" defer></script>',
     '<script src="/filmed-aug17-cleanup-v1.js?v=ea194bf0ea25796003203c82c8ab36b6c8f659a7" defer></script>',
-    '<script src="/production-date-aug25-v1.js?v=a1bc0a609a8be32c370a436481a28cd99ffcd543" defer></script>'
+    '<script src="/production-date-aug25-v1.js?v=a1bc0a609a8be32c370a436481a28cd99ffcd543" defer></script>',
+    '<script src="/production-aug25-final-v1.js?v=7e414e3ef35b48c28a2985da393af18c5354f2ca" defer></script>'
   ].join('');
 
   html = html
