@@ -1,8 +1,8 @@
 (() => {
   'use strict';
 
-  const VERSION = '2026-08-25-1025';
-  const FILMED = new Set(['1A', '2A', '2B', '3A', '4A', '5A', '6A', '7A', '8A', '9A', '9B', '9C', '11A', '15A', '16A']);
+  const VERSION = '2026-08-25-1245';
+  const FILMED = new Set(['1A', '2A', '2B', '3A', '4A', '5A', '6A', '7A', '8A', '9A', '9B', '9C', '11A', '14A', '15A', '16A']);
   let applying = false;
   let queued = false;
 
