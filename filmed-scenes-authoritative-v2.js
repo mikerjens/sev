@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION = '2026-08-25-1245';
+  const VERSION = '2026-08-25-1440';
   const FILMED = [
     {scene:'1A',title:'Lyskontakt og åbningsbillede',location:'Skálabúðin, Tórshavn'},
     {scene:'2A',title:'Drengen læser',location:'Skálabúðin, Tórshavn'},
@@ -15,7 +15,10 @@
     {scene:'9A',title:'Dreng løber hen til mor',location:'Fjalsvegur 28, Vestmanna'},
     {scene:'9B',title:'Elbil og ladeboks',location:'Fjalsvegur 28, Vestmanna'},
     {scene:'9C',title:'Varmepumpe',location:'Fjalsvegur 28, Vestmanna'},
+    {scene:'10B',title:'Scene 10B',location:'Optaget 25. august 2026'},
     {scene:'11A',title:'Aktiv jordvarmeboring',location:'Jarðhiti / borelocation'},
+    {scene:'13A',title:'Hus og solpaneler',location:'Vestmanna'},
+    {scene:'13B',title:'Dreng blændes af solen',location:'Vestmanna'},
     {scene:'14A',title:'Dreng blæser udenfor',location:'Vestmanna'},
     {scene:'15A',title:'Måske begynder det med dig',location:'Skálabúðin, Tórshavn'},
     {scene:'16A',title:'Lyset slukkes',location:'Skálabúðin, Tórshavn'}
