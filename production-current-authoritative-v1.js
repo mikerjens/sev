@@ -1,10 +1,10 @@
 (() => {
   'use strict';
 
-  const VERSION = '2026-08-25-1029';
+  const VERSION = '2026-08-25-1246';
   const STORAGE_KEY = 'sev-task-person';
   const DATE_LABEL = 'TIRSDAG 25. AUGUST';
-  const ACTIVE = new Set(['12A','13A','13B','14A']);
+  const ACTIVE = new Set(['12A','13A','13B']);
 
   const schedules = [
     {
@@ -22,14 +22,6 @@
       equipment:['Samme tøj som i scene 9A, 9B og 9C'],
       missing:['Location er endnu ikke fastlagt.'],
       notes:'Stillfoto: “Man ser dreng og mor pege på kilde/vandløb”.'
-    },
-    {
-      key:'aug25-14a', scenes:['14A'], title:'Dreng blæser udenfor', location:'Ukendt', time:'14:30–15:30',
-      people:['Thomas Koba · Instruktør og filmmaker','Rúni Friis Kjær · Grip / lys','Michael Koba · Filmproducer','Heini Dam Lassen · dreng','Heidi Mortensen · Styling'],
-      relevant:new Set(['michael','thomas','runi','heidi','heini']),
-      equipment:['Lille plastikvindmølle','Samme tøj som i scene 9A, 9B og 9C'],
-      missing:['Location er endnu ikke fastlagt.'],
-      notes:'Stillfoto: “Dreng med legetøjsvindmølle”.'
     }
   ];
 
@@ -39,7 +31,7 @@
   const list = items => (items||[]).map(x=>`<li>${esc(x)}</li>`).join('');
 
   function sceneLinks(items){
-    const labels={'10A':'Tøj på tørresnoren','12A':'Grøn energi fra et vandløb','13A':'Hus og solpaneler','13B':'Dreng blændes af solen','14A':'Dreng blæser udenfor'};
+    const labels={'10A':'Tøj på tørresnoren','12A':'Grøn energi fra et vandløb','13A':'Hus og solpaneler','13B':'Dreng blændes af solen'};
     return items.map(id=>`<a class="scene-portal-link" href="#storyboard-${id.toLowerCase()}" data-scene-link="${id}">${id}<span class="ap3-scene-label">· ${esc(labels[id]||'')}</span></a>`).join('');
   }
 
@@ -62,7 +54,7 @@
     if(!listEl) return;
     listEl.querySelectorAll('.ap3-shoot').forEach(card=>{
       const scenes=ids(card);
-      if(card.hasAttribute('data-current-makeup') || scenes.some(id=>ACTIVE.has(id) || ['9A','9B','9C','10A'].includes(id)) || /19\. AUGUST|22\. AUGUST|25\. AUGUST/i.test(card.textContent||'')) card.remove();
+      if(card.hasAttribute('data-current-makeup') || scenes.some(id=>ACTIVE.has(id) || ['8A','9A','9B','9C','10A','11A','14A'].includes(id)) || /19\. AUGUST|22\. AUGUST|25\. AUGUST/i.test(card.textContent||'')) card.remove();
     });
   }
 
@@ -71,7 +63,7 @@
     if(!pending) return;
     pending.querySelectorAll('.ap3-pending-row').forEach(row=>{
       const scenes=ids(row);
-      if(scenes.some(id=>ACTIVE.has(id) || ['8A','9A','9B','9C','11A','10A'].includes(id))) row.remove();
+      if(scenes.some(id=>ACTIVE.has(id) || ['8A','9A','9B','9C','11A','14A','10A'].includes(id))) row.remove();
     });
     const row=makeNode(`<article class="ap3-pending-row" data-current-pending-10a="${VERSION}"><div class="ap3-scenes">${sceneLinks(['10A'])}</div><div><strong>Tøj på tørresnoren</strong><span>Dato og tidspunkt afventer. Location: Miðalsbrekka, Vestmanna. Bjarni Lamhauge medvirker. Heidi Mortensen står for styling & props.</span></div></article>`);
     pending.appendChild(row);
@@ -84,14 +76,14 @@
     root?.querySelectorAll('[data-aug22-status-banner],[data-current-status]').forEach(x=>x.remove());
     const head=root?.querySelector('.ap3-head');
     if(!head) return;
-    head.insertAdjacentHTML('afterend',`<section data-current-status="${VERSION}" style="margin:0 0 14px;padding:14px 16px;border:1px solid rgba(74,222,128,.55);border-left:5px solid #4ade80;border-radius:10px;background:rgba(74,222,128,.08)"><div style="font-weight:900;font-size:14px">VIGTIG STATUS: Tirsdag den 25. august er optagedag.</div><div style="margin-top:4px;color:var(--text-muted);font-size:11px">Make-up samt scene 9A, 9B og 9C er afviklet. Opdateret tirsdag 25. august 2026 kl. 10:29.</div></section>`);
+    head.insertAdjacentHTML('afterend',`<section data-current-status="${VERSION}" style="margin:0 0 14px;padding:14px 16px;border:1px solid rgba(74,222,128,.55);border-left:5px solid #4ade80;border-radius:10px;background:rgba(74,222,128,.08)"><div style="font-weight:900;font-size:14px">VIGTIG STATUS: Tirsdag den 25. august er optagedag.</div><div style="margin-top:4px;color:var(--text-muted);font-size:11px">Make-up samt scene 9A, 9B, 9C og 14A er afviklet. Stillfoto til scene 14A er taget. Opdateret tirsdag 25. august 2026 kl. 12:46.</div></section>`);
   }
 
   function syncGlance(root){
     root?.querySelectorAll('[data-aug22-glance],[data-current-glance]').forEach(x=>x.remove());
     const status=root?.querySelector('[data-current-status]');
     if(!status) return;
-    const rows=[['11:30–12:30','13A–13B · Hus og solpaneler'],['13:00–14:30','12A · Grøn energi fra et vandløb'],['14:30–15:30','14A · Dreng blæser udenfor']];
+    const rows=[['11:30–12:30','13A–13B · Hus og solpaneler'],['13:00–14:30','12A · Grøn energi fra et vandløb']];
     status.insertAdjacentHTML('afterend',`<section data-current-glance="${VERSION}" style="margin:0 0 18px;padding:15px 16px;background:var(--bg-elevated);border:1px solid var(--border-strong);border-radius:10px"><div style="color:var(--signal);font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:900;letter-spacing:.08em">AKTUEL PLAN · HURTIGT OVERBLIK</div><h3 style="margin-top:3px;font-size:18px">${DATE_LABEL}</h3><div style="display:grid;gap:5px;margin-top:10px">${rows.map(([t,x])=>`<div style="display:grid;grid-template-columns:105px 1fr;gap:10px;font-size:11.5px"><b style="color:var(--signal);font-family:'IBM Plex Mono',monospace">${t}</b><span>${x}</span></div>`).join('')}</div></section>`);
   }
 
