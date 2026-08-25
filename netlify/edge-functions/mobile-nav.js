@@ -1,3 +1,4 @@
+// Redeploy marker 2026-08-25. No functional change.
 export default async (request, context) => {
   const requestUrl = new URL(request.url);
 
