@@ -1,11 +1,10 @@
 (() => {
   'use strict';
 
-  const VERSION = '2026-08-25-1025';
+  const VERSION = '2026-08-25-1029';
   const STORAGE_KEY = 'sev-task-person';
   const DATE_LABEL = 'TIRSDAG 25. AUGUST';
   const ACTIVE = new Set(['12A','13A','13B','14A']);
-  const makeupPeople = new Set(['helena','heini','bjarni']);
 
   const schedules = [
     {
@@ -59,19 +58,11 @@
     </article>`;
   }
 
-  function makeupMarkup(){
-    return `<article class="ap3-shoot" data-current-makeup="${VERSION}" style="border-left-color:var(--current)">
-      <div class="ap3-shoot-top"><div><div class="ap3-kicker">${DATE_LABEL}</div><h3>Make-up · fælles call</h3><div class="ap3-location">📍 Stjørnuskotið · Niels Finsensgøta 22 / Kongagøta 4</div></div><span class="ap3-status">CALL</span></div>
-      <div class="ap3-time-grid"><div class="ap3-time"><span>Mødetid</span><b>08:00</b></div></div>
-      <div class="ap3-details"><section class="ap3-detail-box"><h4>Skuespillere</h4><div class="ap3-people"><span class="ap3-person">Helena Heðinsdóttir Guttesen</span><span class="ap3-person">Heini Dam Lassen</span><span class="ap3-person">Bjarni Lamhauge</span></div></section></div>
-    </article>`;
-  }
-
   function removeCurrentShootCards(listEl){
     if(!listEl) return;
     listEl.querySelectorAll('.ap3-shoot').forEach(card=>{
       const scenes=ids(card);
-      if(scenes.some(id=>ACTIVE.has(id) || ['9A','9B','9C','10A'].includes(id)) || /19\. AUGUST|22\. AUGUST|25\. AUGUST/i.test(card.textContent||'')) card.remove();
+      if(card.hasAttribute('data-current-makeup') || scenes.some(id=>ACTIVE.has(id) || ['9A','9B','9C','10A'].includes(id)) || /19\. AUGUST|22\. AUGUST|25\. AUGUST/i.test(card.textContent||'')) card.remove();
     });
   }
 
@@ -93,14 +84,14 @@
     root?.querySelectorAll('[data-aug22-status-banner],[data-current-status]').forEach(x=>x.remove());
     const head=root?.querySelector('.ap3-head');
     if(!head) return;
-    head.insertAdjacentHTML('afterend',`<section data-current-status="${VERSION}" style="margin:0 0 14px;padding:14px 16px;border:1px solid rgba(74,222,128,.55);border-left:5px solid #4ade80;border-radius:10px;background:rgba(74,222,128,.08)"><div style="font-weight:900;font-size:14px">VIGTIG STATUS: Tirsdag den 25. august er planlagt som optagedag.</div><div style="margin-top:4px;color:var(--text-muted);font-size:11px">Scene 9A, 9B og 9C er optaget. Der blev ikke foretaget optagelser lørdag den 22. august på grund af vejret. Opdateret tirsdag 25. august 2026.</div></section>`);
+    head.insertAdjacentHTML('afterend',`<section data-current-status="${VERSION}" style="margin:0 0 14px;padding:14px 16px;border:1px solid rgba(74,222,128,.55);border-left:5px solid #4ade80;border-radius:10px;background:rgba(74,222,128,.08)"><div style="font-weight:900;font-size:14px">VIGTIG STATUS: Tirsdag den 25. august er optagedag.</div><div style="margin-top:4px;color:var(--text-muted);font-size:11px">Make-up samt scene 9A, 9B og 9C er afviklet. Opdateret tirsdag 25. august 2026 kl. 10:29.</div></section>`);
   }
 
   function syncGlance(root){
     root?.querySelectorAll('[data-aug22-glance],[data-current-glance]').forEach(x=>x.remove());
     const status=root?.querySelector('[data-current-status]');
     if(!status) return;
-    const rows=[['08:00','Make-up · Helena, Heini og Bjarni'],['11:30–12:30','13A–13B · Hus og solpaneler'],['13:00–14:30','12A · Grøn energi fra et vandløb'],['14:30–15:30','14A · Dreng blæser udenfor']];
+    const rows=[['11:30–12:30','13A–13B · Hus og solpaneler'],['13:00–14:30','12A · Grøn energi fra et vandløb'],['14:30–15:30','14A · Dreng blæser udenfor']];
     status.insertAdjacentHTML('afterend',`<section data-current-glance="${VERSION}" style="margin:0 0 18px;padding:15px 16px;background:var(--bg-elevated);border:1px solid var(--border-strong);border-radius:10px"><div style="color:var(--signal);font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:900;letter-spacing:.08em">AKTUEL PLAN · HURTIGT OVERBLIK</div><h3 style="margin-top:3px;font-size:18px">${DATE_LABEL}</h3><div style="display:grid;gap:5px;margin-top:10px">${rows.map(([t,x])=>`<div style="display:grid;grid-template-columns:105px 1fr;gap:10px;font-size:11.5px"><b style="color:var(--signal);font-family:'IBM Plex Mono',monospace">${t}</b><span>${x}</span></div>`).join('')}</div></section>`);
   }
 
@@ -117,7 +108,6 @@
     if(!panel||!root||!listEl) return;
     syncBanner(root); syncGlance(root);
     removeCurrentShootCards(listEl);
-    listEl.appendChild(makeNode(makeupMarkup()));
     schedules.forEach(cfg=>listEl.appendChild(makeNode(cardMarkup(cfg))));
     syncPending(panel);
     panel.dataset.currentProduction=VERSION;
@@ -131,7 +121,6 @@
     removeCurrentShootCards(listEl);
     const person=currentPerson();
     if(!person) return;
-    if(makeupPeople.has(person)) listEl.appendChild(makeNode(makeupMarkup()));
     schedules.filter(cfg=>cfg.relevant.has(person)).forEach(cfg=>listEl.appendChild(makeNode(cardMarkup(cfg))));
     syncPending(panel);
     const summary=panel.querySelector('.ap3-person-summary');
