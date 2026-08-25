@@ -1,4 +1,4 @@
-// Redeploy marker 2026-08-25 14:40. Refresh filmed scene status.
+// Redeploy marker 2026-08-25 14:49. All storyboard scenes filmed.
 export default async (request, context) => {
   const requestUrl = new URL(request.url);
 
@@ -106,13 +106,13 @@ export default async (request, context) => {
     '<script src="/portal-loading-safety-v1.js?v=dd04919e3c91f5947bbd7e3de7bf2f41535b8c0e" defer></script>',
     '<script src="/portal-approved-core-v3.js?v=1e78b5b238e0e24b4fc7df5324f23fe138a27fb3" defer></script>',
     '<script src="/scene-links-light-v2.js?v=4d10dd8e9212eed5a03cdad6592e6a632ef8e2b2" defer></script>',
-    '<script src="/filmed-scenes-authoritative-v2.js?v=fecdae8d870fea51cdd309d8c196d9521139d427" defer></script>',
+    '<script src="/filmed-scenes-authoritative-v2.js?v=a4ea9b23e9dd280d4b26d7115a5c2464a981ecac" defer></script>',
     '<script src="/team-contacts-doc-aug10-v1.js?v=1473a85e6ffe43784eb9c7993b13aefd1a199b57" defer></script>',
     '<script src="/storyboard-single-page-v4.js?v=baacecde95d422bc11cc13136983ea8ce631057e" defer></script>',
     '<script src="/portal-release-3.0.js?v=aebdea47448a583dca9aaa474c246ccba856ef97" defer></script>',
     '<script src="/location-skalabudin-link-v1.js?v=cab50fb49dfd9247b274725fd5d44adfe3edd1ed" defer></script>',
-    '<script src="/hide-filmed-from-schedule-v1.js?v=afc207cd5868f4406a463e49c4ba061bed6ccee7" defer></script>',
-    '<script src="/production-current-authoritative-v1.js?v=b7901972bb82e7a417d09225844a7002ef225eab" defer></script>'
+    '<script src="/hide-filmed-from-schedule-v1.js?v=6b22064801a6ff3ec52a259d4395bf65992df90a" defer></script>',
+    '<script src="/production-current-authoritative-v1.js?v=d4fad02940fa407ae282b28f33869d9b4b02bc7a" defer></script>'
   ].join('');
 
   html = html
