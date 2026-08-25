@@ -101,19 +101,17 @@ export default async (request, context) => {
   }
 </style>`;
 
-  // Only one current production authority is loaded. Superseded Aug 19/Aug 22/date
-  // overlays have been removed to prevent old schedule data from flashing or returning.
   const portalScripts = [
     '<script src="/portal-loading-safety-v1.js?v=dd04919e3c91f5947bbd7e3de7bf2f41535b8c0e" defer></script>',
     '<script src="/portal-approved-core-v3.js?v=1e78b5b238e0e24b4fc7df5324f23fe138a27fb3" defer></script>',
     '<script src="/scene-links-light-v2.js?v=4d10dd8e9212eed5a03cdad6592e6a632ef8e2b2" defer></script>',
-    '<script src="/filmed-scenes-authoritative-v2.js?v=2cf4f86a2a20b6950824d962a539d97772627afe" defer></script>',
+    '<script src="/filmed-scenes-authoritative-v2.js?v=feef3ac732bcc693f3a5c505adaea787ae928f45" defer></script>',
     '<script src="/team-contacts-doc-aug10-v1.js?v=1473a85e6ffe43784eb9c7993b13aefd1a199b57" defer></script>',
     '<script src="/storyboard-single-page-v4.js?v=baacecde95d422bc11cc13136983ea8ce631057e" defer></script>',
     '<script src="/portal-release-3.0.js?v=aebdea47448a583dca9aaa474c246ccba856ef97" defer></script>',
     '<script src="/location-skalabudin-link-v1.js?v=cab50fb49dfd9247b274725fd5d44adfe3edd1ed" defer></script>',
-    '<script src="/hide-filmed-from-schedule-v1.js?v=6b217f25c209cdc01b6a139896aa572fb05c975c" defer></script>',
-    '<script src="/production-current-authoritative-v1.js?v=ce8880ab914ddbd4fd7c462b668aa6072ab54efa" defer></script>'
+    '<script src="/hide-filmed-from-schedule-v1.js?v=83d35d6fd04f361dea392112239547d08a36082a" defer></script>',
+    '<script src="/production-current-authoritative-v1.js?v=f5fb0687e96f9b01509b23b7b0ef4c11314268f5" defer></script>'
   ].join('');
 
   html = html
