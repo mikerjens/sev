@@ -113,7 +113,7 @@ export default async (request, context) => {
     '<script src="/portal-release-3.0.js?v=aebdea47448a583dca9aaa474c246ccba856ef97" defer></script>',
     '<script src="/location-skalabudin-link-v1.js?v=cab50fb49dfd9247b274725fd5d44adfe3edd1ed" defer></script>',
     '<script src="/hide-filmed-from-schedule-v1.js?v=6b217f25c209cdc01b6a139896aa572fb05c975c" defer></script>',
-    '<script src="/production-current-authoritative-v1.js?v=444f8fa1182bdb1fc9b81ff851a6da65f5a552ac" defer></script>'
+    '<script src="/production-current-authoritative-v1.js?v=ce8880ab914ddbd4fd7c462b668aa6072ab54efa" defer></script>'
   ].join('');
 
   html = html
