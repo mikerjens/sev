@@ -1,88 +1,43 @@
 (() => {
   'use strict';
 
-  const VERSION = '2026-08-25-1440';
+  const VERSION = '2026-08-25-1449';
   const STORAGE_KEY = 'sev-task-person';
   const DATE_LABEL = 'TIRSDAG 25. AUGUST';
-  const ACTIVE = new Set(['12A']);
+  const ACTIVE = new Set();
+  const schedules = [];
 
-  const schedules = [
-    {
-      key:'aug25-12a', scenes:['12A'], title:'Grøn energi fra et vandløb', location:'Ukendt', time:'13:00–14:30',
-      people:['Thomas Koba · Instruktør og filmmaker','Rúni Friis Kjær · Grip / lys','Michael Koba · Filmproducer','Helena Heðinsdóttir Guttesen · mor','Heini Dam Lassen · dreng','Heidi Mortensen · Styling'],
-      relevant:new Set(['michael','thomas','runi','heidi','helena','heini']),
-      equipment:['Samme tøj som i scene 9A, 9B og 9C'],
-      missing:['Location er endnu ikke fastlagt.'],
-      notes:'Stillfoto: “Man ser dreng og mor pege på kilde/vandløb”.'
-    }
-  ];
-
-  const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[c]);
   const ids = node => [...(node?.querySelectorAll('[data-scene-link]') || [])].map(a => String(a.dataset.sceneLink || '').toUpperCase()).filter(Boolean);
-  const makeNode = html => { const t=document.createElement('template'); t.innerHTML=html.trim(); return t.content.firstElementChild; };
-  const list = items => (items||[]).map(x=>`<li>${esc(x)}</li>`).join('');
 
-  function sceneLinks(items){
-    const labels={'10A':'Tøj på tørresnoren','12A':'Grøn energi fra et vandløb','13A':'Hus og solpaneler','13B':'Dreng blændes af solen'};
-    return items.map(id=>`<a class="scene-portal-link" href="#storyboard-${id.toLowerCase()}" data-scene-link="${id}">${id}<span class="ap3-scene-label">· ${esc(labels[id]||'')}</span></a>`).join('');
-  }
-
-  function cardMarkup(cfg){
-    return `<article class="ap3-shoot" data-current-production="${cfg.key}">
-      <div class="ap3-shoot-top"><div><div class="ap3-kicker">${DATE_LABEL}</div><h3>${esc(cfg.title)}</h3><div class="ap3-location">📍 ${esc(cfg.location)}</div></div><span class="ap3-status">PLANLAGT</span></div>
-      <div class="ap3-scenes">${sceneLinks(cfg.scenes)}</div>
-      <div class="ap3-time-grid"><div class="ap3-time"><span>Optagelse</span><b>${cfg.time}</b></div></div>
-      <div class="ap3-details">
-        <section class="ap3-detail-box"><h4>Hvem er med?</h4><div class="ap3-people">${cfg.people.map(p=>`<span class="ap3-person">${esc(p)}</span>`).join('')}</div></section>
-        <section class="ap3-detail-box"><h4>Rekvisitter · styling · udstyr</h4><ul>${list(cfg.equipment)}</ul></section>
-        ${(cfg.missing&&cfg.missing.length)?`<section class="ap3-detail-box missing"><h4>⚠ Mangler / skal afklares</h4><ul>${list(cfg.missing)}</ul></section>`:''}
-      </div>
-      <div class="ap3-note"><b>Stillfoto:</b> ${esc(cfg.notes.replace(/^Stillfoto:\s*/i,''))}</div>
-      <div class="ap3-actions"><a class="ap3-action primary scene-portal-link" href="#storyboard-${cfg.scenes[0].toLowerCase()}" data-scene-link="${cfg.scenes[0]}">Åbn storyboard</a><button class="ap3-action secondary" type="button" data-open-team>TEAM · telefonnumre</button><button class="ap3-action secondary" type="button" data-open-personal>Mit skema</button></div>
-    </article>`;
-  }
-
-  function removeCurrentShootCards(listEl){
+  function removeAllCurrentShootCards(listEl){
     if(!listEl) return;
     listEl.querySelectorAll('.ap3-shoot').forEach(card=>{
       const scenes=ids(card);
-      if(card.hasAttribute('data-current-makeup') || scenes.some(id=>ACTIVE.has(id) || ['8A','9A','9B','9C','10A','10B','11A','13A','13B','14A'].includes(id)) || /19\. AUGUST|22\. AUGUST|25\. AUGUST/i.test(card.textContent||'')) card.remove();
+      if(card.hasAttribute('data-current-makeup') || scenes.length || /19\. AUGUST|22\. AUGUST|25\. AUGUST/i.test(card.textContent||'')) card.remove();
     });
   }
 
-  function syncPending(panel){
-    const pending=panel?.querySelector('.ap3-pending');
-    if(!pending) return;
-    pending.querySelectorAll('.ap3-pending-row').forEach(row=>{
-      const scenes=ids(row);
-      if(scenes.some(id=>ACTIVE.has(id) || ['8A','9A','9B','9C','10B','11A','13A','13B','14A','10A'].includes(id))) row.remove();
+  function clearPending(panel){
+    if(!panel) return;
+    panel.querySelectorAll('.ap3-pending-row').forEach(row=>row.remove());
+    panel.querySelectorAll('.ap3-section').forEach(section=>{
+      const pending=section.querySelector('.ap3-pending');
+      if(!pending) return;
+      const counter=section.querySelector('.ap3-count');
+      if(counter) counter.textContent='0 STATUSGRUPPER';
+      section.style.display='none';
     });
-    const row=makeNode(`<article class="ap3-pending-row" data-current-pending-10a="${VERSION}"><div class="ap3-scenes">${sceneLinks(['10A'])}</div><div><strong>Tøj på tørresnoren</strong><span>Dato og tidspunkt afventer. Location: Miðalsbrekka, Vestmanna. Bjarni Lamhauge medvirker. Heidi Mortensen står for styling & props.</span></div></article>`);
-    pending.appendChild(row);
-    const section=pending.closest('.ap3-section');
-    const counter=section?.querySelector('.ap3-count');
-    if(counter) counter.textContent=`${pending.querySelectorAll('.ap3-pending-row').length} STATUSGRUPPER`;
   }
 
   function syncBanner(root){
     root?.querySelectorAll('[data-aug22-status-banner],[data-current-status]').forEach(x=>x.remove());
     const head=root?.querySelector('.ap3-head');
     if(!head) return;
-    head.insertAdjacentHTML('afterend',`<section data-current-status="${VERSION}" style="margin:0 0 14px;padding:14px 16px;border:1px solid rgba(74,222,128,.55);border-left:5px solid #4ade80;border-radius:10px;background:rgba(74,222,128,.08)"><div style="font-weight:900;font-size:14px">VIGTIG STATUS: Tirsdag den 25. august er optagedag.</div><div style="margin-top:4px;color:var(--text-muted);font-size:11px">Scene 10B, 13A og 13B er nu optaget. Tidligere i dag blev også scene 14A samt stillfoto til 14A afviklet. Opdateret tirsdag 25. august 2026 kl. 14:40.</div></section>`);
+    head.insertAdjacentHTML('afterend',`<section data-current-status="${VERSION}" style="margin:0 0 14px;padding:14px 16px;border:1px solid rgba(74,222,128,.55);border-left:5px solid #4ade80;border-radius:10px;background:rgba(74,222,128,.08)"><div style="font-weight:900;font-size:14px">STATUS: Alle scener i storyboardet er nu filmet.</div><div style="margin-top:4px;color:var(--text-muted);font-size:11px">Scene 10A, 12A, 13A og 13B er optaget. Der er ingen resterende scener på dagens skema eller under scener uden fast dato. Opdateret tirsdag 25. august 2026 kl. 14:49.</div></section>`);
   }
 
   function syncGlance(root){
     root?.querySelectorAll('[data-aug22-glance],[data-current-glance]').forEach(x=>x.remove());
-    const status=root?.querySelector('[data-current-status]');
-    if(!status) return;
-    const rows=[['13:00–14:30','12A · Grøn energi fra et vandløb']];
-    status.insertAdjacentHTML('afterend',`<section data-current-glance="${VERSION}" style="margin:0 0 18px;padding:15px 16px;background:var(--bg-elevated);border:1px solid var(--border-strong);border-radius:10px"><div style="color:var(--signal);font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:900;letter-spacing:.08em">AKTUEL PLAN · HURTIGT OVERBLIK</div><h3 style="margin-top:3px;font-size:18px">${DATE_LABEL}</h3><div style="display:grid;gap:5px;margin-top:10px">${rows.map(([t,x])=>`<div style="display:grid;grid-template-columns:105px 1fr;gap:10px;font-size:11.5px"><b style="color:var(--signal);font-family:'IBM Plex Mono',monospace">${t}</b><span>${x}</span></div>`).join('')}</div></section>`);
-  }
-
-  function currentPerson(){
-    const p=document.getElementById('ap3-person-select')?.value || document.getElementById('ap3-home-person')?.value || '';
-    if(p) return p;
-    try { const s=localStorage.getItem(STORAGE_KEY)||''; return s==='all'?'':s; } catch(_) { return ''; }
   }
 
   function syncHome(){
@@ -91,9 +46,8 @@
     const listEl=panel?.querySelector('.ap3-plan-list');
     if(!panel||!root||!listEl) return;
     syncBanner(root); syncGlance(root);
-    removeCurrentShootCards(listEl);
-    schedules.forEach(cfg=>listEl.appendChild(makeNode(cardMarkup(cfg))));
-    syncPending(panel);
+    removeAllCurrentShootCards(listEl);
+    clearPending(panel);
     panel.dataset.currentProduction=VERSION;
   }
 
@@ -102,13 +56,10 @@
     if(!panel) return;
     let listEl=panel.querySelector('.ap3-plan-list');
     if(!listEl){listEl=document.createElement('div');listEl.className='ap3-plan-list';panel.appendChild(listEl);}
-    removeCurrentShootCards(listEl);
-    const person=currentPerson();
-    if(!person) return;
-    schedules.filter(cfg=>cfg.relevant.has(person)).forEach(cfg=>listEl.appendChild(makeNode(cardMarkup(cfg))));
-    syncPending(panel);
+    removeAllCurrentShootCards(listEl);
+    clearPending(panel);
     const summary=panel.querySelector('.ap3-person-summary');
-    if(summary){const count=listEl.querySelectorAll('.ap3-shoot[data-current-production]').length; summary.innerHTML=summary.innerHTML.replace(/\d+ planlagte optagelser/,`${count} planlagte optagelser`);}
+    if(summary) summary.innerHTML=summary.innerHTML.replace(/\d+ planlagte optagelser/,'0 planlagte optagelser');
     panel.dataset.currentProduction=VERSION;
   }
 
