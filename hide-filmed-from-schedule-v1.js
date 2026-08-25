@@ -1,8 +1,8 @@
 (() => {
   'use strict';
 
-  const VERSION = '2026-08-25-1440';
-  const FILMED = new Set(['1A', '2A', '2B', '3A', '4A', '5A', '6A', '7A', '8A', '9A', '9B', '9C', '10B', '11A', '13A', '13B', '14A', '15A', '16A']);
+  const VERSION = '2026-08-25-1449';
+  const FILMED = new Set(['1A','2A','2B','2C','3A','4A','5A','6A','7A','8A','9A','9B','9C','10A','10B','11A','12A','13A','13B','14A','15A','16A','17A','18A']);
   let applying = false;
   let queued = false;
 
@@ -30,6 +30,7 @@
       const count = pending.querySelectorAll('.ap3-pending-row').length;
       const counter = section.querySelector('.ap3-count');
       if (counter) counter.textContent = `${count} STATUSGRUPPER`;
+      if (count === 0) section.style.display = 'none';
     });
   }
 
