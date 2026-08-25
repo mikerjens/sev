@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION = '2026-08-25-1440';
+  const VERSION = '2026-08-25-1449';
   const FILMED = [
     {scene:'1A',title:'Lyskontakt og åbningsbillede',location:'Skálabúðin, Tórshavn'},
     {scene:'2A',title:'Drengen læser',location:'Skálabúðin, Tórshavn'},
@@ -15,13 +15,17 @@
     {scene:'9A',title:'Dreng løber hen til mor',location:'Fjalsvegur 28, Vestmanna'},
     {scene:'9B',title:'Elbil og ladeboks',location:'Fjalsvegur 28, Vestmanna'},
     {scene:'9C',title:'Varmepumpe',location:'Fjalsvegur 28, Vestmanna'},
+    {scene:'10A',title:'Tøj på tørresnoren',location:'Vestmanna'},
     {scene:'10B',title:'Scene 10B',location:'Optaget 25. august 2026'},
     {scene:'11A',title:'Aktiv jordvarmeboring',location:'Jarðhiti / borelocation'},
+    {scene:'12A',title:'Grøn energi fra et vandløb',location:'Færøerne'},
     {scene:'13A',title:'Hus og solpaneler',location:'Vestmanna'},
     {scene:'13B',title:'Dreng blændes af solen',location:'Vestmanna'},
     {scene:'14A',title:'Dreng blæser udenfor',location:'Vestmanna'},
     {scene:'15A',title:'Måske begynder det med dig',location:'Skálabúðin, Tórshavn'},
-    {scene:'16A',title:'Lyset slukkes',location:'Skálabúðin, Tórshavn'}
+    {scene:'16A',title:'Lyset slukkes',location:'Skálabúðin, Tórshavn'},
+    {scene:'17A',title:'Voice-over slutkort',location:'Postproduktion'},
+    {scene:'18A',title:'Animeret SEV-logo',location:'Postproduktion'}
   ];
   const ids = new Set(FILMED.map(item => item.scene));
   const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#039;'})[c]);
@@ -35,7 +39,7 @@
     addStyles();
     const root=document.querySelector('#panel-schedule [data-plan-v3-root]');
     const planList=root?.querySelector('.ap3-plan-list');
-    if(root&&planList){let section=root.querySelector('#authoritative-filmed-scenes'); if(!section){section=document.createElement('section');section.id='authoritative-filmed-scenes';planList.insertAdjacentElement('afterend',section)} section.innerHTML=`<div class="afs-head"><div><h3>Filmede scener</h3><p>Disse scener er optaget og skal ikke længere planlægges.</p></div><span class="afs-count">${FILMED.length} SCENER FILMET</span></div><div class="afs-grid">${FILMED.map(card).join('')}</div>`}
+    if(root&&planList){let section=root.querySelector('#authoritative-filmed-scenes'); if(!section){section=document.createElement('section');section.id='authoritative-filmed-scenes';planList.insertAdjacentElement('afterend',section)} section.innerHTML=`<div class="afs-head"><div><h3>Filmede scener</h3><p>Alle scener i storyboardet er nu optaget.</p></div><span class="afs-count">${FILMED.length} SCENER FILMET</span></div><div class="afs-grid">${FILMED.map(card).join('')}</div>`}
     document.querySelectorAll('.storyboard-scene-card[data-storyboard-scene]').forEach(card=>{const id=card.dataset.storyboardScene;card.classList.toggle('filmed-authoritative',ids.has(id));card.querySelectorAll('.storyboard-authoritative-filmed-tag').forEach(tag=>tag.remove());if(ids.has(id)){const tag=document.createElement('span');tag.className='storyboard-authoritative-filmed-tag';tag.textContent='✓ FILMET';card.appendChild(tag)}});
   }
   function start(){install();window.setTimeout(install,500)}
