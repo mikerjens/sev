@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION = '2026-08-24-0856';
+  const VERSION = '2026-08-25-1025';
   const FILMED = [
     {scene:'1A',title:'Lyskontakt og åbningsbillede',location:'Skálabúðin, Tórshavn'},
     {scene:'2A',title:'Drengen læser',location:'Skálabúðin, Tórshavn'},
@@ -12,12 +12,15 @@
     {scene:'6A',title:'Dæmning, turbine, Eiðisvatn og Eiðisverkið',location:'Eiði / Eiðisvatn / Eiðisverkið'},
     {scene:'7A',title:'Vindmøller',location:'Eystnes'},
     {scene:'8A',title:'Drone view over Færøerne',location:'Færøerne'},
+    {scene:'9A',title:'Dreng løber hen til mor',location:'Fjalsvegur 28, Vestmanna'},
+    {scene:'9B',title:'Elbil og ladeboks',location:'Fjalsvegur 28, Vestmanna'},
+    {scene:'9C',title:'Varmepumpe',location:'Fjalsvegur 28, Vestmanna'},
     {scene:'11A',title:'Aktiv jordvarmeboring',location:'Jarðhiti / borelocation'},
     {scene:'15A',title:'Måske begynder det med dig',location:'Skálabúðin, Tórshavn'},
     {scene:'16A',title:'Lyset slukkes',location:'Skálabúðin, Tórshavn'}
   ];
   const ids = new Set(FILMED.map(item => item.scene));
-  const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[c]);
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#039;'})[c]);
 
   function addStyles(){
     if(document.getElementById('filmed-scenes-authoritative-styles')) return;
